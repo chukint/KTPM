@@ -1,0 +1,2312 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ObjectFactory xmlns:Invoke="Microsoft.SqlServer.DataWarehouse.Common.Ioc.MethodConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Set="Microsoft.SqlServer.DataWarehouse.Common.Ioc.PropertyConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Parameter="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Item="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:NameRef="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:TypeRef="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common">
+  <Includes>
+    <Include Path =".\CommonDiagnosticsConfig.xml"/>
+  </Includes>
+
+  <Types>
+    <Type Alias="DmsCoreInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Diagnostics.DmsCoreInstrumentation, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="HdfsBridgeDmsInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Hadoop.HadoopBridge.HdfsBridgeDmsInstrumentation, Microsoft.SqlServer.DataWarehouse.Hadoop.HadoopBridge"/>
+    <Type Alias="DmsCoreStatePayload" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Diagnostics.DmsCoreStatePayload, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="MessageInfoPayload" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Diagnostics.MessageInfoPayload, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="DmsStepPayload" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Diagnostics.DmsStepPayload, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="DmsDataChannelPayload" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Diagnostics.DmsDataChannelPayload, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="SendBufferPayload" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Diagnostics.SendBufferPayload, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="DmsReceiveBufferPayload" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Diagnostics.DmsReceiveBufferPayload, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="ReaderBufferPayload" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Diagnostics.ReaderBufferPayload, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="ExternalReadPayload" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Diagnostics.ExternalReadPayload, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="StepInfoPayload" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Diagnostics.StepInfoPayload, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="DmsManagerInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Diagnostics.DmsManagerInstrumentation, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="CancelInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Utilities.Cancel.CancelInstrumentation,  Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="SqlObfuscator" Name="Microsoft.SqlServer.DataWarehouse.Sql.Parser.Utilities.SqlObfuscator, Microsoft.SqlServer.DataWarehouse.Sql.Parser"/>
+    <Type Alias="DmsObfuscationSettings" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.DmsObfuscationSettings, DMS"/>
+  </Types>
+
+  <Objects>
+
+    <Object Name="DMSCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>DMS</Set:Name>
+      <Set:Description>This category represents events published by the DMS component</Set:Description>
+    </Object>
+
+    <Object Name="DmsStepInfoCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>DmsStepInfo</Set:Name>
+      <Set:Description>This category represents events that are published from DMS Worker threads</Set:Description>
+    </Object>
+
+    <Object Name="DmsBufferCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>DmsBuffer</Set:Name>
+      <Set:Description>This category represents events that contain datachannel buffer statistics</Set:Description>
+    </Object>
+
+
+    <Object Name="DmsWaitEventCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>DmsWaitEvent</Set:Name>
+      <Set:Description>This category represents events that will be tracked as waiting/blocking time in DMS processing</Set:Description>
+    </Object>
+
+
+    <Object Name="DmsStepCompletionCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>DmsStepCompletion</Set:Name>
+      <Set:Description>This category represents events published on completion of DMS Step operations</Set:Description>
+    </Object>
+
+
+    <Object Name="DmsSenderCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>BufferSender</Set:Name>
+      <Set:Description>This category represents events that are published from the DataChannelSender</Set:Description>
+    </Object>
+
+    <Object Name="DmsInitializationCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>Initialization</Set:Name>
+      <Set:Description>This category represents events published during DMS initialization</Set:Description>
+    </Object>
+
+
+    <Object Name="DmsCoreInfoCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>DmsCoreInitialization</Set:Name>
+      <Set:Description>This category represents events published during DMS initialization</Set:Description>
+    </Object>
+
+    <Object Name="DmsMessageTraceCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>DmsMessageTrace</Set:Name>
+      <Set:Description>This category represents events published during DMS Message receive and processing</Set:Description>
+    </Object>
+
+    <Object Name="DmsDataChannelCreditCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>DmsDataChannelCredit</Set:Name>
+      <Set:Description>This category represents events published during DMS ProducerCredit updates</Set:Description>
+    </Object>
+
+    <Object Name="ExternalReadProgressCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>ExternalReadProgress</Set:Name>
+      <Set:Description>This category includes all events published during the import of data from external data sources</Set:Description>
+    </Object>
+
+    <Object Name="DmsTestCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>DmsTest</Set:Name>
+      <Set:Description>This category includes all events published during DMS operation that should be captured for Test instrumentation</Set:Description>
+    </Object>
+
+    <Object Name="DMSDefaultLogListener" Type="IEventListener" AsType="LoggingListener" Lifecycle="Singleton">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:LogDirectory ObjectName="LogPath"/>
+      <Set:LogFileName>movement</Set:LogFileName>
+      <Set:RollSizeInBytes>52428800</Set:RollSizeInBytes>
+      <Set:TimeStampPattern>yyyy-MM-dd</Set:TimeStampPattern>
+      <Set:MaxRolledFileCount>10</Set:MaxRolledFileCount>
+      <Set:MessageTemplate>$[DateTimePublished] [Thread:$[ThreadId]] [$[FullName]] ($[Listener.Priority], $[Listener.Severity]): $[Message]</Set:MessageTemplate>
+
+      <Invoke:AddCategory>
+        <Parameter:String>DMS</Parameter:String>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:InfoCategory/>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:NormalCategory/>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:ErrorCategory/>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:HighCategory/>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:FatalCategory/>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:CriticalCategory/>
+      </Invoke:AddCategory>
+
+    </Object>
+
+    <Object Name="DMSWindowsEventLog" Type="WindowsEventLogListener" Lifecycle="Singleton">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:Source>MSSQLSERVERADW</Set:Source>
+      <Set:LogName>Application</Set:LogName>
+      <Set:Message>$[Message]</Set:Message>
+
+      <Invoke:AddCategory>
+        <NameRef:WindowsEventLogCategory/>
+      </Invoke:AddCategory>
+    </Object>
+
+    <Object Extends="EventManager" FilterOverride="Polybase">
+      <Invoke:AddListener>
+        <NameRef:DMSWindowsEventLog/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:DMSDefaultLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:DmsStepWorkerEventListenerPolybase/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:DmsCoreStateEventListenerPolybase/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:ExternalReadProgressEventListenerPolybase/>
+      </Invoke:AddListener>
+    </Object>
+
+    <Object Extends="EventManager" FilterOverride="Full,Xdb,AnyLite">
+      <Invoke:AddListener>
+        <NameRef:DMSWindowsEventLog/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:DMSDefaultLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:DmsDataChannelAggEventListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:DmsDataChannelThreadsAggEventListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:DmsStepWorkerEventListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:DmsCoreStateEventListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:DmsMessagesEventListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:DmsDataChannelCreditAggEventListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:ExternalReadProgressEventListener/>
+      </Invoke:AddListener>
+    </Object>
+
+    <Object Name="CreditTrackingScopeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.CreditTrackingScope</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>tracking_scope</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CreditPlanIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.PlanId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>plan_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CreditStepIndexFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.StepIndex</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>dms_step_index</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CreditTargetDistFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.TargetDist</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>distribution_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CreditValueFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.Credit</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>credit</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CreditPendingBuffersFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.PendingBuffers</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>pending_buffers</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+
+
+    <Object Name="CreditSendCountFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.SendCount</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>send_count</Set:ColumnName>
+          <Set:DataType>long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CreditIncrementCountFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.IncrementCount</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>increment_count</Set:ColumnName>
+          <Set:DataType>long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CreditUpdateCountFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.UpdateCount</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>update_count</Set:ColumnName>
+          <Set:DataType>long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CreditAcquireCountFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.AcquireCount</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>acquire_count</Set:ColumnName>
+          <Set:DataType>long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CreditAddPendingCountFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.AddPendingCount</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>add_pending_count</Set:ColumnName>
+          <Set:DataType>long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CreditDequeuePendingCountFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.DequeuePendingCount</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>dequeue_pending_count</Set:ColumnName>
+          <Set:DataType>long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsPlanIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.PlanId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>plan_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsRequestIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.QueryId</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>request_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="OperationFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.op</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>operation</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>1000</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SourceNodeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsDataChannel.SourceNode</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>source_node</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsDataChannelTypeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsDataChannel.Type</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>type</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+
+    <Object Name="DmsDataChannelIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsDataChannel.DataChannelId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>datachannel_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsPartnerDataChannelIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsDataChannel.PartnerDataChannelId</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>partner_datachannel_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsLocalNodeIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsDataChannel.LocalNodeId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>pdw_node_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsCurrentNodeIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CurrentNode.Id</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>pdw_node_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsCurrentComputeNodeIdFieldDescriptor" Type="EventDataColumnDescriptor"  FilterOverride="Polybase">
+      <Set:PropertyName>CurrentNode.Id</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>compute_node_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsCoreIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CurrentNode.Id</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>dms_core_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsPartnerNodeIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsDataChannel.PartnerNodeId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>partner_node_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsDataChannelStatusFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.Status</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>status</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>10</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DestinationNodeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsDataChannel.DestinationNode</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>destination_node</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsBufferStepIndexFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.DMSStepIndex</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>dms_step_index</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsEngineStepIndexFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.StepIndex</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>step_index</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="TargetDistFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.TargetDist</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>distribution_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+
+
+    <Object Name="IncBufferCountFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:AggregateFunction ObjectName="IncrementFunction"/>
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:DmsBufferCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:IsCalculated>true</Set:IsCalculated>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>buffers_processed</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+
+
+    <Object Name="AggBufferBytesFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.BufferBytes</Set:PropertyName>
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:DmsBufferCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="SumFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>bytes_processed</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="WorkerAggBufferBytesFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.BufferBytes</Set:PropertyName>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:DmsMovementBufferStatisticEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="SumFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>bytes_processed</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="BufferBytesFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.BufferBytes</Set:PropertyName>
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:DmsBufferCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>buffer_bytes</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsThroughputBytesPerSecFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.BufferBytes</Set:PropertyName>
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:DmsBufferCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="RatePerSecFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>throughput_bytes</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="BufferBytesPerSecFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.BufferBytes</Set:PropertyName>
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:DmsBufferCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="RatePerSecFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>bytes_per_sec</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="WorkerBufferBytesPerSecFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.BufferBytes</Set:PropertyName>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:DmsMovementBufferStatisticEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="RatePerSecFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>bytes_per_sec</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="AggBufferRowsFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.BufferRows</Set:PropertyName>
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:DmsBufferCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="SumFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>rows_processed</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="WorkerAggBufferRowsFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.BufferRows</Set:PropertyName>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:DmsMovementBufferStatisticEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="SumFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>rows_processed</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="AvgDurationMillisecondsFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>Duration.TotalMilliseconds</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="AverageFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>average_tcp_wait</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="TotalDurationMillisecondsFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>Duration.TotalMilliseconds</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="SumFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>total_tcp_wait</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsStepPlanIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsStep.PlanId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>plan_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>36</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsQueryIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsStep.QueryId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>request_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsExecutionIdFieldDescriptor" Type="EventDataColumnDescriptor"  FilterOverride="Polybase">
+      <Set:PropertyName>DmsStep.QueryId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>execution_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ServerStepIndexFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsStep.StepIndex</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>step_index</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsStepIndexFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsStep.DMSStepIndex</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>dms_step_index</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsDistributionIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsStep.Distribution</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>distribution_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsQueryTextFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsStep.QueryText</Set:PropertyName>
+      <Set:ColumnValueMutator ObjectName="TruncateStringColumnValueMutator"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>source_info</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>4000</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsTableNameFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsStep.TableName</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>destination_info</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>4000</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsCommandFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsStep.Command</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>command</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>4000</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsStepStateFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.State</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>status</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsStepErrorIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>ErrorId</Set:PropertyName>
+      <!-- Filter on specific StepErrorEvents, so that the same ErrorId that goes
+           to dm_pdw_errors is captured in dm_pdw_dms_workers view -->
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:DmsWriterStepErrorEvent/>
+          </Invoke:AddEvent>
+          <Invoke:AddEvent>
+            <NameRef:DmsReaderStepErrorEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>error_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>36</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+
+    <Object Name="DmsStartTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="MinFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>start_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsEndTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <!--Setting a category filter to make sure we populate the end_time column
+      only from the events in the QueryCompletion category-->
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:DmsStepCompletionCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>end_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsStepTotalElapsedTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>total_elapsed_time</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:IsCalculated>true</Set:IsCalculated>
+      <Set:ValueFunction>
+        <Object Type="DurationColumnIntValueFunction">
+          <Set:StartTimeField ObjectName="DmsStartTimeFieldDescriptor"/>
+          <Set:EndTimeField ObjectName="DmsEndTimeFieldDescriptor"/>
+        </Object>
+      </Set:ValueFunction>
+    </Object>
+
+
+    <Object Name="DmsWorkerTypeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DmsStep.Type</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>type</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+
+    <Object Name="DmsThreadUserCpuTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>ThreadUserTime</Set:PropertyName>
+      <!--Setting a category filter to make sure we populate the cpu_time column
+      only from the events in the QueryCompletion category-->
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:DmsStepCompletionCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>cpu_time</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsStepSPIDFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.SqlSpid</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>sql_spid</Set:ColumnName>
+          <Set:DataType>int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsStepQueryIssueTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>Duration.TotalMilliseconds</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:DmsReaderQueryIssueEndEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>query_time</Set:ColumnName>
+          <Set:DataType>int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsProcessIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>ProcessId</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>dms_cpid</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsPoolBuffersAvailableFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.PoolBuffersAvailable</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:DmsMovementBufferStatisticEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>buffers_available</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+
+
+    <Object Name="DmsCoreStateFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.State</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>status</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsMessageTypeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.MessageType</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>message_type</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>64</Set:MaxLength>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsMessageIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.MessageID</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>message_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>64</Set:MaxLength>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DmsLastTransmitTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:DmsSendBufferEndEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>last_io_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="FilterRingBufferEntry" Type="FilterRingBufferEntry" Lifecycle="Singleton"/>
+    
+    <Object Name="DmsStepWorkerEventListener" Type="IEventListener" AsType="RingBufferListener" Lifecycle="Singleton">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>1000</Set:MaxItemCount>
+      <Set:PurgePercentage>10</Set:PurgePercentage>
+      <Set:MaxNumOfElement>120000</Set:MaxNumOfElement>
+      <Set:TableName>dm_pdw_dms_workers</Set:TableName>
+      <Set:RowId>$[DmsStep.QueryId]</Set:RowId>
+
+      <Set:Fields>
+        <NameRef:DmsQueryIdFieldDescriptor/>                <!-- request_id -->
+        <NameRef:ServerStepIndexFieldDescriptor/>           <!-- step_index -->
+        <NameRef:DmsStepIndexFieldDescriptor/>              <!-- dms_step_index -->
+
+        <NameRef:DmsCurrentNodeIdFieldDescriptor/>          <!-- pdw_node_id -->
+        <NameRef:DmsDistributionIdFieldDescriptor/>         <!-- distribution_id -->
+
+        <NameRef:DmsWorkerTypeFieldDescriptor/>             <!-- type -->
+        <NameRef:DmsStepStateFieldDescriptor/>              <!-- status -->
+        <NameRef:WorkerBufferBytesPerSecFieldDescriptor/>   <!-- bytes_per_sec -->
+        <NameRef:WorkerAggBufferBytesFieldDescriptor/>      <!-- bytes_processed -->
+        <NameRef:WorkerAggBufferRowsFieldDescriptor/>       <!-- rows_processed-->
+
+        <NameRef:DmsStartTimeFieldDescriptor/>              <!-- start_time -->
+        <NameRef:DmsEndTimeFieldDescriptor/>                <!-- end_time -->
+        <NameRef:DmsStepTotalElapsedTimeFieldDescriptor/>   <!-- total_elapsed_time -->
+
+        <NameRef:DmsThreadUserCpuTimeFieldDescriptor/>      <!-- cpu_time -->
+
+        <NameRef:DmsStepQueryIssueTimeFieldDescriptor/>     <!-- query_time -->
+        <NameRef:DmsPoolBuffersAvailableFieldDescriptor/>   <!-- buffers_available-->
+        <NameRef:DmsProcessIdFieldDescriptor/>              <!-- dms_cpid -->
+        <NameRef:DmsStepSPIDFieldDescriptor/>               <!-- sql_spid -->
+
+        <NameRef:DmsStepErrorIdFieldDescriptor/>            <!-- error_id -->
+
+        <NameRef:DmsQueryTextFieldDescriptor/>              <!-- source_info -->
+        <NameRef:DmsTableNameFieldDescriptor/>              <!-- destination_info -->
+        <NameRef:DmsCommandFieldDescriptor/>                <!-- Command -->
+
+      </Set:Fields>
+
+      <Invoke:AddRingBufferBehavior>
+        <NameRef:FilterRingBufferEntry/>
+      </Invoke:AddRingBufferBehavior>
+      
+      <Invoke:AddExtractAndForwardEvent>
+        <NameRef:DmsReaderStepCompleteEvent/>
+        <NameRef:ForwardedDmsReaderStepCompleteEvent/>
+      </Invoke:AddExtractAndForwardEvent>
+
+      <Invoke:AddExtractAndForwardEvent>
+        <NameRef:DmsWriterStepCompleteEvent/>
+        <NameRef:ForwardedDmsWriterStepCompleteEvent/>
+      </Invoke:AddExtractAndForwardEvent>
+
+      <Invoke:AddExtractAndForwardEvent>
+        <NameRef:DmsMovementBufferStatisticTelemetryEvent/>
+        <NameRef:ForwardedDmsMovementBufferStatisticEvent/>
+      </Invoke:AddExtractAndForwardEvent>
+
+      <Invoke:AddCategory>
+        <NameRef:DmsStepInfoCategory/>
+      </Invoke:AddCategory>
+    </Object>
+
+    <Object Name="DmsStepWorkerEventListenerPolybase" Type="IEventListener" AsType="RingBufferListener" Lifecycle="Singleton" FilterOverride="Polybase">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>1000</Set:MaxItemCount>
+      <Set:TableName>_dm_exec_dms_workers</Set:TableName>
+      <Set:RowId>$[DmsStep.QueryId]</Set:RowId>
+
+      <Set:Fields>
+        <NameRef:DmsExecutionIdFieldDescriptor/>            <!-- execution_id -->
+        <NameRef:ServerStepIndexFieldDescriptor/>           <!-- step_index -->
+        <NameRef:DmsStepIndexFieldDescriptor/>              <!-- dms_step_index -->
+
+        <NameRef:DmsCurrentComputeNodeIdFieldDescriptor/>   <!-- compute_node_id -->
+        <NameRef:DmsDistributionIdFieldDescriptor/>         <!-- distribution_id -->
+
+        <NameRef:DmsWorkerTypeFieldDescriptor/>             <!-- type -->
+        <NameRef:DmsStepStateFieldDescriptor/>              <!-- status -->
+        <NameRef:WorkerBufferBytesPerSecFieldDescriptor/>   <!-- bytes_per_sec -->
+        <NameRef:WorkerAggBufferBytesFieldDescriptor/>      <!-- bytes_processed -->
+        <NameRef:WorkerAggBufferRowsFieldDescriptor/>       <!-- rows_processed-->
+
+        <NameRef:DmsStartTimeFieldDescriptor/>              <!-- start_time -->
+        <NameRef:DmsEndTimeFieldDescriptor/>                <!-- end_time -->
+        <NameRef:DmsStepTotalElapsedTimeFieldDescriptor/>   <!-- total_elapsed_time -->
+
+        <NameRef:DmsThreadUserCpuTimeFieldDescriptor/>      <!-- cpu_time -->
+
+        <NameRef:DmsStepQueryIssueTimeFieldDescriptor/>     <!-- query_time -->
+        <NameRef:DmsPoolBuffersAvailableFieldDescriptor/>   <!-- buffers_available-->
+        <NameRef:DmsProcessIdFieldDescriptor/>              <!-- dms_cpid -->
+        <NameRef:DmsStepSPIDFieldDescriptor/>               <!-- sql_spid -->
+
+        <NameRef:DmsStepErrorIdFieldDescriptor/>            <!-- error_id -->
+
+        <NameRef:DmsQueryTextFieldDescriptor/>              <!-- source_info -->
+        <NameRef:DmsTableNameFieldDescriptor/>              <!-- destination_info -->
+        <NameRef:DmsCommandFieldDescriptor/>                <!-- Command -->
+
+      </Set:Fields>
+
+      <Invoke:AddCategory>
+        <NameRef:DmsStepInfoCategory/>
+      </Invoke:AddCategory>
+    </Object>
+
+    <Object Name="DmsDataChannelAggEventListener" Type="IEventListener" AsType="RingBufferListener" Lifecycle="Singleton">
+      <Set:IsEnabled>false</Set:IsEnabled>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:TableName>dm_pdw_dms_datachannel_worker_pairs</Set:TableName>
+
+      <Set:Fields>
+        <NameRef:DmsDataChannelIdFieldDescriptor/>          <!-- datachannel_id -->
+        <NameRef:DmsRequestIdFieldDescriptor/>              <!-- request_id -->
+        <NameRef:DmsEngineStepIndexFieldDescriptor/>        <!-- step_index -->
+        <NameRef:DmsBufferStepIndexFieldDescriptor/>        <!-- dms_step_index -->
+        <NameRef:TargetDistFieldDescriptor/>                <!-- distribution_id -->
+        <NameRef:BufferBytesPerSecFieldDescriptor/>         <!-- bytes_per_sec -->
+        <NameRef:IncBufferCountFieldDescriptor/>            <!-- buffers_processed -->
+        <NameRef:AvgDurationMillisecondsFieldDescriptor/>   <!-- average_tcp_wait -->
+        <NameRef:TotalDurationMillisecondsFieldDescriptor/> <!-- total_tcp_wait -->
+        <NameRef:DmsLastTransmitTimeFieldDescriptor/>       <!-- last_transmit_time -->
+        <NameRef:AggBufferBytesFieldDescriptor/>            <!-- bytes_processed -->
+        <NameRef:AggBufferRowsFieldDescriptor/>             <!-- rows_processed -->
+
+        <NameRef:DmsPlanIdFieldDescriptor/>                 <!-- plan_id -->
+      </Set:Fields>
+
+      <Invoke:AddEvent>
+        <NameRef:DmsReceiveBufferEndEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:AddEvent>
+        <NameRef:DmsSendBufferEndEvent/>
+      </Invoke:AddEvent>
+    </Object>
+
+    <!-- Datachannel_threads view: runtime information about running Receivers and Senders.-->
+
+    <Object Name="DmsDataChannelThreadsAggEventListener" Type="IEventListener" AsType="RingBufferListener" Lifecycle="Singleton">
+      <Set:IsEnabled>false</Set:IsEnabled>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:TableName>dm_pdw_dms_datachannel_threads</Set:TableName>
+
+      <Set:Fields>
+        <NameRef:DmsDataChannelIdFieldDescriptor/>
+        <NameRef:DmsLocalNodeIdFieldDescriptor/>
+        <NameRef:DmsDataChannelTypeFieldDescriptor/>
+        <!--NameRef:IncBufferCountFieldDescriptor/>   - Commented out fields are available through instrumentation;
+        <NameRef:AggBufferBytesFieldDescriptor/>         Pending discussion about possibility of changing spec -->
+        <NameRef:DmsThroughputBytesPerSecFieldDescriptor/>
+        <NameRef:DmsDataChannelStatusFieldDescriptor/>
+        <NameRef:DmsPartnerDataChannelIdFieldDescriptor/>
+        <!--NameRef:AggBufferRowsFieldDescriptor/>
+        <NameRef:SourceNodeFieldDescriptor/>
+        <NameRef:DestinationNodeFieldDescriptor/-->
+      </Set:Fields>
+
+      <Invoke:AddEvent>
+        <NameRef:DmsDataChannelSenderStartEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:AddEvent>
+        <NameRef:DmsDataChannelReceiverStartEvent/>
+      </Invoke:AddEvent>
+
+      <!--Invoke:AddEvent>
+        <NameRef:DmsCreditFeedbackSenderStartEvent/>   - Commented out: we can use this view to surface info about
+      </Invoke:AddEvent>                                 Running CreditFeedback threads; pending discussion
+
+      <Invoke:AddEvent>
+        <NameRef:DmsCreditFeedbackReceiverStartEvent/>
+      </Invoke:AddEvent-->
+
+      <Invoke:AddEvent>
+        <NameRef:DmsReceiveBufferEndEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:AddEvent>
+        <NameRef:DmsSendBufferEndEvent/>
+      </Invoke:AddEvent>
+
+    </Object>
+
+
+    <Object Name="DmsCoreStateEventListener" Type="IEventListener" AsType="RingBufferListener" Lifecycle="Singleton">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>100</Set:MaxItemCount>
+      <Set:TableName>dm_pdw_dms_cores</Set:TableName>
+
+      <Set:Fields>
+        <NameRef:DmsCoreIdFieldDescriptor/>                <!-- dms_core_id -->
+        <NameRef:DmsCurrentNodeIdFieldDescriptor/>         <!-- pdw_node_id -->
+        <NameRef:DmsCoreStateFieldDescriptor/>             <!-- status -->
+      </Set:Fields>
+
+      <Invoke:AddCategory>
+        <NameRef:DmsCoreInfoCategory/>
+      </Invoke:AddCategory>
+    </Object>
+
+    <Object Name="DmsCoreStateEventListenerPolybase" Type="IEventListener" AsType="RingBufferListener" Lifecycle="Singleton"  FilterOverride="Polybase">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>100</Set:MaxItemCount>
+      <Set:TableName>_dm_exec_dms_Services</Set:TableName>
+
+      <Set:Fields>
+        <NameRef:DmsCoreIdFieldDescriptor/>               <!-- dms_core_id -->
+        <NameRef:DmsCurrentComputeNodeIdFieldDescriptor/> <!-- compute_node_id -->
+        <NameRef:DmsCoreStateFieldDescriptor/>            <!-- status -->
+      </Set:Fields>
+
+      <Invoke:AddCategory>
+        <NameRef:DmsCoreInfoCategory/>
+      </Invoke:AddCategory>
+    </Object>
+
+    <Object Name="DmsMessagesEventListener" Type="IEventListener" AsType="RingBufferListener" Lifecycle="Singleton">
+      <Set:IsEnabled>false</Set:IsEnabled>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:TableName>dm_pdw_dms_messages</Set:TableName>
+
+      <Set:Fields>
+        <NameRef:DmsMessageTypeFieldDescriptor/>
+        <NameRef:DmsMessageIdFieldDescriptor/>
+        <NameRef:DurationMillisecondsFieldDescriptor/>
+      </Set:Fields>
+
+      <Invoke:AddCategory>
+        <NameRef:DmsMessageTraceCategory/>
+      </Invoke:AddCategory>
+    </Object>
+
+    <Object Name="DmsDataChannelCreditAggEventListener" Type="IEventListener" AsType="RingBufferListener" Lifecycle="Singleton">
+      <Set:IsEnabled>false</Set:IsEnabled>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:TableName>dm_pdw_dms_datachannel_credit</Set:TableName>
+
+      <Set:Fields>
+        <NameRef:CreditTrackingScopeFieldDescriptor/>
+        <NameRef:CreditPlanIdFieldDescriptor/>
+        <NameRef:CreditStepIndexFieldDescriptor/>
+        <NameRef:CreditTargetDistFieldDescriptor/>
+        <NameRef:CreditValueFieldDescriptor/>
+        <NameRef:CreditPendingBuffersFieldDescriptor/>
+        <NameRef:CreditSendCountFieldDescriptor/>
+        <NameRef:CreditIncrementCountFieldDescriptor/>
+        <NameRef:CreditUpdateCountFieldDescriptor/>
+        <NameRef:CreditAcquireCountFieldDescriptor/>
+        <NameRef:CreditAddPendingCountFieldDescriptor/>
+        <NameRef:CreditDequeuePendingCountFieldDescriptor/>
+
+      </Set:Fields>
+
+      <Invoke:AddCategory>
+        <NameRef:DmsDataChannelCreditCategory/>
+      </Invoke:AddCategory>
+    </Object>
+
+    <Object Name="ExternalReadProgressEventListener" Type="IEventListener" AsType="RingBufferListener" Lifecycle="Singleton">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>1000</Set:MaxItemCount>
+      <Set:PurgePercentage>10</Set:PurgePercentage>
+      <Set:MaxNumOfElement>10000</Set:MaxNumOfElement>
+      <Set:TableName>dm_pdw_dms_external_work</Set:TableName>
+      <Set:RowId>$[DmsStep.QueryId]</Set:RowId>
+
+      <Set:Fields>
+        <NameRef:DmsQueryIdFieldDescriptor/>
+        <NameRef:ServerStepIndexFieldDescriptor/>
+        <NameRef:DmsStepIndexFieldDescriptor/>
+        <NameRef:SplitIdFieldDescriptor/>
+        <NameRef:DmsCurrentNodeIdFieldDescriptor/>
+        <NameRef:ExternalWorkTypeFieldDescriptor/>
+        <NameRef:ExternalInputNameFieldDescriptor/>
+        <NameRef:ReadLocationFieldDescriptor/>
+        <NameRef:BytesProcessedFieldDescriptor/>
+        <NameRef:LengthFieldDescriptor/>
+        <NameRef:SplitStartTimeFieldDescriptor/>
+        <NameRef:SplitEndTimeFieldDescriptor/>
+        <NameRef:DmsStepTotalElapsedTimeFieldDescriptor/>
+        <NameRef:SplitStatusFieldDescriptor/>
+      </Set:Fields>
+
+      <Invoke:AddCategory>
+        <NameRef:ExternalReadProgressCategory/>
+        <Parameter:Bool>true</Parameter:Bool>
+      </Invoke:AddCategory>
+
+    </Object>
+
+    <Object Name="ExternalReadProgressEventListenerPolybase" Type="IEventListener" AsType="RingBufferListener" Lifecycle="Singleton"  FilterOverride="Polybase">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>1000</Set:MaxItemCount>
+      <Set:PurgePercentage>10</Set:PurgePercentage>
+      <Set:MaxNumOfElement>10000</Set:MaxNumOfElement>
+      <Set:TableName>_dm_exec_external_work</Set:TableName>
+      <Set:RowId>$[DmsStep.QueryId]</Set:RowId>
+
+      <Set:Fields>
+        <NameRef:DmsExecutionIdFieldDescriptor/>
+        <NameRef:ServerStepIndexFieldDescriptor/>
+        <NameRef:DmsStepIndexFieldDescriptor/>
+        <NameRef:SplitIdFieldDescriptor/>
+        <NameRef:DmsCurrentComputeNodeIdFieldDescriptor/>
+        <NameRef:ExternalWorkTypeFieldDescriptor/>
+        <NameRef:ExternalInputNameFieldDescriptor/>
+        <NameRef:ReadLocationFieldDescriptor/>
+        <NameRef:ReadCommandFieldDescriptor/>
+        <NameRef:BytesProcessedFieldDescriptor/>
+        <NameRef:LengthFieldDescriptor/>
+        <NameRef:SplitStartTimeFieldDescriptor/>
+        <NameRef:SplitEndTimeFieldDescriptor/>
+        <NameRef:DmsStepTotalElapsedTimeFieldDescriptor/>
+        <NameRef:SplitStatusFieldDescriptor/>
+      </Set:Fields>
+
+      <Invoke:AddCategory>
+        <NameRef:ExternalReadProgressCategory/>
+        <Parameter:Bool>true</Parameter:Bool>
+      </Invoke:AddCategory>
+
+    </Object>
+
+    <Object Name="SplitIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.WorkId</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>work_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ExternalWorkTypeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.ExternalWorkType</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>type</Set:ColumnName>
+          <Set:DataType>string</Set:DataType>
+          <Set:MaxLength>60</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ExternalInputNameFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.ExternalInputName</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>input_name</Set:ColumnName>
+          <Set:DataType>string</Set:DataType>
+          <Set:MaxLength>4000</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ReadLocationFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.ReadLocation</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>read_location</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ReadCommandFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.ReadCommand</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>read_command</Set:ColumnName>
+          <Set:DataType>string</Set:DataType>
+          <Set:MaxLength>4000</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="BytesProcessedFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.BytesProcessed</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceNotNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>bytes_processed</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="LengthFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.SplitLength</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>length</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SplitStatusFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.SplitStatus</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:KeepOriginalValue>true</Set:KeepOriginalValue>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>status</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SplitEndTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <!--Setting a category filter to make sure we populate the end_time column
+      only from the events in the QueryCompletion category-->
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:ExternalReadCompletionEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>end_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SplitStartTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:ExternalReadBeginEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>start_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <!--Configure all the payloads available for DMS events using an event copnfiguration group
+    defined in the common config which we extend here.
+
+    Payloads are used to define which properties each event can have as well as instances of
+    payloads actually contain values for such properties
+    -->
+    <Object Extends="AllEventsConfigurationGroup">
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>DmsCoreStatePayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>MessageInfoPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>DmsDataChannelPayload</Set:PayloadType>
+                <Set:PayloadName>DmsDataChannel</Set:PayloadName>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <!--This is a named payload which means that during event processing it will be mapped
+      into DmsStep.[Property Name] vs. CustomContext.[Property Name]-->
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>DmsStepPayload</Set:PayloadType>
+                <Set:PayloadName>DmsStep</Set:PayloadName>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>SendBufferPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>DmsReceiveBufferPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>ReaderBufferPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>StepInfoPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+    </Object>
+
+    <Object Name="DmsDataChannelSenderStartEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="DmsDataChannelReceiverStartEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="DmsCreditFeedbackSenderStartEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="DmsCreditFeedbackReceiverStartEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="DmsReceiveBufferBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="DmsReceiveBufferEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsBufferCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+      <Set:CorrelationEvent ObjectName="DmsReceiveBufferBeginEvent"/>
+    </Object>
+
+    <Object Name="DmsSendBufferBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+          <NameRef:TraceCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsSendBufferEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:DmsSenderCategory/>
+          <NameRef:DmsBufferCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsSendBufferBeginEvent"/>
+    </Object>
+
+
+    <Object Name="DmsSendBufferErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+    </Object>
+
+    <Object Name="DmsSendBufferEnqueueEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+          <NameRef:TraceCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsSendBufferDequeueEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+          <NameRef:TraceCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+    </Object>
+
+
+    <Object Name="DmsDirectBulkCopyRowcountEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsBufferCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsReaderStepBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ForwardedDmsReaderStepCompleteEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="DmsReaderStepCompleteEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsStepCompletionCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsReaderStepBeginEvent"/>
+    </Object>
+
+    <Object Name="DmsReaderWorkerClosedEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="DmsReaderStepErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+    </Object>
+
+    <Object Name="DmsWriterStepBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ForwardedDmsWriterStepCompleteEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="DmsWriterStepCompleteEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsStepCompletionCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsWriterStepBeginEvent"/>
+    </Object>
+
+    <Object Name="DmsWriterStepErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+    </Object>
+
+    <Object Name="ForwardedDmsMovementBufferStatisticEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="DmsMovementBufferStatisticEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+    </Object>
+
+    <Object Name="DmsMovementBufferStatisticTelemetryEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+    </Object>
+
+    <Object Name="DmsReaderQueryIssueBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsReaderQueryIssueEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsReaderQueryIssueBeginEvent"/>
+    </Object>
+
+    <Object Name="DmsReaderOpenedEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsReadAndSendBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsReadAndSendEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsReadAndSendBeginEvent"/>
+    </Object>
+
+    <Object Name="DmsReaderEnqueueBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsBufferCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsReaderEnqueueEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsWaitEventCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsReaderEnqueueBeginEvent"/>
+    </Object>
+
+    <Object Name="DmsExternalMoveReaderEnqueueBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsBufferCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsExternalMoveReaderEnqueueEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsWaitEventCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsExternalMoveReaderEnqueueBeginEvent"/>
+    </Object>
+
+    <Object Name="DmsReceiverWriterEnqueueBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsReceiverWriterEnqueueEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsWaitEventCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsReceiverWriterEnqueueBeginEvent"/>
+    </Object>
+
+    <Object Name="DmsWriterCancelEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+
+    <Object Name="DmsWriterBulkInsertStartEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsWriterBulkInsertStartCompleteEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsWriterBulkInsertStartEvent"/>
+    </Object>
+
+    <Object Name="DmsStreamingWriterStartEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsStreamingWriterStartCompleteEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsStreamingWriterStartEvent"/>
+    </Object>
+
+    <Object Name="DmsWriterCloseEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsWriterAllClosedEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsStepInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsWriterDequeueBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsWriterDequeueEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsWaitEventCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsWriterDequeueBeginEvent"/>
+    </Object>
+
+    <Object Name="DmsWriterProcessRowsBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsWriterProcessRowsEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsBufferCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsWriterProcessRowsBeginEvent"/>
+    </Object>
+
+
+    <Object Name="DmsCoreStateChangeEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsCoreInfoCategory/>
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsMessageReceiveEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsMessageProcessEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsMessageTraceCategory/>
+          <NameRef:DmsTestCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DmsMessageReceiveEvent"/>
+    </Object>
+
+
+    <Object Name="DmsMessageReceiveErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DmsMessageProcessErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsTestCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+
+    <Object Name="DmsProducerCreditUpdateEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DmsDataChannelCreditCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ExternalReadInitializationEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ExternalReadProgressCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ExternalReadBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ExternalReadProgressCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ExternalReadProgressEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ExternalReadProgressCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="ExternalReadBeginEvent"/>
+    </Object>
+
+    <Object Name="ExternalReadCompletionEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DmsCoreInstrumentation</Set:Source>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ExternalReadProgressCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+      <Set:CorrelationEvent ObjectName="ExternalReadBeginEvent"/>
+    </Object>
+
+    <Object Extends="EventManager">
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DmsCoreInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DmsManagerInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>CancelInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>HdfsBridgeDmsInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+    </Object>
+
+    <Object Name="SqlObfuscator" Type="ISqlObfuscator" AsType="SqlObfuscator" Lifecycle="Singleton" />
+    <Object Name="ObfuscationSettings" Type="IObfuscationSettings" AsType="DmsObfuscationSettings" Lifecycle="Singleton" />
+  </Objects>
+</ObjectFactory>

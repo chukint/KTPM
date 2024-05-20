@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Messages [
+    <!ELEMENT Messages (Package*)>
+
+    <!ELEMENT Package (Error*)>
+    <!ATTLIST Package ID CDATA #REQUIRED>
+    <!ATTLIST Package DefaultComponent CDATA #REQUIRED>
+
+    <!ELEMENT Error (#PCDATA)>
+    <!ATTLIST Error Key ID #REQUIRED>
+    <!ATTLIST Error Component CDATA #IMPLIED>
+    <!ATTLIST Error NativeErrorCode CDATA #REQUIRED>
+    <!ATTLIST Error Params CDATA "0">
+]>
+
+<Messages>
+    <!-- Package ID corresponds to the MD_ERROR constant defined in MongoDBODBC.h -->
+    <Package ID="19780" DefaultComponent="MongoDBODBC">
+        <!-- Error thrown when attempting to map MD type to SQL type. -->
+        <Error Key="MDUnknownType" Params="1" NativeErrorCode="5">Unknown MongoDBODBC data type: %1%</Error>
+
+        <!-- Error thrown when attempting to access an invalid column. -->
+        <Error Key="MDInvalidColumnIndex" Params="1" NativeErrorCode="6">Invalid column index: %1%.</Error>
+
+        <!-- Error thrown when an error occurs while converting data in the DSII. -->
+        <Error Key="MDConvError" Params="5" NativeErrorCode="7">Error reading "%1%" (index %2%): Failed to convert value from BSON Type "%3%" to SQL Type "%4%". %5%</Error>
+
+        <!-- Error thrown when an error occurs while opening a table file. -->
+        <Error Key="MDFileOpenError" Params="1" NativeErrorCode="8">Error attempting to open file: %1%.</Error>
+
+        <!-- Error thrown when an error occurs while reading from a table . -->
+        <Error Key="MDFileReadError" Params="1" NativeErrorCode="9">Error attempting to read data from file: %1%.</Error>
+
+        <!-- Error thrown when the DBF path isn't found in the registry. -->
+        <Error Key="MDDbfNotFound" NativeErrorCode="10">DBF key not found in connection string.</Error>
+
+        <!-- Error thrown when the file is an invalid format. -->
+        <Error Key="MDInvalidFileFormat" Params="1" NativeErrorCode="11">The selected file (%1%) is not encoded using UTF16-LE.</Error>
+
+        <!-- Error thrown when an attempt is made to retrieve data for a row that has not been processed. -->
+        <Error Key="MDRowNotProcessed" NativeErrorCode="12">GetData() called before MoveFirst().</Error>
+
+        <!-- Error thrown when parsing a table metadata file fails. -->
+        <Error Key="MDTableMetadataParseFormatError" Params="3" NativeErrorCode="15">Unable to parse table metadata file %1%: %2% at line %3%</Error>
+
+        <!-- Error thrown when a table metadata file has invalid attributes. -->
+        <Error Key="MDTableMetadataInvalidFormat" NativeErrorCode="16">Invalid table metadata file format.</Error>
+
+        <!-- Error thrown when the table name does not exist. -->
+        <Error Key="MDTableDoesNotExist" Params="1" NativeErrorCode="18">The table '%1%' does not exist.</Error>
+
+        <!-- Warning posted when a row count is requested via SQLRowCount. -->
+        <Error Key="MDRowCountUnknown" NativeErrorCode="19">The row count is unknown.</Error>
+
+        <!-- Error writing data. -->
+        <Error Key="MDWriteDuplicateFieldError" NativeErrorCode="20">Write error: attempting to write to duplicate field.</Error>
+
+        <!-- Error writing data: id was not specified. -->
+        <Error Key="MDWriteMissingId" NativeErrorCode="21">Required column for "_id" field was not specified for INSERT.</Error>
+
+        <!-- Error writing data: invalid value-->
+        <Error Key="MDWriteInvalidValue" Params="1" NativeErrorCode="22">Invalid write value for column %1%.</Error>
+
+        <!-- Error writing data: invalid array index -->
+        <Error Key="MDWriteInvalidIndex" NativeErrorCode="23">Write error: one or more invalid array index(es) specified.</Error>
+
+        <!-- Error writing data: can't delete -->
+        <Error Key="MDDeleteError" NativeErrorCode="24">Failed to delete row.</Error>
+
+        <!-- Error: attempting to update key column. -->
+        <Error Key="MDUpdateKeyError" Params="1" NativeErrorCode="25">Not permitted to update key column: %1%</Error>
+
+        <!-- Error when updating row. -->
+        <Error Key="MDUpdateError" NativeErrorCode="26">Failed to update row.</Error>
+
+        <!-- Error: missing row id -->
+        <Error Key="MDMissingId" NativeErrorCode="27">Operation failed due to missing "_id" for row.</Error>
+
+        <!-- Error writing data: can't insert without any value. -->
+        <Error Key="MDWriteNoRowValue" NativeErrorCode="28">Write error: when writing to a virtual table, at least one value must be specified.</Error>
+
+        <!-- Error sampling data: Found empty field Name -->
+        <Error Key="MDEmptyFieldName" NativeErrorCode="29">Child field name should not be empty, parent is %1%.</Error>
+
+        <!-- Error writing data: failed to convert value. -->
+        <Error Key="MDWriteConvError" Params="2" NativeErrorCode="30">Error writing value: failed to convert from %1% to %2%.</Error>
+
+        <!-- Error writing data: Table is read-only. -->
+        <Error Key="MDReadOnlyTable" Params="1" NativeErrorCode="31">Write error: Table "%1%" is read-only.</Error>
+
+        <!-- Error attempting to update the array count column. -->
+        <Error Key="MDUpdateSpecialColumnError" Params="1" NativeErrorCode="32">Not permitted to update special column: %1%</Error>
+      
+        <!-- Error thrown when a connection attempt fails. -->
+        <Error Key="MDConnError" NativeErrorCode="100">Failed to connect to MongoDB.</Error>
+
+        <!-- Error thrown when a connection attempt fails due to a '.' in the database name. -->
+        <Error Key="MDDotInDBNameError" NativeErrorCode="101">Failed to connect to MongoDB. The database name cannot contain the '.' character.</Error>
+
+        <!-- Error thrown from MongoDB client. -->
+        <Error Key="MDNativeError" Params="2" NativeErrorCode="110">Error from MongoDB Client: %1% (Error Code: %2%)</Error>
+
+        <!-- Warning posted when a numeric value is out of range for conversion.. -->
+        <Error Key="MDNumValOutOfRange" Params="0" NativeErrorCode="120">Numeric value out of range for conversion.</Error>
+
+        <!-- Error thrown when metadata cannot be read.-->
+        <Error Key="MDMetadataReadError" Params="0" NativeErrorCode="130">Failed to read metadata from database.</Error>
+
+        <!-- Invalid source name error. -->
+        <Error Key="MDInvalidSourceName" Params="1" NativeErrorCode="140">Invalid source name in schema map: '%1%'.</Error>
+
+        <!-- Invalid table in schema map. -->
+        <Error Key="MDInvalidSchemaTable" Params="1" NativeErrorCode="150">Invalid table specification in schema map: '%1%'.</Error>
+
+        <!-- Fractional trunction. -->
+        <Error Key="MDFracTrunc" Params="0" NativeErrorCode="160">Fractional truncation during conversion.</Error>
+      
+        <!-- Server version retrieval failed. -->
+        <Error Key="MDServerVersionReadError" Params="0" NativeErrorCode="170">Failed to retrieve server version.</Error>
+
+        <!-- Server version retrieval failed. -->
+        <Error Key="MDServerVersionNotSupported" Params="0" NativeErrorCode="180">MongoDB Versions below 2.4 are not supported.</Error>
+    
+        <!--Error thrown during upgrading schema map -->
+        <Error Key="MDSchemaMapLoadError" Params="2" NativeErrorCode="190">Unable to use the schema map version:'%1%'</Error>
+
+        <!-- Invalid table in schema map. -->
+        <Error Key="MDSDDParseError" Params="1" NativeErrorCode="200">Legacy Schema Map SDD file parse failure: '%1%'.</Error>
+      
+        <!-- Invalid schema map inside the database. -->
+        <Error Key="MDDatabaseSchemaMapParseError" Params="0" NativeErrorCode="210">Failed to parse the database schema map. Re-sample and publish a new schema map</Error>
+
+        <!-- LocalMetadataFile is not set. -->
+        <Error Key="MDMetadataFileNotSet" Params="0" NativeErrorCode="220">Schema map file location (LocalMetadataFile) is required when file metadata persistence is enabled (LoadMetadataTable=0 and PersistMetadata=[1 or 2]) as the metadata is intended to be read from and written to the schema map file.</Error>
+
+        <!-- Configuration dialog error messages. -->
+        <!-- Error thrown when an error occurs while trying to load a string resource for the dialog. -->
+        <Error Key="MDStringResourceError" Params="1" NativeErrorCode="1020">String resource %1% not found.</Error>
+
+        <!-- Error thrown when an error occurs while trying to load a cursor resource.. -->
+        <Error Key="MDCursorResourceError" Params="1" NativeErrorCode="1030">An error occurred while attempting to load a cursor: %1%</Error>
+
+        <!-- Error thrown when trying to change the directory and failing when launching the editor. -->
+        <Error Key="MDUnableToSetDir" Params="1" NativeErrorCode="1040">Unable to set current directory: %1%</Error>
+
+        <!-- Error thrown when failing to launch the Schema Editor. -->
+        <Error Key="MDUnableToLaunchEditor" Params="1" NativeErrorCode="1050">Unable to launch the Schema Editor: %1%</Error>
+      
+        <!-- Error thrown when using unauthized Database name in the "Database" field. -->
+        <Error Key="MDUnauthorizedDatabaseField" Params="1" NativeErrorCode="1060">Not authorized to query database: %1%</Error>
+
+      <!-- CONFIGURATION ERRORS -->
+
+        <!-- Error thrown from dialog. User put in an invalid customized int number -->
+        <Error Key="MDDialogInvalidIntCustom" Params="2" NativeErrorCode="10001">Invalid number for '%1%'. Valid values are in the range [0, %2%].</Error>
+
+        <!-- Error thrown from dialog. User put in an invalid int 16 number -->
+        <Error Key="MDDialogInvalidUInt16" Params="1" NativeErrorCode="10002">Invalid number for '%1%'. Valid values are in the range [0, 65535].</Error>
+      
+        <!-- Error thrown from dialog. User put in an invalid int 32 number -->
+        <Error Key="MDDialogInvalidUInt32" Params="1" NativeErrorCode="10003">Invalid number for '%1%'. Valid values are in the range [0, 2147483647].</Error>
+    </Package>
+</Messages>

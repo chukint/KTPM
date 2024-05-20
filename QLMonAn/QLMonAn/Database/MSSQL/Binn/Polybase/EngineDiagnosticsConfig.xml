@@ -1,0 +1,3797 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ObjectFactory xmlns:Invoke="Microsoft.SqlServer.DataWarehouse.Common.Ioc.MethodConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Set="Microsoft.SqlServer.DataWarehouse.Common.Ioc.PropertyConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Parameter="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Item="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:NameRef="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:TypeRef="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common">
+  <Includes>
+    <Include Path =".\CommonDiagnosticsConfig.xml"/>
+    <Include Path =".\DmsCommonDiagnosticsConfig.xml" FilterOverride="NonLite"/>
+    <Include Path =".\FailoverDiagnosticsConfig.xml" FilterOverride="NonLite"/>
+    <!-- Only Load in Xdb/Cloud environments. -->
+    <Include Path =".\EngineDiagnosticsCloudMdsConfig.xml" FilterOverride="AnyXdb" />
+  </Includes>
+
+  <Types>
+    <Type Alias="EngineInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Engine.Diagnostics.EngineInstrumentation, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="NodesInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Nodes.Diagnostics.NodesInstrumentation, Microsoft.SqlServer.DataWarehouse.Nodes"/>
+    <Type Alias="ProtocolInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Engine.Protocol.ProtocolInstrumentation, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="BatchInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Sql.Parser.Diagnostics.BatchInstrumentation, Microsoft.SqlServer.DataWarehouse.Sql.Parser"/>
+
+    <!-- sqldwagent no longer works in PDW_Main, even under single node appliance. Commenting out the following two references -->
+    <!--
+    <Type Alias="AgentInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Diagnostics.Agent.AgentInstrumentation, sqldwagent" FilterOverride="Full"/>
+    <Type Alias="MonitoringInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Diagnostics.Agent.GeneralInstrumentation, sqldwagent" FilterOverride="Full"/>
+    -->
+
+    <Type Alias="CatalogInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Catalog.CatalogInstrumentation, Microsoft.SqlServer.DataWarehouse.Catalog"/>
+    <Type Alias="QueryState" Name="Microsoft.SqlServer.DataWarehouse.Engine.Query.QueryState, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="ExecutableState" Name="Microsoft.SqlServer.DataWarehouse.Engine.Executables.ExecutableState, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="SerialStepState" Name="Microsoft.SqlServer.DataWarehouse.Distributor.Plan.SerialStepState, Microsoft.SqlServer.DataWarehouse.Distributor"/>
+    <Type Alias="ClientPayload" Name="Microsoft.SqlServer.DataWarehouse.Engine.Diagnostics.ClientPayload, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="ServerInterfacePayload" Name="Microsoft.SqlServer.DataWarehouse.Engine.Diagnostics.ServerInterfacePayload, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="TransactionContextPayload" Name="Microsoft.SqlServer.DataWarehouse.Engine.Diagnostics.TransactionContextPayload, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="ExecutablePayload" Name="Microsoft.SqlServer.DataWarehouse.Engine.Diagnostics.ExecutablePayload, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="MapReduceProgressPayload" Name="Microsoft.SqlServer.DataWarehouse.Engine.Diagnostics.MapReduceProgressPayload, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="MetadataBuilderPayload" Name="Microsoft.SqlServer.DataWarehouse.Engine.Diagnostics.MetadataBuilderPayload, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="ReturnExecutablePayload" Name="Microsoft.SqlServer.DataWarehouse.Engine.Diagnostics.ReturnExecutablePayload, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="StickyRingBufferEntry" Name ="Microsoft.SqlServer.DataWarehouse.Engine.Diagnostics.StickyRingBufferEntry, Microsoft.SqlServer.DataWarehouse.Engine"/>
+    <Type Alias="DSQLInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Sql.Utilities.DSQLInstrumentation, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="PushdownInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Sql.Utilities.PushdownInstrumentation, Microsoft.SqlServer.DataWarehouse.Sql" />
+    <Type Alias="SqlDistributorInstrumentation" Name=" Microsoft.SqlServer.DataWarehouse.Distributor.Diagnostics.SqlDistributorInstrumentation, Microsoft.SqlServer.DataWarehouse.SqlDistributor" FilterOverride="NonLite"/>
+    <Type Alias="ParallelizerInstrumentation" Name=" Microsoft.SqlServer.DataWarehouse.Parallelizer.Diagnostics.ParallelizerInstrumentation, Microsoft.SqlServer.DataWarehouse.Parallelizer" FilterOverride="NonLite"/>
+    <Type Alias="HdfsBridgeEngineInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Hadoop.HadoopBridge.HdfsBridgeEngineInstrumentation, Microsoft.SqlServer.DataWarehouse.Hadoop.HadoopBridge" FilterOverride="NonLite"/>
+    <Type Alias="JavaBridgeInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Hadoop.HadoopBridge.JavaBridgeInstrumentation, Microsoft.SqlServer.DataWarehouse.Hadoop.HadoopBridge" FilterOverride="NonLite"/>
+
+    <Type Alias="DistributorInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Distributor.Diagnostics.DistributorInstrumentation, Microsoft.SqlServer.DataWarehouse.Distributor"/>
+    <Type Alias="SerialStepProcessorPayload" Name="Microsoft.SqlServer.DataWarehouse.Distributor.Diagnostics.SerialStepProcessorPayload, Microsoft.SqlServer.DataWarehouse.Distributor"/>
+
+    <Type Alias="ResourceManagementInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Resources.Diagnostics.ResourceManagementInstrumentation, Microsoft.SqlServer.DataWarehouse.ResourceManagement"/>
+    <Type Alias="ResourceTicketPayload" Name="Microsoft.SqlServer.DataWarehouse.Resources.Diagnostics.ResourceTicketPayload, Microsoft.SqlServer.DataWarehouse.ResourceManagement"/>
+    <Type Alias="ResourcePayload" Name="Microsoft.SqlServer.DataWarehouse.Resources.Diagnostics.ResourcePayload, Microsoft.SqlServer.DataWarehouse.ResourceManagement"/>
+
+    <Type Alias="LoaderCoreInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Loader.Diagnostics.LoaderCoreInstrumentation, Microsoft.SqlServer.DataWarehouse.LoadManager" FilterOverride="NonLite"/>
+    <Type Alias="LoaderManagerInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Loader.Diagnostics.LoaderManagerInstrumentation, Microsoft.SqlServer.DataWarehouse.LoadManager" FilterOverride="NonLite"/>
+    <Type Alias="LoaderEventPaylLoad" Name="Microsoft.SqlServer.DataWarehouse.Loader.Diagnostics.LoaderCoreInstrumentation, Microsoft.SqlServer.DataWarehouse.LoadManager" FilterOverride="NonLite"/>
+    <Type Alias="SqlRequestsPayloadExtractor" Name ="Microsoft.SqlServer.DataWarehouse.Engine.Diagnostics.SqlRequestsPayloadExtractor, Microsoft.SqlServer.DataWarehouse.Engine"/>
+
+    <Type Alias="SqlObfuscator" Name="Microsoft.SqlServer.DataWarehouse.Sql.Parser.Utilities.SqlObfuscator, Microsoft.SqlServer.DataWarehouse.Sql.Parser"/>
+    <Type Alias="ServerObfuscationSettings" Name="Microsoft.SqlServer.DataWarehouse.Engine.Server.ServerObfuscationSettings, Microsoft.SqlServer.DataWarehouse.Engine"/>
+  </Types>
+
+  <Objects>
+    <!--Used to maintain status in dm_pdw_exec_requests-->
+    <!--IQueryContext.cs contains the defintion of QueryState-->
+    <Object Name="QueryStateTransitionFunction" Type="TransitionFunction">
+      <Set:IsWhiteList>true</Set:IsWhiteList>
+      <Invoke:AddTransition>
+        <Parameter Type="QueryState">Running</Parameter>
+        <Parameter Type="QueryState">Suspended</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="QueryState">Running</Parameter>
+        <Parameter Type="QueryState">Completed</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="QueryState">Running</Parameter>
+        <Parameter Type="QueryState">Cancelled</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="QueryState">Running</Parameter>
+        <Parameter Type="QueryState">Failed</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="QueryState">Suspended</Parameter>
+        <Parameter Type="QueryState">Running</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="QueryState">Suspended</Parameter>
+        <Parameter Type="QueryState">Completed</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="QueryState">Suspended</Parameter>
+        <Parameter Type="QueryState">Cancelled</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="QueryState">Suspended</Parameter>
+        <Parameter Type="QueryState">Failed</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="QueryState">Completed</Parameter>
+        <Parameter Type="QueryState">Cancelled</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="QueryState">Completed</Parameter>
+        <Parameter Type="QueryState">Failed</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="QueryState">Cancelled</Parameter>
+        <Parameter Type="QueryState">Failed</Parameter>
+      </Invoke:AddTransition>
+    </Object>
+
+    <!--Used to maintain status in dm_pdw_request_steps-->
+    <!--ExecutableState.cs contains the defintion of ExecutableState-->
+    <Object Name="ExecutableStateTransitionFunction" Type="TransitionFunction">
+      <Set:IsWhiteList>true</Set:IsWhiteList>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Pending</Parameter>
+        <Parameter Type="ExecutableState">Running</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Pending</Parameter>
+        <Parameter Type="ExecutableState">Aborted</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Pending</Parameter>
+        <Parameter Type="ExecutableState">Cancelled</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Pending</Parameter>
+        <Parameter Type="ExecutableState">Failed</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Pending</Parameter>
+        <Parameter Type="ExecutableState">Abandoned</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Running</Parameter>
+        <Parameter Type="ExecutableState">Aborted</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Running</Parameter>
+        <Parameter Type="ExecutableState">Cancelled</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Running</Parameter>
+        <Parameter Type="ExecutableState">Failed</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Running</Parameter>
+        <Parameter Type="ExecutableState">Undone</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Running</Parameter>
+        <Parameter Type="ExecutableState">Complete</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Cancelled</Parameter>
+        <Parameter Type="ExecutableState">Aborted</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Complete</Parameter>
+        <Parameter Type="ExecutableState">Undone</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Complete</Parameter>
+        <Parameter Type="ExecutableState">Cancelled</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Complete</Parameter>
+        <Parameter Type="ExecutableState">Aborted</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Failed</Parameter>
+        <Parameter Type="ExecutableState">Undone</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Running</Parameter>
+        <Parameter Type="ExecutableState">Retrying</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Retrying</Parameter>
+        <Parameter Type="ExecutableState">Running</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Retrying</Parameter>
+        <Parameter Type="ExecutableState">Failed</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Failed</Parameter>
+        <Parameter Type="ExecutableState">Retrying</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Retrying</Parameter>
+        <Parameter Type="ExecutableState">Cancelled</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Retrying</Parameter>
+        <Parameter Type="ExecutableState">Aborted</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="ExecutableState">Complete</Parameter>
+        <Parameter Type="ExecutableState">Retrying</Parameter>
+      </Invoke:AddTransition>
+    </Object>
+
+    <!--Used to maintain status in dm_pdw_sql_requests-->
+    <!--ISerialStep.cs contains the definition of SerialStep-->
+    <Object Name="SerialStepTransitionFunction" Type="TransitionFunction">
+      <Set:IsWhiteList>true</Set:IsWhiteList>
+      <Invoke:AddTransition>
+        <Parameter Type="SerialStepState">Pending</Parameter>
+        <Parameter Type="SerialStepState">Running</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="SerialStepState">Pending</Parameter>
+        <Parameter Type="SerialStepState">Failed</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="SerialStepState">Pending</Parameter>
+        <Parameter Type="SerialStepState">Cancelled</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="SerialStepState">Pending</Parameter>
+        <Parameter Type="SerialStepState">Complete</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="SerialStepState">Running</Parameter>
+        <Parameter Type="SerialStepState">Failed</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="SerialStepState">Running</Parameter>
+        <Parameter Type="SerialStepState">Cancelled</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="SerialStepState">Running</Parameter>
+        <Parameter Type="SerialStepState">Complete</Parameter>
+      </Invoke:AddTransition>
+      <Invoke:AddTransition>
+        <Parameter Type="SerialStepState">Failed</Parameter>
+        <Parameter Type="SerialStepState">Cancelled</Parameter>
+      </Invoke:AddTransition>
+    </Object>
+
+    <!--Listener responsible for processing events as textual messages to the log file-->
+    <Object Name="EngineDefaultLogListener" Type="IEventListener" AsType="LoggingListener" Lifecycle="Singleton">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:LogDirectory ObjectName="LogPath"/>
+      <Set:LogFileName>server</Set:LogFileName>
+      <Set:RollSizeInBytes>52428800</Set:RollSizeInBytes>
+      <Set:TimeStampPattern>yyyy-MM-dd</Set:TimeStampPattern>
+      <Set:MaxRolledFileCount>10</Set:MaxRolledFileCount>
+      <Set:MessageTemplate>$[DateTimePublished] [Thread:$[ThreadId]] [$[FullName]] ($[Listener.Priority], $[Listener.Severity]): $[Message]</Set:MessageTemplate>
+
+      <Set:OptionalMessageAttributes>
+        <Object Name="DefaultLogListenerOptionalProperties" Type="System.Collections.Generic.List`1[[System.string]]">
+          <Invoke:Add>
+            <Parameter:String>Session.SessionId</Parameter:String>
+          </Invoke:Add>
+          <Invoke:Add>
+            <Parameter:String>Session.IsTransactional</Parameter:String>
+          </Invoke:Add>
+          <Invoke:Add>
+            <Parameter:String>Query.QueryId</Parameter:String>
+          </Invoke:Add>
+        </Object>
+      </Set:OptionalMessageAttributes>
+
+      <Invoke:AddCategory>
+        <NameRef:InfoCategory/>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:NormalCategory/>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:ErrorCategory/>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:HighCategory/>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:FatalCategory/>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:CriticalCategory/>
+      </Invoke:AddCategory>
+
+    </Object>
+
+    <!--Listener responsible for processing query diagnostic events as textual messages to the log file-->
+    <Object Name="QueryDiagnosticsLogListener" Type="IEventListener" AsType="LoggingListener" Lifecycle="Singleton">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:LogDirectory ObjectName="LogPath"/>
+      <Set:LogFileName>query_diagnostics</Set:LogFileName>
+      <Set:QueryDiagnosticsRelativePath>QueryDiagnostics</Set:QueryDiagnosticsRelativePath>
+      <Set:RollSizeInBytes>52428800</Set:RollSizeInBytes>
+      <Set:TimeStampPattern>yyyy-MM-dd</Set:TimeStampPattern>
+      <Set:MaxRolledFileCount>10</Set:MaxRolledFileCount>
+      <Set:MessageTemplate>$[DateTimePublished] [Thread:$[ThreadId]] [$[FullName]] ($[Listener.Priority], $[Listener.Severity]): $[Message]</Set:MessageTemplate>
+
+      <Set:OptionalMessageAttributes>
+        <Object Name="DefaultLogListenerOptionalProperties" Type="System.Collections.Generic.List`1[[System.string]]">
+          <Invoke:Add>
+            <Parameter:String>Session.SessionId</Parameter:String>
+          </Invoke:Add>
+          <Invoke:Add>
+            <Parameter:String>Query.QueryId</Parameter:String>
+          </Invoke:Add>
+        </Object>
+      </Set:OptionalMessageAttributes>
+
+      <Invoke:AddEvent>
+        <NameRef:QueryDiagnosticEvent/>
+      </Invoke:AddEvent>
+
+    </Object>
+
+    <Object Name="ServerCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>Server</Set:Name>
+      <Set:Description>This category represents events published by the Server component</Set:Description>
+    </Object>
+
+    <Object Name="ResourceManagementCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>ResourceManagement</Set:Name>
+      <Set:Description>This category represents events published by the resource management components</Set:Description>
+    </Object>
+
+    <Object Name="ResourceTicketCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>ResourceTicketCategory</Set:Name>
+      <Set:Description>This category represents events published by the resource ticket components</Set:Description>
+    </Object>
+
+    <Object Name="ResourceCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>ResourceCategory</Set:Name>
+      <Set:Description>This category represents events published by the resource acquisition and release logic</Set:Description>
+    </Object>
+
+    <Object Name="EngineServerCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>EngineServer</Set:Name>
+      <Set:Description>This category represents events published by the EngineServer component</Set:Description>
+    </Object>
+
+    <Object Name="InitializationCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>Initialization</Set:Name>
+      <Set:Description>This category represents events published during Engine initialization</Set:Description>
+    </Object>
+
+    <Object Name="TransactionContextCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>TransactionContext</Set:Name>
+      <Set:Description>This category represents events published by TransactionContext component</Set:Description>
+    </Object>
+
+    <Object Name="TransactionsCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>Transactions</Set:Name>
+      <Set:Description>This category represents events published during transactional operations (e.g. create, rollback, commit, dispose)</Set:Description>
+    </Object>
+
+    <Object Name="SessionCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>Session</Set:Name>
+      <Set:Description>This category represents events published within context of a session.</Set:Description>
+    </Object>
+
+    <Object Name="QueryCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>Query</Set:Name>
+      <Set:Description>This category represents events published within context of logical queries.</Set:Description>
+    </Object>
+
+    <Object Name="QueryStateCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>QueryState</Set:Name>
+      <Set:Description>This category represents events published within context of logical queries when changing query state.</Set:Description>
+    </Object>
+
+    <Object Name="QueryStepCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>QueryStep</Set:Name>
+      <Set:Description>This category represents events published within context of a step in a query plan.</Set:Description>
+    </Object>
+
+    <Object Name="ExternalOperationCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>ExternalOperation</Set:Name>
+      <Set:Description>This category represents events published within context of the execution of an external operation in a query plan.</Set:Description>
+    </Object>
+
+    <Object Name="PhysicalQueryCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>PhysicalQuery</Set:Name>
+      <Set:Description>This category represents events published within context of a physical query (Data Movement or SQL Server).</Set:Description>
+    </Object>
+
+    <Object Name="PhysicalQueryStepCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>PhysicalQueryStep</Set:Name>
+      <Set:Description>This category represents events published within context of a physical query step (a single SQL query in the parallel step).</Set:Description>
+    </Object>
+
+    <Object Name="DistributedQueryCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>DistributedQuery</Set:Name>
+      <Set:Description>This category represents events published within context of a distribution query.</Set:Description>
+    </Object>
+
+    <Object Name="QueryCompletionCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>QueryCompletion</Set:Name>
+      <Set:Description>This category represents events published on completion of logical queries, steps and distribution operations.</Set:Description>
+    </Object>
+
+    <Object Name="ClientResultsCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>ClientResults</Set:Name>
+      <Set:Description>This category represents events published within context of returning results to the client.</Set:Description>
+    </Object>
+
+    <Object Name="AuthenticationCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>Authentication</Set:Name>
+      <Set:Description>This category represents events published within context of client authentication.</Set:Description>
+    </Object>
+
+    <Object Name="AuthorizationCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>Authentication</Set:Name>
+      <Set:Description>This category represents events published within context of query authorization.</Set:Description>
+    </Object>
+
+    <Object Name="SecurityCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>Authentication</Set:Name>
+      <Set:Description>This category represents events published within context of any security related operation.</Set:Description>
+    </Object>
+
+    <Object Type="int"
+        Name="MaxDiagSessions"
+        Lifecycle="Singleton" FilterOverride="Full">${HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SQL Server Parallel Data Warehouse\Configuration\MaxDiagSessions\Value}</Object>
+    <Object Type="int"
+        Name="MaxDiagSessions"
+        Lifecycle="Singleton" FilterOverride="Lite">10</Object>
+    <Object Type="int"
+        Name="MaxDiagSessions"
+        Lifecycle="Singleton" FilterOverride="AnyXdb">10</Object>
+    <Object Type="int"
+        Name="MaxDiagSessions"
+        Lifecycle="Singleton" FilterOverride="Polybase">
+      <Constructor FactoryName="PolybaseFabricProperties" FactoryMethod="MaxDiagSessions"/>
+    </Object>
+
+    <Object Extends="AllEventsConfigurationGroup">
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>ServerInterfacePayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>ServerInterfacePayload</Set:PayloadType>
+                <Set:PayloadName>Session</Set:PayloadName>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>ServerInterfacePayload</Set:PayloadType>
+                <Set:PayloadName>Query</Set:PayloadName>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>ClientPayload</Set:PayloadType>
+                <Set:PayloadName>Client</Set:PayloadName>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>ExecutablePayload</Set:PayloadType>
+                <Set:PayloadName>QueryStep</Set:PayloadName>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>ExecutablePayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>SerialStepProcessorPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>ResourcePayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>ResourceTicketPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>MetadataBuilderPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>TransactionContextPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+    </Object>
+
+    <Object Name="RestoreHeaderOnlyTraceEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:MessageTemplate>$[Session.SessionId]:$[Query.QueryId] - $[Message]</Set:MessageTemplate>
+    </Object>
+
+    <Object Name="BackupProcessorTraceEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:MessageTemplate>$[Session.SessionId]:$[Query.QueryId] - $[Message]</Set:MessageTemplate>
+    </Object>
+
+    <Object Name="RestoreProcessorTraceEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:MessageTemplate>$[Session.SessionId]:$[Query.QueryId] - $[Message]</Set:MessageTemplate>
+    </Object>
+
+    <Object Name="EngineInitializationDebugModeEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:EngineServerCategory/>
+          <NameRef:InitializationCategory/>
+          <NameRef:WarningCategory/>
+          <NameRef:NormalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="QueryDiagnosticEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DSQLInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="EngineInitializationStatusEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:EngineServerCategory/>
+          <NameRef:InitializationCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineInitializationErrorEvent" Type="Event" Lifecycle="Singleton" FilterOverride="Full">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:EngineServerCategory/>
+          <NameRef:InitializationCategory/>
+          <NameRef:FatalCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <!-- Suppress dumping on DwEngine initialization errors since SQL can be permanently down during a service deployment
+         which will cause continuous restarts and dumping of the DwEngine process. -->
+    <Object Name="EngineInitializationErrorEvent" Type="Event" Lifecycle="Singleton" FilterOverride="AnyXdb,Polybase">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:EngineServerCategory/>
+          <NameRef:InitializationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineInitializationBeginEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:EngineServerCategory/>
+          <NameRef:InitializationCategory/>
+          <NameRef:InfoCategory/>
+          <NameRef:LowCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineInitializationEndEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:EngineServerCategory/>
+          <NameRef:InitializationCategory/>
+          <NameRef:InfoCategory/>
+          <NameRef:LowCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ConnectionPoolInitializationBeginEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:EngineServerCategory/>
+          <NameRef:InitializationCategory/>
+          <NameRef:InfoCategory/>
+          <NameRef:LowCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ConnectionPoolInitializationEndEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:EngineServerCategory/>
+          <NameRef:InitializationCategory/>
+          <NameRef:InfoCategory/>
+          <NameRef:LowCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ConnectionPoolInitializationErrorEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:EngineServerCategory/>
+          <NameRef:InitializationCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+          <NameRef:WindowsEventLogCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="TransactionContextCreateEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:PerformanceCounterCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="TransactionContextDisposeEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:PerformanceCounterCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="TransactionContextBeginEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+    </Object>
+
+    <Object Name="TransactionContextEndEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:DebugCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:PerformanceCounterCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="TransactionContextBeginEvent"/>
+    </Object>
+
+    <Object Name="TransactionContextErrorEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="TransactionContextCommitEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:DebugCategory/>
+          <NameRef:LowCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="TransactionContextRollbackEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:DebugCategory/>
+          <NameRef:LowCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="TransactionContextTransactionalOperationBeginEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="TransactionContextTransactionalOperationEndEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="TransactionContextTransactionalOperationBeginEvent"/>
+    </Object>
+
+    <Object Name="TransactionContextTransactionalOperationErrorEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="TransactionContextUndoableOperationBeginEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="TransactionContextUndoableOperationEndEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="TransactionContextUndoableOperationBeginEvent"/>
+    </Object>
+
+    <Object Name="TransactionContextUndoableOperationErrorEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TransactionContextCategory/>
+          <NameRef:TransactionsCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineUnhandledExceptionEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:FatalCategory/>
+          <NameRef:CriticalCategory/>
+          <NameRef:WindowsEventLogCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+
+    <Object Name="EngineStartSessionErrorEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:SessionCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineStopSessionErrorEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:SessionCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineStartSessionBeginEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:SessionCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineStopSessionBeginEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:SessionCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineStartSessionEndEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:SessionCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="EngineStartSessionBeginEvent"/>
+    </Object>
+
+    <Object Name="EngineStopSessionEndEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:SessionCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="EngineStopSessionBeginEvent"/>
+    </Object>
+
+    <Object Name="ProcessorAcquireObjectResourcesBeginEvent" Type="Event" Lifecycle="Singleton">
+        <Set:Source>EngineInstrumentation</Set:Source>
+
+        <Invoke:AddEventInfo>
+            <Parameter Type="IEventInfo[]">
+                <NameRef:QueryCategory/>
+            </Parameter>
+        </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineExecuteQueryBeginEvent2" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineExecuteQueryBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="EngineExecuteQueryEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryCategory/>
+          <NameRef:QueryCompletionCategory/>
+          <NameRef:PhysicalQueryCategory/>
+          <NameRef:QueryStepCategory/>
+          <NameRef:ExternalOperationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="EngineExecuteQueryBeginEvent2"/>
+    </Object>
+
+    <Object Name="EngineExecutePlansBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+    
+    <Object Name="EngineExecutePlansEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+    
+    <Object Name="EngineExecuteQueryErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+          <NameRef:QueryCategory/>
+          <NameRef:QueryCompletionCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineCancelQueryBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineCancelQueryEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="EngineCancelQueryBeginEvent"/>
+    </Object>
+
+    <Object Name="EngineCancelQueryErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ProcessorOnProcessBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryCategory/>
+          <NameRef:QueryStateCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ProcessorOnInitializeProcessBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ProcessorOnProcessBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryCategory/>
+          <NameRef:QueryStateCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineQueryAcquireSystemResourcesEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ProcessorOnProcessBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryCategory/>
+          <NameRef:QueryStateCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineQueryAcquireApplicationResourcesEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ProcessorOnProcessBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryCategory/>
+          <NameRef:QueryStateCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineQueryRunningEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ProcessorOnProcessBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryCategory/>
+          <NameRef:QueryStateCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+      <Object Name="SqlProcessorRebindBeginEvent" Type="Event" Lifecycle="Singleton">
+          <Set:Source>EngineInstrumentation</Set:Source>
+
+          <Invoke:AddEventInfo>
+              <Parameter Type="IEventInfo[]">
+                  <NameRef:QueryCategory/>
+              </Parameter>
+          </Invoke:AddEventInfo>
+      </Object>
+
+    <Object Name="SqlProcessorRebindEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="SqlProcessorCompilationGateBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="SqlProcessorCompilationGateEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="ProcessorOnExecuteRequestBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryCategory/>
+          <NameRef:QueryStateCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DistributedPlanGenerationEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ProcessorOnExecuteRequestBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryCategory/>
+          <NameRef:QueryStateCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineQueryCompletedEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ProcessorOnProcessBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryCategory/>
+          <NameRef:QueryStateCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineQueryErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ProcessorOnProcessBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineParseQueryBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryStateCategory/>
+          <NameRef:QueryCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineParseQueryEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="EngineParseQueryBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryStateCategory/>
+          <NameRef:QueryCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineParseQueryErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="EngineParseQueryBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:QueryStateCategory/>
+          <NameRef:QueryCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineAuthenticateQueryBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:SecurityCategory/>
+          <NameRef:AuthenticationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineAuthenticateQueryEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="EngineAuthenticateQueryBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:SecurityCategory/>
+          <NameRef:AuthenticationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+    <Object Name="EngineAuthenticateQueryErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="EngineAuthenticateQueryBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+          <NameRef:SecurityCategory/>
+          <NameRef:AuthenticationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="QueryStepStatusChangeEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:QueryStepCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+
+    <Object Name="QueryStepCreateEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:IsSeed>true</Set:IsSeed>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:QueryStepCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="QueryStepExecuteBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryStepCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="QueryStepExecuteEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="QueryStepExecuteBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryStepCategory/>
+          <NameRef:QueryCompletionCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="QueryStepExecuteErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="QueryStepExecuteBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+          <NameRef:QueryStepCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:QueryCompletionCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="SendResultsBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:ClientResultsCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="SendResultsEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="SendResultsBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:ClientResultsCategory/>
+          <!--<NameRef:QueryCompletionCategory/>
+          <NameRef:QueryStepCategory/>-->
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="SendResultsErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="SendResultsBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+          <NameRef:ClientResultsCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="CreateDiagnosticsSessionErrorEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DropDiagnosticsSessionErrorEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="BackupProgressDetailsEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="BackupProgressEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="MapReduceJobBeginEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ExternalOperationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="MapReduceJobProgressEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ExternalOperationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="MapReduceJobEndEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>EngineInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ExternalOperationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ClientSessionOpenedEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="ClientSessionClosedEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="ClientSessionTerminatedEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="LoadProgressEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>LoaderCoreInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="LoadStageProgressEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>LoaderCoreInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="ParallelStepCreateEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DistributorInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:PhysicalQueryCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ParallelStepCompressedEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DistributorInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:PhysicalQueryCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ParallelStepSkipEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DistributorInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:PhysicalQueryCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ParallelStepBeginEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DistributorInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:PhysicalQueryCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ParallelStepEndEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DistributorInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ParallelStepBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:PhysicalQueryCategory/>
+          <NameRef:QueryCompletionCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ParallelStepErrorEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DistributorInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ParallelStepBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:DurationCategory/>
+          <NameRef:PhysicalQueryCategory/>
+          <NameRef:QueryCompletionCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="GrantTicketBeginEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceTicketCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="GrantTicketEndEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="GrantTicketBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceTicketCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="GrantTicketWaitingEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="GrantTicketBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceTicketCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="GrantTicketErrorEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="GrantTicketBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceTicketCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ReleaseTicketBeginEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceTicketCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ReleaseTicketEndEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ReleaseTicketBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceTicketCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ReleaseTicketErrorEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ReleaseTicketBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceTicketCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="AcquireResourceBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="AcquireResourceEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="AcquireResourceBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="AcquireResourceErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="AcquireResourceBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ReleaseResourceBeginEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ReleaseResourceEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ReleaseResourceBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ReleaseResourceErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>ResourceManagementInstrumentation</Set:Source>
+      <Set:CorrelationEvent ObjectName="ReleaseResourceBeginEvent"/>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ServerCategory/>
+          <NameRef:ResourceManagementCategory/>
+          <NameRef:ResourceCategory/>
+          <NameRef:ServerCategory/>
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EngineWindowsEventLog" Type="WindowsEventLogListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:Source>MSSQLSERVERADW</Set:Source>
+      <Set:LogName>Application</Set:LogName>
+      <Set:Message>$[Message]</Set:Message>
+
+      <Invoke:AddCategory>
+        <NameRef:WindowsEventLogCategory/>
+      </Invoke:AddCategory>
+    </Object>
+
+    <Object Name="QueryIdKeyFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>Query.QueryId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>request_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ExecutionIdKeyFieldDescriptor" Type="EventDataColumnDescriptor"  FilterOverride="Polybase">
+      <Set:PropertyName>Query.QueryId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>execution_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SessionQueryIdFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.QueryId</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>request_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DatabaseIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.CurrentDatabaseId</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>database_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CommandTextFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.CommandText</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:ColumnValueMutator ObjectName="TruncateStringColumnValueMutator"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>command</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>4000</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ResourceClassFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.ResourceClass</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>resource_class</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>20</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ImportanceFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.Importance</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>importance</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>128</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="WorkloadGroupNameFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.WorkloadGroupName</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>group_name</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>128</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="WorkloadClassifierNameFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.WorkloadClassifierName</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>classifier_name</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>128</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ResourcesGrantedFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.ResourcesGranted</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>resource_allocation_percentage</Set:ColumnName>
+          <Set:DataType>double</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ResultCacheHitFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.ResultCacheHit</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:DefaultValue>false</Set:DefaultValue>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>result_cache_hit</Set:ColumnName>
+          <Set:DataType>Bool</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="StatusFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.Status</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="QueryStateTransitionFunction"/>
+      <Set:KeepOriginalValue>true</Set:KeepOriginalValue>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>status</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="StartTimeFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>start_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="QueryStepStartTimeFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:QueryStepExecuteBeginEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>start_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="QueryStepStartTimeFieldDescriptor2" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:QueryStepExecuteBeginEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>start_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="RequestSubmitTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>submit_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="EndTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <!--Setting a category filter to make sure we populate the end_time column
+      only from the events in the QueryCompletion category-->
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:QueryCompletionCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>end_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="EndTimeFieldDescriptor2" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <!--Setting a category filter to make sure we populate the end_time column
+      only from the events in the QueryCompletion category-->
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:QueryCompletionCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>end_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="EndCompileTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <!--Setting a category filter to make sure we populate the end_time column
+      only from the events in the QueryCompletion category-->
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:DistributedPlanGenerationEndEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>end_compile_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="RequestStartTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <!--Setting a category filter to make sure we populate the end_time column
+      only from the events in the QueryCompletion category-->
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:EngineQueryRunningEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>start_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="TotalElapsedTimeFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>DurationMilliseconds</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="MaxIntFunction"/>
+      <!--Setting a category filter to make sure we populate the total_elapsed_time column
+      only from the events in the QueryCompletion and Duration categories-->
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:DurationCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>total_elapsed_time</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="CalculatedTotalElapsedTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>total_elapsed_time</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:IsCalculated>true</Set:IsCalculated>
+      <Set:ValueFunction>
+        <Object Type="DurationColumnIntValueFunction">
+          <Set:StartTimeField ObjectName="RequestSubmitTimeFieldDescriptor"/>
+          <Set:EndTimeField ObjectName="EndTimeFieldDescriptor"/>
+        </Object>
+      </Set:ValueFunction>
+    </Object>
+
+    <Object Name="QueryStepCalculatedTotalElapsedTimeFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>total_elapsed_time</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:IsCalculated>true</Set:IsCalculated>
+      <Set:ValueFunction>
+        <Object Type="DurationColumnIntValueFunction">
+          <Set:StartTimeField ObjectName="QueryStepStartTimeFieldDescriptor"/>
+          <Set:EndTimeField ObjectName="EndTimeFieldDescriptor"/>
+        </Object>
+      </Set:ValueFunction>
+    </Object>
+
+    <Object Name="StatusFieldDescriptorForQuerySteps" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.Status</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ExecutableStateTransitionFunction"/>
+      <Set:KeepOriginalValue>true</Set:KeepOriginalValue>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>status</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="StepIdKeyFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.StepId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>step_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>36</Set:MaxLength>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="PlanStepIdKeyFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.PlanStepId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>plan_step_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>36</Set:MaxLength>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="StepIndexKeyFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.StepIndex</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>step_index</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="OperationTypeFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.OperationType</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>operation_type</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>128</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="LocationFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.OperationLocation</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>location_type</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="RequestLabelFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>Query.RequestLabel</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>label</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="RequestRowCountFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.RowCount</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:EngineExecuteQueryEndEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>row_count</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DistributionTypeFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.NodeDistribution</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>distribution_type</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="RowsCountFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.RowCount</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>row_count</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="NodeNameFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.NodeName</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>dw_node_name</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="EndWaitTimeFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:GrantTicketEndEvent/>
+          </Invoke:AddEvent>
+          <Invoke:AddEvent>
+            <NameRef:GrantTicketErrorEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>end_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SessionIdKeyFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>Session.SessionId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>session_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="LocalSessionIdKeyFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.SessionId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>session_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="UserNameFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.Username</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>login_name</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>128</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="LoginTimeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.DateTimeLogin</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>login_time</Set:ColumnName>
+          <Set:DataType>datetime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="QueryCountFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.QueryCount</Set:PropertyName>
+      <Set:DefaultValue>0</Set:DefaultValue>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>query_count</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="IsSessionTransactionalFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.IsTransactional</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:DefaultValue>false</Set:DefaultValue>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>is_transactional</Set:ColumnName>
+          <Set:DataType>Bool</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SessionStatusFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.SessionStatus</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>status</Set:ColumnName>
+          <Set:DataType>string</Set:DataType>
+          <Set:MaxLength>10</Set:MaxLength>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ClientIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.ClientId</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>client_id</Set:ColumnName>
+          <Set:DataType>string</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:ComplianceTag>Pii</Set:ComplianceTag>
+    </Object>
+
+    <Object Name="ApplicationNameFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.ClientAppName</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>app_name</Set:ColumnName>
+          <Set:DataType>string</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SPIDFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.SPID</Set:PropertyName>
+      <Set:DefaultValue>0</Set:DefaultValue>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>sql_spid</Set:ColumnName>
+          <Set:DataType>Short</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SessionsRingBuffer" Type="RingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:TableName>dm_pdw_exec_sessions</Set:TableName>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:IsUsedExplicitly>true</Set:IsUsedExplicitly>
+      <Set:ProcessRealTime>true</Set:ProcessRealTime>
+
+      <Set:Fields>
+        <NameRef:LocalSessionIdKeyFieldDescriptor/>
+        <NameRef:SessionStatusFieldDescriptor/>
+        <NameRef:SessionQueryIdFieldDescriptor/>
+        <NameRef:UserNameFieldDescriptor/>
+        <NameRef:LoginTimeFieldDescriptor/>
+        <NameRef:QueryCountFieldDescriptor/>
+        <NameRef:IsSessionTransactionalFieldDescriptor/>
+        <NameRef:ClientIdFieldDescriptor/>
+        <NameRef:ApplicationNameFieldDescriptor/>
+        <NameRef:SPIDFieldDescriptor/>
+      </Set:Fields>
+
+      <Invoke:AddEvent>
+        <NameRef:ClientSessionClosedEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:AddEvent>
+        <NameRef:ClientSessionTerminatedEvent/>
+      </Invoke:AddEvent>
+
+      <!--This ring buffer would only store sessions that have queries associated
+      with them. Empty sessions are ignored.-->
+      <Invoke:AddFilter>
+        <Parameter>
+          <Object Type="EventPropertyFilter">
+            <Set:PropertyName>CustomContext.QueryCount</Set:PropertyName>
+            <Set:PropertyValue Type="Int">0</Set:PropertyValue>
+            <Set:ComparisonType>GreaterThan</Set:ComparisonType>
+          </Object>
+        </Parameter>
+      </Invoke:AddFilter>
+
+    </Object>
+
+    <Object Name="StickyRingBufferEntry" Type="StickyRingBufferEntry" Lifecycle="Singleton">
+      <Set:StickyEvent ObjectName="EngineExecuteQueryEndEvent"/>
+    </Object>
+
+    <Object Name="FilterRingBufferEntry" Type="FilterRingBufferEntry" Lifecycle="Singleton"/>
+
+    <Object Name="ForwardedEngineExecuteQueryEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="QueriesRingBuffer" Type="RingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:TableName>dm_pdw_exec_requests</Set:TableName>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <!--<Set:RowId>$[Session.SessionId]</Set:RowId>-->
+
+      <Set:Fields>
+        <NameRef:QueryIdKeyFieldDescriptor/>
+        <NameRef:SessionIdFieldDescriptor/>
+        <NameRef:StatusFieldDescriptor/>
+        <NameRef:RequestSubmitTimeFieldDescriptor/>
+        <NameRef:RequestStartTimeFieldDescriptor/>
+        <NameRef:EndCompileTimeFieldDescriptor/>
+        <NameRef:EndTimeFieldDescriptor/>
+        <NameRef:CalculatedTotalElapsedTimeFieldDescriptor/>
+        <NameRef:RequestLabelFieldDescriptor/>
+        <NameRef:ErrorIdFieldDescriptor/>
+        <NameRef:DatabaseIdFieldDescriptor/>
+        <NameRef:CommandTextFieldDescriptor/>
+        <NameRef:ResourceClassFieldDescriptor/>
+        <NameRef:ImportanceFieldDescriptor/>
+        <NameRef:WorkloadGroupNameFieldDescriptor/>
+        <NameRef:WorkloadClassifierNameFieldDescriptor/>
+        <NameRef:ResourcesGrantedFieldDescriptor/>
+        <NameRef:ResultCacheHitFieldDescriptor/>
+      </Set:Fields>
+
+      <Invoke:AddRingBufferBehavior>
+        <NameRef:StickyRingBufferEntry/>
+      </Invoke:AddRingBufferBehavior>
+
+      <Invoke:AddRingBufferBehavior>
+        <NameRef:FilterRingBufferEntry/>
+      </Invoke:AddRingBufferBehavior>
+
+      <Invoke:AddExtractAndForwardEvent>
+        <NameRef:EngineExecuteQueryEndEvent/>
+        <NameRef:ForwardedEngineExecuteQueryEndEvent/>
+      </Invoke:AddExtractAndForwardEvent>
+
+      <Invoke:AddCategory>
+        <NameRef:QueryCategory/>
+        <Parameter:Bool>true</Parameter:Bool>
+      </Invoke:AddCategory>
+    </Object>
+
+    <Object Name="SqlHandleFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="Polybase">
+      <Set:PropertyName>Query.SqlHandle</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>sql_handle</Set:ColumnName>
+          <Set:DataType>System.Byte[]</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="TotalElapsedTimeFieldDescriptorForDistributedRequests" Type="EventDataColumnDescriptor" FilterOverride="Polybase">
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>total_elapsed_time</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:IsCalculated>true</Set:IsCalculated>
+      <Set:ValueFunction>
+        <Object Type="DurationColumnIntValueFunction">
+          <Set:StartTimeField ObjectName="RequestStartTimeFieldDescriptor"/>
+          <Set:EndTimeField ObjectName="EndTimeFieldDescriptor"/>
+        </Object>
+      </Set:ValueFunction>
+    </Object>
+
+    <Object Name="DistributedRequestsRingBufferPolybase" Type="RingBufferListener" Lifecycle="Singleton" FilterOverride="Polybase">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:TableName>_dm_exec_distributed_requests</Set:TableName>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+
+      <Set:Fields>
+        <NameRef:SqlHandleFieldDescriptor/>
+        <NameRef:ExecutionIdKeyFieldDescriptor/>
+        <NameRef:StatusFieldDescriptor/>
+        <NameRef:ErrorIdFieldDescriptor/>
+        <NameRef:RequestStartTimeFieldDescriptor/>
+        <NameRef:EndTimeFieldDescriptor/>
+        <NameRef:TotalElapsedTimeFieldDescriptorForDistributedRequests/>
+      </Set:Fields>
+
+      <Invoke:AddRingBufferBehavior>
+        <NameRef:StickyRingBufferEntry/>
+      </Invoke:AddRingBufferBehavior>
+
+      <Invoke:AddCategory>
+        <NameRef:QueryCategory/>
+        <Parameter:Bool>true</Parameter:Bool>
+      </Invoke:AddCategory>
+
+    </Object>
+
+    <Object Name="ForwardedQueryStepExecuteEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>EngineInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="QueryStepsEventMonitorListener" Type="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.ApplicationEventTriggerListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:WorkerPoolSize>0</Set:WorkerPoolSize>
+
+      <Invoke:AddBeginEndEvent>
+        <NameRef:EngineExecutePlansBeginEvent/>
+        <NameRef:EngineExecutePlansEndEvent/>
+        <NameRef:QueryStepsRingBuffer/>
+      </Invoke:AddBeginEndEvent>
+    </Object>
+
+    <Object Name="QueryStepsRingBuffer" Type="RingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>1024</Set:MaxItemCount>
+      <Set:TableName>dm_pdw_request_steps</Set:TableName>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:RowId>$[Query.QueryId]</Set:RowId>
+      <Set:RequiresSeedEvent>true</Set:RequiresSeedEvent>
+
+      <Set:Fields>
+        <NameRef:QueryIdKeyFieldDescriptor/>
+        <NameRef:StepIndexKeyFieldDescriptor/>
+        <NameRef:OperationTypeFieldDescriptor/>
+        <NameRef:DistributionTypeFieldDescriptor/>
+        <NameRef:LocationFieldDescriptor/>
+        <NameRef:StatusFieldDescriptorForQuerySteps/>
+        <NameRef:ErrorIdFieldDescriptor/>
+        <NameRef:QueryStepStartTimeFieldDescriptor2/>
+        <NameRef:EndTimeFieldDescriptor2/>
+        <NameRef:QueryStepCalculatedTotalElapsedTimeFieldDescriptor/>
+        <NameRef:RowsCountFieldDescriptor/>
+        <NameRef:CommandTextFieldDescriptor/>
+      </Set:Fields>
+
+      <Invoke:AddRingBufferBehavior>
+        <NameRef:StickyRingBufferEntry/>
+      </Invoke:AddRingBufferBehavior>
+
+      <Invoke:AddRingBufferBehavior>
+        <NameRef:FilterRingBufferEntry/>
+      </Invoke:AddRingBufferBehavior>
+
+      <Invoke:AddExtractAndForwardEvent>
+        <NameRef:QueryStepExecuteEndEvent/>
+        <NameRef:ForwardedQueryStepExecuteEndEvent/>
+      </Invoke:AddExtractAndForwardEvent>
+
+      <Invoke:AddCategory>
+        <NameRef:QueryStepCategory/>
+        <Parameter:Bool>true</Parameter:Bool>
+      </Invoke:AddCategory>
+
+      <!-- Ignore any data that comes from an EngineExecuteEndEvent.  We are only using it as
+           a trigger for sticky behavior. -->
+      <Set:IgnoreDataFilter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:EngineExecuteQueryEndEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:IgnoreDataFilter>
+    </Object>
+
+
+     <Object Name="QueryStepsRingBufferPolyBase" Type="RingBufferListener" Lifecycle="Singleton" FilterOverride="Polybase">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>1024</Set:MaxItemCount>
+      <Set:TableName>_dm_exec_distributed_request_steps</Set:TableName>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:RowId>$[Query.QueryId]</Set:RowId>
+
+      <Set:Fields>
+        <NameRef:ExecutionIdKeyFieldDescriptor/>
+        <NameRef:StepIndexKeyFieldDescriptor/>
+        <NameRef:OperationTypeFieldDescriptor/>
+        <NameRef:DistributionTypeFieldDescriptor/>
+        <NameRef:LocationFieldDescriptor/>
+        <NameRef:StatusFieldDescriptorForQuerySteps/>
+        <NameRef:ErrorIdFieldDescriptor/>
+        <NameRef:QueryStepStartTimeFieldDescriptor/>
+        <NameRef:EndTimeFieldDescriptor/>
+        <NameRef:QueryStepCalculatedTotalElapsedTimeFieldDescriptor/>
+        <NameRef:RowsCountFieldDescriptor/>
+        <NameRef:CommandTextFieldDescriptor/>
+      </Set:Fields>
+
+       <Invoke:AddRingBufferBehavior>
+         <NameRef:StickyRingBufferEntry/>
+       </Invoke:AddRingBufferBehavior>
+
+      <Invoke:AddCategory>
+        <NameRef:QueryStepCategory/>
+        <Parameter:Bool>true</Parameter:Bool>
+      </Invoke:AddCategory>
+
+      <!-- Ignore any data that comes from an EngineExecuteEndEvent.  We are only using it as
+           a trigger for sticky behavior. -->
+      <Set:IgnoreDataFilter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:EngineExecuteQueryEndEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:IgnoreDataFilter>
+    </Object>
+
+
+    <!-- ********************************************************* -->
+    <!-- The following section is for the dm_pdw_hadoop_operations view -->
+    <!-- ********************************************************* -->
+
+    <Object Name="ExternalOperationRingBuffer" Type="RingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>1024</Set:MaxItemCount>
+      <Set:TableName>dm_pdw_hadoop_operations</Set:TableName>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:RowId>$[Query.QueryId]</Set:RowId>
+
+      <Set:Fields>
+        <NameRef:QueryIdKeyFieldDescriptor/>
+        <NameRef:StepIndexKeyFieldDescriptor/>
+        <NameRef:OperationTypeFieldDescriptor/>
+        <NameRef:OperationNameFieldDescriptor/>
+        <NameRef:MapProgressFieldDescriptor/>
+        <NameRef:ReduceProgressFieldDescriptor/>
+      </Set:Fields>
+
+      <Invoke:AddRingBufferBehavior>
+        <NameRef:StickyRingBufferEntry/>
+      </Invoke:AddRingBufferBehavior>
+
+      <Invoke:AddCategory>
+        <NameRef:ExternalOperationCategory/>
+        <Parameter:Bool>true</Parameter:Bool>
+      </Invoke:AddCategory>
+
+      <!-- Ignore any data that comes from an EngineExecuteEndEvent.  We are only using it as
+           a trigger for sticky behavior. -->
+      <Set:IgnoreDataFilter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:EngineExecuteQueryEndEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:IgnoreDataFilter>
+    </Object>
+
+     <Object Name="ExternalOperationRingBufferPolybase" Type="RingBufferListener" Lifecycle="Singleton" FilterOverride="Polybase">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>1024</Set:MaxItemCount>
+      <Set:TableName>_dm_exec_external_operations</Set:TableName>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:RowId>$[Query.QueryId]</Set:RowId>
+
+      <Set:Fields>
+        <NameRef:ExecutionIdKeyFieldDescriptor/>
+        <NameRef:StepIndexKeyFieldDescriptor/>
+        <NameRef:OperationTypeFieldDescriptor/>
+        <NameRef:OperationNameFieldDescriptor/>
+        <NameRef:MapProgressFieldDescriptor/>
+        <NameRef:ReduceProgressFieldDescriptor/>
+      </Set:Fields>
+
+       <Invoke:AddRingBufferBehavior>
+         <NameRef:StickyRingBufferEntry/>
+       </Invoke:AddRingBufferBehavior>
+
+      <Invoke:AddCategory>
+        <NameRef:ExternalOperationCategory/>
+        <Parameter:Bool>true</Parameter:Bool>
+      </Invoke:AddCategory>
+
+       <Set:IgnoreDataFilter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:EngineExecuteQueryEndEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:IgnoreDataFilter>
+    </Object>
+
+    <Object Name="MapProgressFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.MapProgress</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceNotNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>map_progress</Set:ColumnName>
+          <Set:DataType>float</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ReduceProgressFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.ReduceProgress</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceNotNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>reduce_progress</Set:ColumnName>
+          <Set:DataType>float</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="OperationNameFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.OperationName</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>operation_name</Set:ColumnName>
+          <Set:DataType>string</Set:DataType>
+          <Set:MaxLength>4000</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <!-- ********************************************************* -->
+    <!-- End of dm_pdw_hadoop_operations view section.           -->
+    <!-- ********************************************************* -->
+
+    <!-- ********************************************************* -->
+    <!-- The following section is for the dm_pdw_sql_requests view -->
+    <!-- ********************************************************* -->
+
+    <Object Name="SqlRequestsPayloadExtractor" Type="SqlRequestsPayloadExtractor" Lifecycle="Singleton" FilterOverride="NonLite"/>
+
+    <Object Name="QueryIdKeyFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>Query.QueryId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>request_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="ExecutionIdKeyFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="Polybase">
+      <Set:PropertyName>Query.QueryId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>execution_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="QueryStepIndexKeyFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.StepIndex</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>step_index</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="DistributionIdKeyFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.DistributionId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>distribution_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="NodeIdFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.NodeId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>pdw_node_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="ComputeNodeIdFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="Polybase">
+      <Set:PropertyName>CustomContext.NodeId</Set:PropertyName>
+      <Set:IsKey>true</Set:IsKey>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>compute_node_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="StatusFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.Status</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="SerialStepTransitionFunction"/>
+      <Set:KeepOriginalValue>true</Set:KeepOriginalValue>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>status</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="ErrorIdFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>ErrorId</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>error_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>36</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="ParallelStepStartTimeFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Filter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:ParallelStepBeginEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:Filter>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>start_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="EndTimeFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <!--Setting a category filter to make sure we populate the end_time column
+      only from the events in the QueryCompletion category-->
+      <Set:Filter>
+        <Object Type="EventCategoryFilter">
+          <Invoke:AddCategory>
+            <NameRef:QueryCompletionCategory/>
+            <Parameter:Bool>true</Parameter:Bool>
+          </Invoke:AddCategory>
+        </Object>
+      </Set:Filter>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>end_time</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="ParallelStepCalculatedTotalElapsedTimeFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>total_elapsed_time</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:IsCalculated>true</Set:IsCalculated>
+      <Set:ValueFunction>
+        <Object Type="DurationColumnIntValueFunction">
+          <Set:StartTimeField ObjectName="ParallelStepStartTimeFieldDescriptorForSqlRequests"/>
+          <Set:EndTimeField ObjectName="EndTimeFieldDescriptorForSqlRequests"/>
+        </Object>
+      </Set:ValueFunction>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="RowsCountFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.RowCount</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>row_count</Set:ColumnName>
+          <Set:DataType>Long</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="SPIDFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.SPID</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>spid</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="CommandTextFieldDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.CommandText</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:ColumnValueMutator ObjectName="TruncateStringColumnValueMutator"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>command</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>4000</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="CommandTextFieldSizeDescriptorForSqlRequests" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.CommandSize</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>command_length</Set:ColumnName>
+          <Set:DataType>int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+      <Set:OptimizedPayloadExtractor ObjectName="SqlRequestsPayloadExtractor"/>
+    </Object>
+
+    <Object Name="ForwardedParallelStepEndEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DistributorInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="ForwardedParallelStepErrorEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DistributorInstrumentation</Set:Source>
+    </Object>
+
+    <Object Name="SqlQueryDistributionsRingBuffer" Type="RingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>1024</Set:MaxItemCount>
+      <Set:TableName>dm_pdw_sql_requests</Set:TableName>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:RowId>$[Query.QueryId]</Set:RowId>
+
+      <Set:Fields>
+        <NameRef:QueryIdKeyFieldDescriptorForSqlRequests/>
+        <NameRef:QueryStepIndexKeyFieldDescriptorForSqlRequests/>
+        <NameRef:NodeIdFieldDescriptorForSqlRequests/>
+        <NameRef:DistributionIdKeyFieldDescriptorForSqlRequests/>
+        <NameRef:StatusFieldDescriptorForSqlRequests/>
+        <NameRef:ErrorIdFieldDescriptorForSqlRequests/>
+        <NameRef:ParallelStepStartTimeFieldDescriptorForSqlRequests/>
+        <NameRef:EndTimeFieldDescriptorForSqlRequests/>
+        <NameRef:ParallelStepCalculatedTotalElapsedTimeFieldDescriptorForSqlRequests/>
+        <NameRef:RowsCountFieldDescriptorForSqlRequests/>
+        <NameRef:SPIDFieldDescriptorForSqlRequests/>
+        <NameRef:CommandTextFieldDescriptorForSqlRequests/>
+      </Set:Fields>
+
+      <Invoke:AddRingBufferBehavior>
+        <NameRef:StickyRingBufferEntry/>
+      </Invoke:AddRingBufferBehavior>
+
+      <Invoke:AddRingBufferBehavior>
+        <NameRef:FilterRingBufferEntry/>
+      </Invoke:AddRingBufferBehavior>
+
+      <Invoke:AddExtractAndForwardEvent>
+        <NameRef:ParallelStepEndEvent/>
+        <NameRef:ForwardedParallelStepEndEvent/>
+      </Invoke:AddExtractAndForwardEvent>
+
+      <Invoke:AddExtractAndForwardEvent>
+        <NameRef:ParallelStepErrorEvent/>
+        <NameRef:ForwardedParallelStepErrorEvent/>
+      </Invoke:AddExtractAndForwardEvent>
+
+      <Invoke:AddCategory>
+        <NameRef:PhysicalQueryCategory/>
+        <Parameter:Bool>true</Parameter:Bool>
+      </Invoke:AddCategory>
+
+      <!-- Ignore any data that comes from an EngineExecuteEndEvent.  We are only using it as
+           a trigger for sticky behavior. -->
+      <Set:IgnoreDataFilter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:EngineExecuteQueryEndEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:IgnoreDataFilter>
+    </Object>
+
+
+    <Object Name="SqlQueryDistributionsRingBufferPolybase" Type="RingBufferListener" Lifecycle="Singleton" FilterOverride="Polybase">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>1024</Set:MaxItemCount>
+      <Set:TableName>_dm_exec_distributed_sql_requests</Set:TableName>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:RowId>$[Query.QueryId]</Set:RowId>
+
+      <Set:Fields>
+        <NameRef:ExecutionIdKeyFieldDescriptorForSqlRequests/>
+        <NameRef:QueryStepIndexKeyFieldDescriptorForSqlRequests/>
+        <NameRef:ComputeNodeIdFieldDescriptorForSqlRequests/>
+        <NameRef:DistributionIdKeyFieldDescriptorForSqlRequests/>
+        <NameRef:StatusFieldDescriptorForSqlRequests/>
+        <NameRef:ErrorIdFieldDescriptorForSqlRequests/>
+        <NameRef:ParallelStepStartTimeFieldDescriptorForSqlRequests/>
+        <NameRef:EndTimeFieldDescriptorForSqlRequests/>
+        <NameRef:ParallelStepCalculatedTotalElapsedTimeFieldDescriptorForSqlRequests/>
+        <NameRef:RowsCountFieldDescriptorForSqlRequests/>
+        <NameRef:SPIDFieldDescriptorForSqlRequests/>
+        <NameRef:CommandTextFieldDescriptorForSqlRequests/>
+      </Set:Fields>
+
+      <Invoke:AddRingBufferBehavior>
+        <NameRef:StickyRingBufferEntry/>
+      </Invoke:AddRingBufferBehavior>
+
+      <Invoke:AddCategory>
+        <NameRef:PhysicalQueryCategory/>
+        <Parameter:Bool>true</Parameter:Bool>
+      </Invoke:AddCategory>
+
+      <!-- Ignore any data that comes from an EngineExecuteEndEvent.  We are only using it as
+           a trigger for sticky behavior. -->
+      <Set:IgnoreDataFilter>
+        <Object Type="EventDescriptorFilter">
+          <Invoke:AddEvent>
+            <NameRef:EngineExecuteQueryEndEvent/>
+          </Invoke:AddEvent>
+        </Object>
+      </Set:IgnoreDataFilter>
+    </Object>
+
+    <!-- ********************************************************* -->
+    <!-- End of dm_pdw_sql_requests view section.                  -->
+    <!-- ********************************************************* -->
+
+    <Object Name="LoaderBackupPersistedTableListener" Type="IEventListener" AsType="PersistedRingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:TableName>pdw_loader_backup_runs_data</Set:TableName>
+      <Set:Mode>Update</Set:Mode>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:IsPersisted>true</Set:IsPersisted>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:PrimaryKey>$[CustomContext.Run_Id]</Set:PrimaryKey>
+      <Set:CommandToExecuteOnStart>
+        UPDATE [{0}]
+        SET [CustomContext.Status] = 'FAILED',
+        [CustomContext.End_Time] = CASE WHEN [CustomContext.StartTime] IS NOT NULL THEN GetDate() END
+        WHERE [CustomContext.Status] IN ('RUNNING', 'QUEUED')
+      </Set:CommandToExecuteOnStart>
+
+      <Set:CustomUpdateClause>
+        ,[CustomContext.StartTime] = IsNull($[CustomContext.StartTime],[CustomContext.StartTime])
+        ,[CustomContext.End_Time] = IsNull($[CustomContext.End_Time],[CustomContext.End_Time])
+        ,[CustomContext.Status] = IsNull($[CustomContext.Status],[CustomContext.Status])
+        ,[CustomContext.Progress] = IsNull($[CustomContext.Progress],[CustomContext.Progress])
+        ,[CustomContext.Rows_Processed] = $[CustomContext.Rows_Processed]
+        ,[CustomContext.Rows_Rejected] = $[CustomContext.Rows_Rejected]
+        ,[CustomContext.Rows_Inserted] = $[CustomContext.Rows_Inserted]
+      </Set:CustomUpdateClause>
+
+      <Invoke:AddView>
+        <Parameter:String>pdw_loader_backup_runs</Parameter:String>
+        <Parameter:String>
+          [CustomContext.Run_Id] as [run_id],
+          [CustomContext.Name] as [name],
+          [CustomContext.Submit_Time] as [submit_time],
+          [CustomContext.StartTime] as [start_time],
+          [CustomContext.End_Time] as [end_time],
+          [total_elapsed_time] =
+          CASE
+          WHEN ([CustomContext.StartTime] IS NULL) AND ([CustomContext.End_Time] IS NULL) THEN NULL
+          WHEN datediff(ss, [CustomContext.StartTime], ISNULL([CustomContext.End_Time], GETDATE())) &lt; 2147483 THEN datediff(ms, [CustomContext.StartTime], ISNULL([CustomContext.End_Time], GETDATE()))
+          ELSE 2147483647
+          END,
+          [CustomContext.Operation_Type] as [operation_type],
+          [CustomContext.Mode] as [mode],
+          [CustomContext.Database] as [database_name],
+          [CustomContext.Table] as [table_name],
+          [CustomContext.PrincipalId] as [principal_id],
+          CAST([CustomContext.Session_Id] AS nvarchar(32)) as [session_id],
+          CAST([CustomContext.Request_Id] AS nvarchar(32)) as [request_id],
+          [CustomContext.Status] as [status],
+          [CustomContext.Progress] as [progress],
+          [CustomContext.Command] as [command],
+          [CustomContext.Rows_Processed] as [rows_processed],
+          [CustomContext.Rows_Rejected] as [rows_rejected],
+          [CustomContext.Rows_Inserted] as [rows_inserted]
+        </Parameter:String>
+      </Invoke:AddView>
+
+      <Invoke:AddEvent>
+        <NameRef:BackupProgressEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:AddEvent>
+        <NameRef:LoadProgressEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:Register/>
+    </Object>
+
+    <Object Name="LoaderBackupDetailsPersistedTableListener" Type="IEventListener" AsType="PersistedRingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:TableName>pdw_loader_backup_run_details_data</Set:TableName>
+      <Set:Mode>Update</Set:Mode>
+      <Set:MaxItemCount>100000</Set:MaxItemCount>
+      <Set:IsPersisted>true</Set:IsPersisted>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:PrimaryKey>$[CustomContext.Run_Id].$[CustomContext.Pdw_Node_Id]</Set:PrimaryKey>
+      <Set:CommandToExecuteOnStart>UPDATE [{0}] SET [CustomContext.Status] = 'FAILED', [CustomContext.End_Time] = GetDate() WHERE [CustomContext.Status] = 'RUNNING'</Set:CommandToExecuteOnStart>
+
+      <Invoke:AddView>
+        <Parameter:String>pdw_loader_backup_run_details</Parameter:String>
+        <Parameter:String>
+          [CustomContext.Run_Id] as [run_id],
+          [CustomContext.Pdw_Node_Id] as [pdw_node_id],
+          [CustomContext.Status] as [status],
+          [CustomContext.Start_Time] as [start_time],
+          [CustomContext.End_Time] as [end_time],
+          [total_elapsed_time] =
+          CASE
+          WHEN ([CustomContext.Start_Time] IS NULL) AND ([CustomContext.End_Time] IS NULL) THEN NULL
+          WHEN datediff(ss, [CustomContext.Start_Time], ISNULL([CustomContext.End_Time], GETDATE())) &lt; 2147483 THEN datediff(ms, [CustomContext.Start_Time], ISNULL([CustomContext.End_Time], GETDATE()))
+          ELSE 2147483647
+          END,
+          [CustomContext.Progress] as [progress]
+        </Parameter:String>
+      </Invoke:AddView>
+
+      <Invoke:AddEvent>
+        <NameRef:BackupProgressDetailsEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:Register/>
+    </Object>
+
+    <Object Name="LoaderStageDetailsPersistedTableListener" Type="IEventListener" AsType="PersistedRingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:TableName>pdw_loader_run_stages_data</Set:TableName>
+      <Set:Mode>Update</Set:Mode>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:IsPersisted>true</Set:IsPersisted>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:PrimaryKey>$[CustomContext.Run_Id].$[CustomContext.Stage]</Set:PrimaryKey>
+      <Set:CommandToExecuteOnStart>UPDATE [{0}] SET [CustomContext.Status] = 'FAILED', [CustomContext.End_Time] = GetDate() WHERE [CustomContext.Status] = 'RUNNING'</Set:CommandToExecuteOnStart>
+
+      <Set:CustomUpdateClause>
+        ,[CustomContext.Start_Time] = IsNull($[CustomContext.Start_Time],[CustomContext.Start_Time])
+        ,[CustomContext.End_Time] = IsNull($[CustomContext.End_Time],[CustomContext.End_Time])
+        ,[CustomContext.Status] = IsNull($[CustomContext.Status],[CustomContext.Status])
+      </Set:CustomUpdateClause>
+
+      <Invoke:AddView>
+        <Parameter:String>pdw_loader_run_stages</Parameter:String>
+        <Parameter:String>
+          [CustomContext.Run_Id] as [run_id],
+          [CustomContext.Stage] as [stage],
+          CAST([CustomContext.Request_Id] AS nvarchar(32))  as [request_id],
+          [CustomContext.Status] as [status],
+          [CustomContext.Start_Time] as [start_time],
+          [CustomContext.End_Time] as [end_time],
+          [total_elapsed_time] =
+          CASE
+          WHEN ([CustomContext.Start_Time] IS NULL) AND ([CustomContext.End_Time] IS NULL) THEN NULL
+          WHEN datediff(ss, [CustomContext.Start_Time], ISNULL([CustomContext.End_Time], GETDATE())) &lt; 2147483 THEN datediff(ms, [CustomContext.Start_Time], ISNULL([CustomContext.End_Time], GETDATE()))
+          ELSE 2147483647
+          END
+        </Parameter:String>
+      </Invoke:AddView>
+
+      <Invoke:AddEvent>
+        <NameRef:LoadStageProgressEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:Register/>
+    </Object>
+
+    <Object Extends="AllErrorsWindowsEventLogListener" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:Source>Engine</Set:Source>
+    </Object>
+
+    <Object Extends="EventManager" FilterOverride="Polybase">
+      <Set:ServiceMode>Control</Set:ServiceMode>
+
+      <Invoke:AddListener>
+        <NameRef:EngineDefaultLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:EngineWindowsEventLog/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:DistributedRequestsRingBufferPolybase/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:QueryStepsRingBufferPolyBase/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:ExternalOperationRingBufferPolybase/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:SqlQueryDistributionsRingBufferPolybase/>
+      </Invoke:AddListener>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>EngineInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DistributorInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>ResourceManagementInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>LoaderCoreInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>LoaderManagerInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>BatchInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>ProtocolInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>NodesInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>CatalogInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DSQLInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>PushdownInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>SqlDistributorInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>ParallelizerInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>HdfsBridgeEngineInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>JavaBridgeInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+    </Object>
+
+     <Object Extends="EventManager" FilterOverride="Full">
+      <Set:ServiceMode>Control</Set:ServiceMode>
+
+      <Invoke:AddListener>
+        <NameRef:EngineDefaultLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:EngineWindowsEventLog/>
+      </Invoke:AddListener>
+
+       <Invoke:AddListener>
+         <NameRef:QueryDiagnosticsLogListener/>
+       </Invoke:AddListener>
+
+      <!--BEGIN: Engine ring buffers-->
+
+      <Invoke:AddListener>
+        <NameRef:SessionsRingBuffer/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:QueriesRingBuffer/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:QueryStepsRingBuffer/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:ExternalOperationRingBuffer/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:SqlQueryDistributionsRingBuffer/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:LoaderBackupPersistedTableListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:LoaderBackupDetailsPersistedTableListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:LoaderStageDetailsPersistedTableListener/>
+      </Invoke:AddListener>
+
+      <!--END: Engine ring buffers-->
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>EngineInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DistributorInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>ResourceManagementInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>LoaderCoreInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>LoaderManagerInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>BatchInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>ProtocolInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>NodesInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+       <!-- sqldwagent no longer works in PDW_Main, even under single node appliance. Commenting out the following two references -->
+       <!--
+      <Invoke:AddEventContainer>
+        <Parameter:Type>AgentInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>MonitoringInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+      -->
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>CatalogInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DSQLInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>PushdownInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>SqlDistributorInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>ParallelizerInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>HdfsBridgeEngineInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>JavaBridgeInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+    </Object>
+
+    <Object Extends="EventManager" FilterOverride="Xdb">
+      <Set:ServiceMode>Control</Set:ServiceMode>
+
+      <Invoke:AddListener>
+        <NameRef:EngineDefaultLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:EngineWindowsEventLog/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:QueryDiagnosticsLogListener/>
+      </Invoke:AddListener>
+
+      <!--BEGIN: Engine ring buffers-->
+
+      <Invoke:AddListener>
+        <NameRef:SessionsRingBuffer/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:QueryStepsEventMonitorListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:QueriesRingBuffer/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:QueryStepsRingBuffer/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:ExternalOperationRingBuffer/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:SqlQueryDistributionsRingBuffer/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:LoaderBackupPersistedTableListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:LoaderBackupDetailsPersistedTableListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:LoaderStageDetailsPersistedTableListener/>
+      </Invoke:AddListener>
+
+      <!--END: Engine ring buffers-->
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>EngineInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DistributorInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>ResourceManagementInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>LoaderCoreInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>LoaderManagerInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>BatchInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>ProtocolInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>NodesInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>CatalogInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DSQLInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>PushdownInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>SqlDistributorInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>ParallelizerInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>HdfsBridgeEngineInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>JavaBridgeInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+    </Object>
+
+    <Object Extends="EventManager" FilterOverride="AnyLite">
+      <Set:ServiceMode>Control</Set:ServiceMode>
+
+      <Invoke:AddListener>
+        <NameRef:EngineDefaultLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>EngineInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DistributorInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>ResourceManagementInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>BatchInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>ProtocolInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>NodesInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>CatalogInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DSQLInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>PushdownInstrumentation</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+    </Object>
+
+    <Object Name="SqlObfuscator" Type="ISqlObfuscator" AsType="SqlObfuscator" Lifecycle="Singleton" />
+    <Object Name="ObfuscationSettings" Type="IObfuscationSettings" AsType="ServerObfuscationSettings" Lifecycle="Singleton" />
+  </Objects>
+</ObjectFactory>

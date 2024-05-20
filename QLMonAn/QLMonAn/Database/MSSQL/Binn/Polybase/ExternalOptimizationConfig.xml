@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ObjectFactory xmlns:Invoke="Microsoft.SqlServer.DataWarehouse.Common.Ioc.MethodConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Set="Microsoft.SqlServer.DataWarehouse.Common.Ioc.PropertyConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Parameter="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:NameRef="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common">
+
+  <Types>
+    <Type Alias="IExternalPushDownConfiguration" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.External.IExternalPushDownConfiguration, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="EmptyPushDownConfiguration" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.External.EmptyPushDownConfiguration, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="ExternalPushDownConfiguration" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.External.ExternalPushDownConfiguration, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="OdbcSqlPushDownConfiguration" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.External.OdbcSqlPushDownConfiguration, Microsoft.SqlServer.DataWarehouse.Sql"/>
+
+    <Type Alias="IExternalPushDown" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.External.IExternalPushDown, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="HadoopPushDown" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.External.HadoopPushDown, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="PassThroughPushdown" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.External.PassThroughPushdown, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="NoPushdown" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.External.NoPushdown, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="OdbcSqlPushDown" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.External.OdbcSqlPushDown, Microsoft.SqlServer.DataWarehouse.Sql"/>
+
+    <Type Alias="OperatorContext" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.OperatorContext, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="HadoopOpContext" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.HadoopGeneration.HadoopOpContext, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="ExternalRelOpContext" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.ExternalPlanGeneration.ExternalRelOpContext, Microsoft.SqlServer.DataWarehouse.Sql"/>
+
+    <Type Alias="CostingOperator" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.CostModel.CostingComponent.CostingOperator, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="HadoopPushDownCostOperator" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.CostModel.CostingComponent.HadoopPushDownCostOperator, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="DummyPushDownCostOperator" Name="Microsoft.SqlServer.DataWarehouse.Sql.Optimizer.CostModel.CostingComponent.DummyPushDownCostOperator, Microsoft.SqlServer.DataWarehouse.Sql"/>
+
+    <Type Alias="CodeGenerator" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.CodeGenerator, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="ExternalTSqlCodeGenerator" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.ExternalPlanGeneration.ExternalTSqlCodeGenerator, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="HadoopXmlGenerator" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.HadoopGeneration.HadoopXmlGenerator, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="ExternalGenericSqlCodeGenerator" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.ExternalPlanGeneration.ExternalGenericSqlCodeGenerator, Microsoft.SqlServer.DataWarehouse.Sql"/>
+
+    <Type Alias="AbstractExternalQueryBuilder" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.ExternalPlanGeneration.AbstractExternalQueryBuilder, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="ExternalGenericSqlHdfsQueryBuilder" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.ExternalPlanGeneration.ExternalGenericSqlHdfsQueryBuilder, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="ExternalTSqlQueryBuilder" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.ExternalPlanGeneration.ExternalTSqlQueryBuilder, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="OdbcSqlQueryBuilder" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.ExternalPlanGeneration.OdbcSqlQueryBuilder, Microsoft.SqlServer.DataWarehouse.Sql"/>
+
+    <Type Alias="Sql92Function" Name="Microsoft.SqlServer.DataWarehouse.Sql.PlanGenerator.ExternalPlanGeneration.Sql92Function, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="OdbcInfoType" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Common.ExternalAccess.OdbcInfoType, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    <Type Alias="SqlDbType" Name="System.Data.SqlDbType"/>
+  </Types>
+
+  <Objects>
+    <Object Name="HadoopPushDownConfiguration" Type="IExternalPushDownConfiguration" AsType="EmptyPushDownConfiguration" Lifecycle="Singleton" />
+    <Object Name="HadoopPushDown" Type="IExternalPushDown" AsType="HadoopPushDown" Lifecycle="Singleton" />
+    <Object Name="HadoopOpContext" Type="OperatorContext" AsType="HadoopOpContext" />
+    <Object Name="HadoopPushDownCostOperator" Type="CostingOperator" AsType="HadoopPushDownCostOperator" />
+    <Object Name="HadoopCodeGenerator" Type="CodeGenerator" AsType="HadoopXmlGenerator" />
+
+    <Object Name="SqlServerPushDownConfiguration" Type="IExternalPushDownConfiguration" AsType="ExternalPushDownConfiguration" >
+      <Set:EnableJoin>true</Set:EnableJoin>
+      <Set:SupportsSampledScan>true</Set:SupportsSampledScan>
+      <Set:SampleAsFraction>false</Set:SampleAsFraction>
+      <Set:SampleClause>TABLESAMPLE ({0} PERCENT)</Set:SampleClause>
+    </Object>
+    <Object Name="SqlServerPushDown" Type="IExternalPushDown" AsType="PassThroughPushDown" />
+    <Object Name="SqlServerPushDownCostOperator" Type="CostingOperator" AsType="DummyPushDownCostOperator" />
+    <Object Name="SqlServerOpContext" Type="OperatorContext" AsType="ExternalRelOpContext" />
+    <Object Name="SqlServerCodeGenerator" Type="CodeGenerator" AsType="ExternalTSqlCodeGenerator" />
+    <Object Name="SqlServerQueryBuilder" Type="AbstractExternalQueryBuilder" AsType="ExternalTSqlQueryBuilder" />
+
+    <Object Name="OdbcPushDownConfiguration" Type="IExternalPushDownConfiguration" AsType="OdbcSqlPushDownConfiguration">
+      <Set:EnableJoin>true</Set:EnableJoin>
+      <Set:EnableGroupBy>true</Set:EnableGroupBy>
+      <Set:EnableAggregation>true</Set:EnableAggregation>
+      <Set:EnableFilter>true</Set:EnableFilter>
+      <Set:EnableTop>false</Set:EnableTop>
+      <Set:PartitionUsesFilter>false</Set:PartitionUsesFilter>
+      <Set:SupportsDateArithmetic>true</Set:SupportsDateArithmetic>
+      <Set:SupportsNullOrdering>true</Set:SupportsNullOrdering>
+      <Set:NullsAreLeast>false</Set:NullsAreLeast>
+      <Set:TranslateDateDiff>false</Set:TranslateDateDiff>
+      <Set:MaxFloatFractionalDigits>17</Set:MaxFloatFractionalDigits>
+      <Set:SmallestFloatExponent>-307</Set:SmallestFloatExponent>
+      <Set:LargestFloatExponent>308</Set:LargestFloatExponent>
+      <Set:MaxTimestampFractionalDigits>6</Set:MaxTimestampFractionalDigits>
+      <Set:SupportsSampledScan>false</Set:SupportsSampledScan>
+    </Object>
+    <Object Name="OdbcPushDown" Type="IExternalPushDown" AsType="OdbcSqlPushDown" />
+    <Object Name="OdbcPushDownCostOperator" Type="CostingOperator" AsType="DummyPushDownCostOperator" />
+    <Object Name="OdbcOpContext" Type="OperatorContext" AsType="ExternalRelOpContext" />
+    <Object Name="OdbcCodeGenerator" Type="CodeGenerator" AsType="ExternalGenericSqlCodeGenerator" />
+    <Object Name="OdbcQueryBuilder" Type="AbstractExternalQueryBuilder" AsType="OdbcSqlQueryBuilder" />
+
+    <Object Name="OraclePushDownConfiguration" Type="IExternalPushDownConfiguration" AsType="OdbcSqlPushDownConfiguration" >
+      <Set:EnableJoin>true</Set:EnableJoin>
+      <Set:EnableGroupBy>true</Set:EnableGroupBy>
+      <Set:EnableAggregation>true</Set:EnableAggregation>
+      <Set:EnableFilter>true</Set:EnableFilter>
+      <Set:EnableTop>true</Set:EnableTop>
+      <Set:TopIsFilter>true</Set:TopIsFilter>
+      <Set:LimitString>where rownum &lt;= {0}</Set:LimitString>
+      <Set:PartitionUsesFilter>false</Set:PartitionUsesFilter>
+      <Set:SupportsDateArithmetic>true</Set:SupportsDateArithmetic>
+      <Set:SupportsNullOrdering>true</Set:SupportsNullOrdering>
+      <Set:NullsAreLeast>false</Set:NullsAreLeast>
+      <Set:TranslateDateDiff>true</Set:TranslateDateDiff>
+      <Set:MaxFloatFractionalDigits>17</Set:MaxFloatFractionalDigits>
+      <Set:SmallestFloatExponent>-307</Set:SmallestFloatExponent>
+      <Set:LargestFloatExponent>308</Set:LargestFloatExponent>
+      <Set:MaxTimestampFractionalDigits>9</Set:MaxTimestampFractionalDigits>
+      <Set:SupportsSampledScan>true</Set:SupportsSampledScan>
+      <Set:SampleAsFraction>false</Set:SampleAsFraction>
+      <Set:SampleClause>SAMPLE ({0})</Set:SampleClause>
+      <Set:LiteralSuffixes>Float:d</Set:LiteralSuffixes>
+      <Set:RequiresTruncateOnIntegralNumericCast>true</Set:RequiresTruncateOnIntegralNumericCast>
+      <Invoke:AddFunctionMapping>
+        <Parameter:Sql92Function>TRUNCATE</Parameter:Sql92Function>
+        <Parameter:String>TRUNC</Parameter:String>
+      </Invoke:AddFunctionMapping>
+      <Invoke:AddSqlTypeMapping>
+        <Parameter:SqlDbType>BigInt</Parameter:SqlDbType>
+        <Parameter:String>NUMBER(19)</Parameter:String>
+      </Invoke:AddSqlTypeMapping>
+      <Invoke:AddSqlTypeMapping>
+        <Parameter:SqlDbType>SmallInt</Parameter:SqlDbType>
+        <Parameter:String>NUMBER(5)</Parameter:String>
+      </Invoke:AddSqlTypeMapping>
+      <!-- This is slightly optimistic but the alternative won't yield better results -->
+      <Set:ImplementsTSqlDecimalDivisionSemantics>true</Set:ImplementsTSqlDecimalDivisionSemantics>
+    </Object>
+    <Object Name="OraclePushDown" Type="IExternalPushDown" AsType="OdbcSqlPushDown" />
+    <Object Name="OraclePushDownCostOperator" Type="CostingOperator" AsType="DummyPushDownCostOperator" />
+    <Object Name="OracleOpContext" Type="OperatorContext" AsType="ExternalRelOpContext" />
+    <Object Name="OracleCodeGenerator" Type="CodeGenerator" AsType="ExternalGenericSqlCodeGenerator" />
+    <Object Name="OracleQueryBuilder" Type="AbstractExternalQueryBuilder" AsType="OdbcSqlQueryBuilder" />
+
+    <Object Name="TeradataPushDownConfiguration" Type="IExternalPushDownConfiguration" AsType="OdbcSqlPushDownConfiguration" >
+      <Set:EnableJoin>true</Set:EnableJoin>
+      <Set:EnableGroupBy>true</Set:EnableGroupBy>
+      <Set:EnableAggregation>true</Set:EnableAggregation>
+      <Set:EnableFilter>true</Set:EnableFilter>
+      <Set:EnableTop>true</Set:EnableTop>
+      <Set:TopIsTop>true</Set:TopIsTop>
+      <Set:LimitString>top {0}</Set:LimitString>
+      <Set:PartitionUsesFilter>true</Set:PartitionUsesFilter>
+      <Set:SupportsDateArithmetic>true</Set:SupportsDateArithmetic>
+      <Set:SupportsNullOrdering>true</Set:SupportsNullOrdering>
+      <Set:NullsAreLeast>true</Set:NullsAreLeast>
+      <Set:TranslateDateDiff>true</Set:TranslateDateDiff>
+      <Set:MaxFloatFractionalDigits>15</Set:MaxFloatFractionalDigits>
+      <Set:SmallestFloatExponent>-307</Set:SmallestFloatExponent>
+      <Set:LargestFloatExponent>308</Set:LargestFloatExponent>
+      <Set:MaxTimestampFractionalDigits>6</Set:MaxTimestampFractionalDigits>
+      <Set:NullBooleanExpression>0 = (SELECT MAX(x) FROM (SELECT 1 x) T WHERE 1 = 0)</Set:NullBooleanExpression>
+      <Set:IntDividedByIntIsInt>true</Set:IntDividedByIntIsInt>
+      <Set:SupportsSampledScan>true</Set:SupportsSampledScan>
+      <Set:SampleAsFraction>true</Set:SampleAsFraction>
+      <Set:SampleClause>SAMPLE {0}</Set:SampleClause>
+    </Object>
+    <Object Name="TeradataPushDown" Type="IExternalPushDown" AsType="OdbcSqlPushDown" />
+    <Object Name="TeradataPushDownCostOperator" Type="CostingOperator" AsType="DummyPushDownCostOperator" />
+    <Object Name="TeradataOpContext" Type="OperatorContext" AsType="ExternalRelOpContext" />
+    <Object Name="TeradataCodeGenerator" Type="CodeGenerator" AsType="ExternalGenericSqlCodeGenerator" />
+    <Object Name="TeradataQueryBuilder" Type="AbstractExternalQueryBuilder" AsType="OdbcSqlQueryBuilder" />
+
+    <Object Name="MongoDbPushDownConfiguration" Type="IExternalPushDownConfiguration" AsType="OdbcSqlPushDownConfiguration" >
+      <Set:EnableJoin>false</Set:EnableJoin>
+      <Set:EnableGroupBy>true</Set:EnableGroupBy>
+      <Set:EnableAggregation>true</Set:EnableAggregation>
+      <Set:EnableFilter>true</Set:EnableFilter>
+      <Set:EnableTop>true</Set:EnableTop>
+      <Set:TopIsTop>false</Set:TopIsTop>
+      <Set:LimitString>limit {0}</Set:LimitString>
+      <Set:PartitionUsesFilter>false</Set:PartitionUsesFilter>
+      <Set:SupportsDateArithmetic>true</Set:SupportsDateArithmetic>
+      <Set:SupportsNullOrdering>false</Set:SupportsNullOrdering>
+      <Set:NullsAreLeast>true</Set:NullsAreLeast>
+      <Set:TranslateDateDiff>true</Set:TranslateDateDiff>
+      <Set:MaxFloatFractionalDigits>17</Set:MaxFloatFractionalDigits>
+      <Set:SmallestFloatExponent>-307</Set:SmallestFloatExponent>
+      <Set:LargestFloatExponent>308</Set:LargestFloatExponent>
+      <Set:MaxTimestampFractionalDigits>3</Set:MaxTimestampFractionalDigits>
+      <Set:SupportsSampledScan>false</Set:SupportsSampledScan>
+      <Invoke:AddFunctionMapping>
+        <Parameter:Sql92Function>SUBSTRING</Parameter:Sql92Function>
+        <Parameter:String>SUBSTRING</Parameter:String>
+      </Invoke:AddFunctionMapping>
+    </Object>
+    <Object Name="MongoDbPushDown" Type="IExternalPushDown" AsType="OdbcSqlPushDown" />
+    <Object Name="MongoDbPushDownCostOperator" Type="CostingOperator" AsType="DummyPushDownCostOperator" />
+    <Object Name="MongoDbOpContext" Type="OperatorContext" AsType="ExternalRelOpContext" />
+    <Object Name="MongoDbCodeGenerator" Type="CodeGenerator" AsType="ExternalGenericSqlCodeGenerator" />
+    <Object Name="MongoDbQueryBuilder" Type="AbstractExternalQueryBuilder" AsType="OdbcSqlQueryBuilder" />
+
+    <Object Name="SqlHdfsPushDownConfiguration" Type="IExternalPushDownConfiguration" AsType="ExternalPushDownConfiguration" >
+      <Set:EnableJoin>false</Set:EnableJoin>
+      <Set:SupportsSampledScan>true</Set:SupportsSampledScan>
+      <Set:SampleAsFraction>true</Set:SampleAsFraction>
+      <Set:SampleClause> WHERE {0} >= CAST(CHECKSUM(NEWID(), {1}) &amp; 0x7fffffff AS float) / CAST (0x7fffffff AS int)</Set:SampleClause>
+    </Object>
+    <Object Name="SqlHdfsPushDown" Type="IExternalPushDown" AsType="PassThroughPushDown" />
+    <Object Name="SqlHdfsPushDownCostOperator" Type="CostingOperator" AsType="DummyPushDownCostOperator" />
+    <Object Name="SqlHdfsOpContext" Type="OperatorContext" AsType="ExternalRelOpContext" />
+    <Object Name="SqlHdfsCodeGenerator" Type="CodeGenerator" AsType="ExternalTSqlCodeGenerator" />
+    <Object Name="SqlHdfsQueryBuilder" Type="AbstractExternalQueryBuilder" AsType="ExternalGenericSqlHdfsQueryBuilder" />
+
+    <Object Name="SqlDataPoolPushDownConfiguration" Type="IExternalPushDownConfiguration" AsType="ExternalPushDownConfiguration" >
+      <Set:EnableJoin>true</Set:EnableJoin>
+    </Object>
+    <Object Name="SqlDataPoolPushDown" Type="IExternalPushDown" AsType="PassThroughPushDown" />
+    <Object Name="SqlDataPoolPushDownCostOperator" Type="CostingOperator" AsType="DummyPushDownCostOperator" />
+    <Object Name="SqlDataPoolOpContext" Type="OperatorContext" AsType="ExternalRelOpContext" />
+    <Object Name="SqlDataPoolCodeGenerator" Type="CodeGenerator" AsType="ExternalTSqlCodeGenerator" />
+
+    <!--3rd Party Driver Configuration-->
+    <Object Name="OdbcPushDownConfiguration,Driver={Microsoft Spark ODBC Driver}" Type="IExternalPushDownConfiguration" AsType="OdbcSqlPushDownConfiguration" >
+      <Constructor>
+        <NameRef:OdbcPushDownConfiguration/>
+      </Constructor>
+      <Set:EnableTop>true</Set:EnableTop>
+      <Set:TopIsTop>false</Set:TopIsTop>
+      <Set:LimitString>limit {0}</Set:LimitString>
+      <Set:NullsAreLeast>true</Set:NullsAreLeast>
+    </Object>
+
+    <!-- InterSystems ODBC incorrectly claims support for SQL-92 Date / Time literals -->
+    <Object Name="InterSystemsOdbc" Type="IExternalPushDownConfiguration" AsType="OdbcSqlPushDownConfiguration" >
+      <Constructor>
+        <NameRef:OdbcPushDownConfiguration/>
+      </Constructor>
+      <Invoke:AddSqlGetInfoResult>
+        <Parameter:OdbcInfoType>SqlDateTimeLiterals</Parameter:OdbcInfoType>
+        <Parameter:uint>0</Parameter:uint>
+      </Invoke:AddSqlGetInfoResult>
+    </Object>
+    <Object Name="OdbcPushDownConfiguration,Driver={InterSystems ODBC}" Type="IExternalPushDownConfiguration" AsType="OdbcSqlPushDownConfiguration" >
+      <Constructor>
+        <NameRef:InterSystemsOdbc/>
+      </Constructor>
+    </Object>
+    <Object Name="OdbcPushDownConfiguration,Driver={InterSystems ODBC35}" Type="IExternalPushDownConfiguration" AsType="OdbcSqlPushDownConfiguration" >
+      <Constructor>
+        <NameRef:InterSystemsOdbc/>
+      </Constructor>
+    </Object>
+    <Object Name="OdbcPushDownConfiguration,Driver={InterSystems IRIS ODBC}" Type="IExternalPushDownConfiguration" AsType="OdbcSqlPushDownConfiguration" >
+      <Constructor>
+        <NameRef:InterSystemsOdbc/>
+      </Constructor>
+    </Object>
+    <Object Name="OdbcPushDownConfiguration,Driver={InterSystems IRIS ODBC35}" Type="IExternalPushDownConfiguration" AsType="OdbcSqlPushDownConfiguration" >
+      <Constructor>
+        <NameRef:InterSystemsOdbc/>
+      </Constructor>
+    </Object>
+
+  </Objects>
+</ObjectFactory>

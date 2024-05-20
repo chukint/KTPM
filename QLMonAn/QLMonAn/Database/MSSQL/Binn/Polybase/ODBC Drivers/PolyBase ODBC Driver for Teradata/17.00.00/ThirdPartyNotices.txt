@@ -1,0 +1,503 @@
+============================================================================= 
+Third Party Licenses
+============================================================================= 
+
+-----------------------------------------------------------------------------
+The following is the license for CityHash, which is included in this package.
+
+--License Start--
+CityHash License
+Copyright (c) 2011 Google, Inc.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+CityHash, by Geoff Pike and Jyrki Alakuijala
+http://code.google.com/p/cityhash/
+--License End--
+
+-----------------------------------------------------------------------------
+The following is the license for dtoa, which is included in this package.
+
+--License Start--
+The author of this software is David M. Gay.
+
+Copyright (c) 1991, 2000, 2001 by Lucent Technologies.
+
+Permission to use, copy, modify, and distribute this software for any purpose 
+without fee is hereby granted, provided that this entire notice is included 
+in all copies of any software which is or includes a copy or modification of 
+this software and in all copies of the supporting documentation for such 
+software.
+
+THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR
+IMPLIED WARRANTY. IN PARTICULAR, NEITHER THE AUTHOR NOR LUCENT
+MAKES ANY REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE
+MERCHANTABILITY OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR
+PURPOSE.
+--License End--
+
+-----------------------------------------------------------------------------
+The following is the license for Expat, which is included in this package.
+
+--License Start--
+Copyright (c) 1998, 1999, 2000 Thai Open Source Software Center Ltd
+
+Permission is hereby granted, free of charge, to any person obtaining a copy 
+of this software and associated documentation files (the "Software"), to deal 
+in the Software without restriction, including without limitation the rights 
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+copies of the Software, and to permit persons to whom the Software is 
+furnished to do so, subject to the following conditions: 
+
+The above copyright notice and this permission notice shall be included in all 
+copies or substantial portions of the Software. 
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NOINFRINGEMENT. IN NO EVENT SHALL THE 
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+SOFTWARE. 
+--License End--
+
+-----------------------------------------------------------------------------
+The following is the license for ICU 1.8.1 and later, which is included in 
+this package.
+
+--License Start--
+COPYRIGHT AND PERMISSION NOTICE
+
+Copyright (c) 1995-2014 International Business Machines Corporation and others
+
+All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy 
+of this software and associated documentation files (the "Software"), to deal 
+in the Software without restriction, including without limitation the rights 
+to use, copy, modify, merge, publish, distribute, and/or sell copies of the 
+Software, and to permit persons to whom the Software is furnished to do so, 
+provided that the above copyright notice(s) and this permission notice appear 
+in all copies of the Software and that both the above copyright notice(s) and 
+this permission notice appear in supporting documentation. 
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN 
+NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE BE 
+LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY 
+DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN 
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN 
+CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. 
+
+Except as contained in this notice, the name of a copyright holder shall not 
+be used in advertising or otherwise to promote the sale, use or other dealings 
+in this Software without prior written authorization of the copyright holder. 
+All trademarks and registered trademarks mentioned herein are the property of 
+their respective owners. 
+--License End--
+
+-----------------------------------------------------------------------------
+The following is the license for OpenSSL, which is included in this package.
+
+--License Start--
+Copyright (c) 1998-2016 The OpenSSL Project. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without 
+modification, are permitted provided that the following conditions are met:
+
+	1. Redistributions of source code must retain the above copyright notice, 
+	   this list of conditions and the following disclaimer.
+
+	2. Redistributions in binary form must reproduce the above copyright 
+	   notice, this list of conditions and the following disclaimer in the 
+	   documentation and/or other materials provided with the distribution.
+
+	3. All advertising materials mentioning features or use of this software 
+	   must display the following acknowledgment:
+
+		"This product includes software developed by the OpenSSL Project for 
+		use in the OpenSSL Toolkit. (http://www.openssl.org/)"
+
+	4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to 
+	   endorse or promote products derived from this software without prior 
+	   written permission. For written permission, please contact 
+	   openssl-core@openssl.org.
+
+	5. Products derived from this software may not be called "OpenSSL" nor may
+	   "OpenSSL" appear in their names without prior written permission of the 
+	   OpenSSL Project.
+
+	6. Redistributions of any form whatsoever must retain the following 
+	   acknowledgment:
+
+	   "This product includes software developed by the OpenSSL Project for 
+	   use in the OpenSSL Toolkit (http://www.openssl.org/)"
+
+THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT "AS IS" AND ANY EXPRESSED OR 
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
+EVENT SHALL THE OpenSSL PROJECT OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+
+This product includes cryptographic software written by Eric 
+Young(eay@cryptsoft.com). This product includes software written by Tim Hudson 
+(tjh@cryptsoft.com). 
+--License End--
+
+-----------------------------------------------------------------------------
+The following is the license for Original SSLeay, which is included in this 
+package.
+
+--License Start--
+Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
+
+All rights reserved.
+
+This package is an SSL implementation written by Eric Young 
+(eay@cryptsoft.com). The implementation was written so as to conform with 
+Netscapes SSL. 
+
+This library is free for commercial and non-commercial use as long as the 
+following conditions are aheared to. The following conditions apply to all 
+code found in this distribution, be it the RC4, RSA, lhash, DES, etc., code; 
+not just the SSL code. The SSL documentation included with this distribution 
+is covered by the same copyright terms except that the holder is Tim Hudson 
+(tjh@cryptsoft.com). 
+
+Copyright remains Eric Young's, and as such any Copyright notices in the code 
+are not to be removed. If this package is used in a product, Eric Young should 
+be given attribution as the author of the parts of the library used. This can 
+be in the form of a textual message at program startup or in documentation 
+(online or textual) provided with the package. 
+
+Redistribution and use in source and binary forms, with or without 
+modification, are permitted provided that the following conditions are met: 
+
+	1. Redistributions of source code must retain the copyright notice, this 
+	   list of conditions and the following disclaimer.
+
+	2. Redistributions in binary form must reproduce the above copyright 
+	   notice, this list of conditions and the following disclaimer in the 
+	   documentation and/or other materials provided with the distribution.
+
+	3. All advertising materials mentioning features or use of this software 
+	   must display the following acknowledgement:
+
+	   "This product includes cryptographic software written by Eric Young
+	   (eay@cryptsoft.com)"
+
+	   The word 'cryptographic' can be left out if the rouines from the 
+	   library being used are not cryptographic related :-).
+
+	4. If you include any Windows specific code (or a derivative thereof) from
+  	   the apps directory (application code) you must include an 
+	   acknowledgement:
+
+	   "This product includes software written by Tim Hudson 
+	   (tjh@cryptsoft.com)"
+
+THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
+EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+
+The licence and distribution terms for any publically available version or 
+derivative of this code cannot be changed. i.e. this code cannot simply be 
+copied and put under another distribution licence [including the GNU Public 
+Licence.] 
+--License End--
+
+-----------------------------------------------------------------------------
+The following is the license for Stringencoders, which is included in this 
+package.
+
+--License Start--
+Copyright 2005, 2006, 2007
+
+Nick Galbreath -- nickg [at] modp [dot] com
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without 
+modification, are permitted provided that the following conditions are met: 
+
+	Redistributions of source code must retain the above copyright notice, 
+	this list of conditions and the following disclaimer. 
+
+	Redistributions in binary form must reproduce the above copyright notice, 
+	this list of conditions and the following disclaimer in the documentation 
+	and/or other materials provided with the distribution. 
+
+	Neither the name of the modp.com nor the names of its contributors may be 
+	used to endorse or promote products derived from this software without 
+	specific prior written permission. 
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE 
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+
+This is the standard "new" BSD license:
+
+http://www.opensource.org/licenses/bsd-license.php
+--License End--
+
+-----------------------------------------------------------------------------
+
+The following is the license for terasso, which is included in this package.
+
+--License Start--
+Copyright © 2000 - 2018 Teradata Corporation
+
+
+IMPORTANT - READ THIS AGREEMENT CAREFULLY BEFORE USING THE 
+SOFTWARE. TERADATA WILL LICENSE THE SOFTWARE TO YOU ONLY IF YOU ACCEPT THE 
+TERMS AND CONDITIONS OF THIS AGREEMENT AND MEET THE CONDITIONS FOR USING THE 
+SOFTWARE DESCRIBED BELOW. BY USING THE SOFTWARE YOU (1) AGREE 
+TO THE TERMS AND CONDITIONS OF THIS AGREEMENT, AND (2) REPRESENT AND WARRANT 
+THAT YOU POSSESS THE AUTHORITY TO ENTER INTO THIS AGREEMENT ON BEHALF OF YOU, 
+YOUR EMPLOYER (WHEN ACTING ON BEHALF OF YOUR EMPLOYER), AND/OR A 
+TERADATA-AUTHORIZED LICENSEE (WHEN YOU AND YOUR EMPLOYER ARE ACTING ON BEHALF 
+OF A TERADATA-AUTHORIZED LICENSEE). IF YOU DO NOT ACCEPT THE TERMS AND 
+CONDITIONS OF THIS AGREEMENT, DO NOT USE THE SOFTWARE. 
+
+This License Agreement (“Agreement”) is a legal contract between you (as 
+defined below) and Teradata (as defined below) regarding the Software (as 
+defined below). The terms “you”, “your” and “yours” collectively 
+and individually refer to you as an individual and to any company for which 
+you are acting. The term “Teradata” refers to either Teradata U.S., Inc. 
+for Software deliveries in the US or Teradata Ireland Ltd. for Software 
+deliveries outside the United States. “Software” refers to the software 
+product identified above, which consists of computer software code in object 
+code form only, as well as associated documentation that Teradata may elect in 
+its sole discretion to provide you. “Software” also includes any and all 
+error corrections, bug fixes, updates, upgrades, or new versions or releases 
+of the Software (collectively and individually, “Enhancements”) that 
+Teradata may elect in its sole discretion to provide you. 
+
+“Scenario (i)”: If you are using the Software on behalf of a 
+Teradata-authorized licensee that has already purchased a license to the 
+Software pursuant to an executed master agreement (“Master Agreement”) 
+with Teradata or one of its affiliates, the terms of such master agreement 
+prevail over this Agreement except for Section 2.a.(i).  
+
+“Scenario (ii)”: If Scenario (i) does not apply to you, then this 
+Agreement constitutes the entire understanding of 
+the parties with respect to the Software and Services, and supersedes all other 
+prior agreements and understandings whether oral or written. For clarity, 
+Section 2.a.(i) does not apply to you. For example, individuals that have 
+downloaded a copy of the Teradata Express version of the Teradata Relational 
+Database product fall within Scenario (ii). 
+
+   1. Term. This Agreement commences on the earliest date of the first  
+      installation or first use of the 
+      Software (the “Effective Date”). Unless terminated earlier as 
+      provided herein, this agreement, including your license to the Software, 
+      will expire or terminate on the same date that your Teradata-authorized 
+      license to use the Teradata Relational Database product expires or 
+      terminates (whichever occurs first). 
+
+   2. License.  
+   
+      (a) Teradata grants you a nonexclusive, nontransferable, paid up 
+          license: 
+
+         (i) If Scenario (i) applies - subject to your compliance with all 
+             of the terms and conditions of the Master Agreement, to install 
+             and use the Software on any number and type of 
+             computers in object code form for your internal use solely for the 
+             purpose of facilitating your Teradata-authorized license to use 
+             the Teradata Relational Database product.  
+
+         (ii) If Scenario (ii) applies - subject to your compliance with 
+             all of the terms and conditions of this Agreement, to install and 
+             use the Software on your computer workstation in object code form 
+             for your internal use solely for purposes of facilitating your 
+             Teradata-authorized license to use the Teradata Relational 
+             Database product. You may make reasonable archival backup copies 
+             of the Software, but may only use an archival copy in lieu of your 
+             primary copy and subject to the same restrictions as your primary 
+             copy. 
+
+      (b) The term Third Party Software means computer programs or modules 
+          (including their documentation) that bear the logo, copyright and/or 
+          trademark of a third party (including open source software that are 
+          contained in files marked as “open source” or the like) or are otherwise 
+          subject to the written license terms of a third party.  The term “Software” 
+          does not include Third Party Software. Third Party Software is licensed to you 
+          subject to the applicable license terms accompanying it, included 
+          in/with it, referenced in it, or otherwise entered into by you with 
+          respect to it. Third Party Software license terms include those found 
+          in the FOSS licensing zip file accompanying the Software. Teradata 
+          provides source code to certain Third Party Software for certain 
+          periods of time in compliance with certain applicable licenses. To 
+          request such source code, visit 
+          http://developer.teradata.com/download/license/oss-request. 
+
+      (c) You will not sell, copy, rent, loan, modify, transfer, disclose, 
+          embed, sublicense, create derivative works of or distribute the 
+          Software, in whole or in part, without Teradata’s prior written 
+          consent. You are granted no rights to obtain or use the Software’s 
+          source code. You will not reverse-assemble, reverse compile or 
+          reverse-engineer the Software, except as expressly permitted by 
+          applicable law without the possibility of contractual waiver. 
+          Notwithstanding anything to the contrary, you do not have any 
+          license, right, or authority to subject the Software, in whole or in 
+          part or as part of a larger work, to any terms of any other 
+          agreement, including GNU Public Licenses. 
+
+      (d) No license rights to the Software will be implied. The Software, 
+          which includes all copies thereof (whether in whole or in part), is 
+          and remains the exclusive property of Teradata. You 
+          will ensure that all copies of the Software contain Teradata's 
+          copyright notices, as well as all other proprietary 
+          legends. Teradata reserves the right to inspect your use of the 
+          Software for purposes of verifying your compliance with the terms and 
+          conditions of this Agreement. 
+
+   3. Responsibilities. You are responsible for the installation of the 
+      Software, as well as for providing data security and backup operations. 
+      This Agreement does not require Teradata to provide you with any 
+      Enhancements, consulting services, technical assistance, installation, 
+      training, support, or maintenance of any kind (collectively and 
+      individually, “Services”). To the extent that Teradata elects to 
+      provide you with any Services, such Services are provided to you at 
+      Teradata’s sole discretion and may be modified or discontinued at any 
+      time for any reason. 
+
+   4. DISCLAIMER OF WARRANTY. TERADATA: (a) PROVIDES 
+      SERVICES (IF ANY), (b) LICENSES THE SOFTWARE, AND (c) PROVIDES THIRD 
+      PARTY SOFTWARE TO YOU ON AN “AS-IS” BASIS WITHOUT WARRANTIES OF ANY 
+      KIND (ORAL OR WRITTEN, EXPRESS OR IMPLIED, OR STATUTORY). WITHOUT 
+      LIMITATION TO THE FOREGOING, THERE ARE NO IMPLIED WARRANTIES OF 
+      MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT. 
+      TERADATA DOES NOT WARRANT THAT THE SOFTWARE, THIRD PARTY SOFTWARE, OR 
+      SERVICES WILL MEET YOUR REQUIREMENTS OR CONFORM TO ANY SPECIFICATIONS, 
+      OR THAT THE OPERATION OF THE SOFTWARE OR THIRD PARTY SOFTWARE WILL BE 
+      UNINTERRUPTED OR ERROR FREE. YOU BEAR THE ENTIRE RISK AS TO SATISFACTORY 
+      QUALITY, PERFORMANCE, ACCURACY, AND RESULTS OBTAINED FROM THE SOFTWARE, 
+      THIRD PARTY SOFTWARE, AND SERVICES. 
+
+      SOME JURISDICTIONS RESTRICT DISCLAIMERS OF WARRANTY, SO THE ABOVE 
+      DISCLAIMERS MAY NOT FULLY APPLY TO YOU. 
+
+   5. LIMITATIONS ON LIABILITY: UNDER NO CIRCUMSTANCES WILL TERADATA’S 
+      AND ITS LICENSORS’ TOTAL CUMULATIVE LIABILITY FOR CLAIMS RELATING TO 
+      THIS AGREEMENT, THE SERVICES, THE SOFTWARE, AND/OR THIRD PARTY SOFTWARE 
+      (WHETHER BASED IN CONTRACT, STATUTE, TORT (INCLUDING NEGLIGENCE) OR 
+      OTHERWISE) EXCEED US$1,000; PROVIDED, HOWEVER, THAT THE FOREGOING WILL 
+      NOT APPLY TO CLAIMS FOR (A) PERSONAL INJURY, INCLUDING DEATH, TO THE 
+      EXTENT CAUSED BY TERADATA'S NEGLIGENCE OR WILLFUL MISCONDUCT; OR (B) 
+      PHYSICAL DAMAGE TO TANGIBLE REAL OR PERSONAL PROPERTY TO THE EXTENT 
+      CAUSED BY TERADATA'S NEGLIGENCE OR WILLFUL MISCONDUCT EQUAL TO THE 
+      AMOUNT OF DIRECT DAMAGES UP TO ONE MILLION DOLLARS PER OCCURRENCE. IN NO 
+      EVENT WILL TERADATA OR ITS LICENSORS BE LIABLE FOR ANY INDIRECT, 
+      SPECIAL, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL DAMAGES, OR FOR LOSS OF 
+      PROFITS, REVENUE, TIME, OPPORTUNITY OR DATA, EVEN IF INFORMED OF THE 
+      POSSIBILITY OF SUCH DAMAGES. 
+
+      SOME JURISDICTIONS RESTRICT LIMITATIONS OF LIABILITY, SO THE ABOVE 
+      LIMITATIONS MAY NOT FULLY APPLY TO YOU. 
+
+   6. Government Restrictions. You agree that you will not, directly or 
+      indirectly, export or transmit any Software without obtaining 
+      Teradata’s prior written authorization, as well as appropriate 
+      governmental approvals, including those required by the U.S. Government. 
+      Use and or distribution of this software is subject to export laws and 
+      regulations of the United States and other jurisdictions. The links 
+      below connect you to applicable U.S. government agencies, and their 
+      regulations, that have jurisdiction over this transaction. 
+
+      http://www.bis.doc.gov/
+      http://www.treas.gov/offices/enforcement/ofac/
+
+      In using this product, you acknowledge that this transaction is 
+      subject to applicable export control laws and you certify that your download, 
+      use and/or subsequent distribution of this product is not prohibited under 
+      applicable laws and regulations. 
+
+      The Government’s use, duplication, or disclosure of Teradata’s commercial computer 
+      software and commercial computer software documentation is subject to: (a) the 
+      Restricted Rights Notice set forth in 48 C.F.R. ¶ 52.227-14 (Rights In Data - General); 
+      (b) Teradata’s standard commercial license rights supplemented by 48 C.F.R. ¶ 52.227-19
+      (Commercial Computer Software - Restricted Rights); and/or (c) the limited rights and 
+      license set forth 48 CFR ¶ 252.227-7015 (Technical Data–Commercial Items), as applicable. 
+
+   7. Termination and Expiration. A party may terminate this Agreement with 
+      or without cause, upon providing written notice to the other parties. 
+      When this Agreement terminates or expires, you will immediately cease 
+      all use of the Software, permanently remove the Software from all 
+      computers, destroy all copies of the Software, and (upon receipt of 
+      Teradata’s request) provide a signed written certification that the 
+      foregoing has occurred. Sections 4, 5, 6, 7, 8, 9, 10, and 11 will 
+      survive expiration or termination of this Agreement. 
+
+   8. Choice of Law and Dispute Resolution. The parties will attempt in 
+      good faith to resolve any controversy or claim by negotiation or 
+      mediation. If they are unable to do so, and regardless of the causes of 
+      action alleged and whether they arise under this Agreement or otherwise, 
+      the claim will be resolved by arbitration before a sole arbitrator in 
+      Dayton, Ohio pursuant to the then-current Commercial Rules of the 
+      American Arbitration Association and the federal substantive and 
+      procedural law of arbitration. The arbitrator’s award will be final 
+      and binding, and may be entered in any court having jurisdiction 
+      thereof, but may include only damages consistent with the limitations in 
+      this Agreement. Each party will bear its own attorney's fees and costs 
+      related to the arbitration. The obligations to negotiate, mediate and 
+      arbitrate shall not apply to claims for misuse or infringement of a 
+      party’s intellectual property rights. Any claim or action must be 
+      brought within two years after the claimant knows or should have known of 
+      the claim. New York law will govern the interpretation and enforcement of 
+      this Agreement, except that the Federal Arbitration Act will govern the 
+      interpretation and enforcement of the arbitrability of claims under this 
+      Section. 
+
+   9. Feedback. Notwithstanding anything to the contrary: (a) Teradata will 
+      have no obligation of any kind with respect to any Software-related 
+      comments, suggestions, design changes or improvements that you elect to 
+      provide to Teradata in either verbal or written form (collectively, 
+      “Software Feedback”), and (b) Teradata and its affiliates are hereby 
+      free to use any ideas, concepts, know-how or techniques, in whole or in 
+      part, contained in Software Feedback: (i) for any purpose whatsoever, 
+      including developing, manufacturing, and/or marketing products and/or 
+      services incorporating Software Feedback in whole or in part, and (ii) 
+      without any restrictions or limitations, including requiring the payment 
+      of any license fees, royalties, or other consideration. 
+
+  10. Confidentiality. You will not disclose the results of any testing or 
+      evaluations, including any benchmarks, insofar as it relates to the 
+      Software without Teradata’s prior written consent. 
+
+  11. Miscellaneous. In the event of a conflict between this Agreement and 
+      the General Terms of Use, this Agreement will prevail with respect to 
+      the subject matter hereof. No oral representation or change to this 
+      Agreement will be binding upon either party unless agreed to in writing 
+      and signed by authorized representatives of all parties. You will not 
+      assign this Agreement or your rights, nor will you delegate your 
+      obligations under this Agreement. Failure by either party to enforce any 
+      term or condition of this Agreement will not be deemed a waiver of 
+      future enforcement of that or any other term or condition. The 
+      provisions of this Agreement are severable. "Include", "includes", and 
+      "including" shall be interpreted as introducing a list of examples which 
+      do not limit the generality of any preceding words or any words in the 
+      list of examples. 
+
+--License End--

@@ -1,0 +1,1283 @@
+<?xml version="1.0" encoding="utf-8" ?>
+  <ObjectFactory xmlns:Invoke="Microsoft.SqlServer.DataWarehouse.Common.Ioc.MethodConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+                 xmlns:Set="Microsoft.SqlServer.DataWarehouse.Common.Ioc.PropertyConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+                 xmlns:Parameter="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+                 xmlns:Item="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+                 xmlns:NameRef="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common">
+
+    <Types>
+      <Type Alias="StringArray" Name="System.String[]"/>
+      <Type Alias="IExternalGenericMetadataProcessor" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Common.ExternalAccess.IExternalGenericMetadataProcessor, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+      <Type Alias="OdbcMetadataProcessor" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Common.ExternalAccess.OdbcMetadataProcessor, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+      <Type Alias="OdbcOptionsBag" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Common.ExternalAccess.OdbcOptionsBag, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+      <Type Alias="GenericOdbcMetadataProcessor" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Common.ExternalAccess.GenericOdbcMetadataProcessor, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+      <Type Alias="MongoDbMetadataProcessor" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Common.ExternalAccess.MongoDbMetadataProcessor, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+      <Type Alias="SqlServerMetadataProcessor" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Common.ExternalAccess.SqlServerMetadataProcessor, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+      <Type Alias="ShardedMetadataProcessor" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Common.ExternalAccess.ShardedMetadataProcessor, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+      <Type Alias="ComputePoolMetadataProcessor" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Common.ExternalAccess.ComputePoolMetadataProcessor, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+      <Type Alias="SqlHdfsMetadataProcessor" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Common.ExternalAccess.SqlHdfsMetadataProcessor, Microsoft.SqlServer.DataWarehouse.DataMovement.Common"/>
+    </Types>
+
+    <Objects>
+      <!--Metadata Processors-->
+      <Object Name="OdbcMetadataProcessor" Type="IExternalGenericMetadataProcessor" AsType="GenericOdbcMetadataProcessor"/>
+      <Object Name="TeradataMetadataProcessor" Type="IExternalGenericMetadataProcessor" AsType="OdbcMetadataProcessor"/>
+      <Object Name="MongoDbMetadataProcessor" Type="IExternalGenericMetadataProcessor" AsType="MongoDbMetadataProcessor">
+        <Set:UseInnerJoin>False</Set:UseInnerJoin>
+      </Object>
+      <Object Name="SqlServerMetadataProcessor" Type="IExternalGenericMetadataProcessor" AsType="SqlServerMetadataProcessor"/>
+      <Object Name="OracleMetadataProcessor" Type="IExternalGenericMetadataProcessor" AsType="OdbcMetadataProcessor"/>
+      <Object Name="SqlDataPoolMetadataProcessor" Type="IExternalGenericMetadataProcessor" AsType="ShardedMetadataProcessor"/>
+      <Object Name="SqlComputePoolMetadataProcessor" Type="IExternalGenericMetadataProcessor" AsType="ComputePoolMetadataProcessor"/>
+      <Object Name="SqlHdfsMetadataProcessor" Type="IExternalGenericMetadataProcessor" AsType="SqlHdfsMetadataProcessor">
+        <Set:ExternalDatabase>StoragePool</Set:ExternalDatabase>
+      </Object>
+      
+      <!--Option Bags-->
+      <Object Name="OdbcOptionsBag" Type="OdbcOptionsBag" >
+        <Invoke:AddUnsupportedDriverCapability>
+          <Parameter:String>SupportsMetadataIdAttributes</Parameter:String>
+        </Invoke:AddUnsupportedDriverCapability>
+        <Invoke:AddUnsupportedDriverCapability>
+          <Parameter:String>SupportsBindOffset</Parameter:String>
+        </Invoke:AddUnsupportedDriverCapability>
+        <Invoke:AddUnsupportedDriverCapability>
+          <Parameter:String>SupportsRowCount</Parameter:String>
+        </Invoke:AddUnsupportedDriverCapability>
+      </Object>
+      <Object Name="TeradataOptionsBag" Type="OdbcOptionsBag" >
+        <Set:DriverName>{PolyBase ODBC Driver for Teradata}</Set:DriverName>
+        <Invoke:SetExpectedIdentifierPartsFromFile>
+          <Parameter:Int>2</Parameter:Int>
+        </Invoke:SetExpectedIdentifierPartsFromFile>
+        <Set:RowCountQuery>SELECT CAST(COUNT(*) AS BIGINT) FROM $$DATABASE_NAME_IDENTIFIER$$.$$TABLE_NAME_IDENTIFIER$$</Set:RowCountQuery>
+        <Set:TableSizeQuery>SELECT CAST(sum(currentperm) AS BIGINT) FROM dbc.tablesizev WHERE databasename='$$DATABASE_NAME_STRING$$' AND tablename='$$TABLE_NAME_STRING$$'</Set:TableSizeQuery>
+        <Set:DatabaseIdentifierName>DefaultDatabase</Set:DatabaseIdentifierName>
+        <Set:ServerIdentifierName>DBCName</Set:ServerIdentifierName>
+        <Set:HasCatalogSupport>false</Set:HasCatalogSupport>
+        <Set:UseDatabaseNameForSchemaName>true</Set:UseDatabaseNameForSchemaName>
+        <Set:DataReaderName>TeradataBufferReader</Set:DataReaderName>
+        <Set:PartitionQuery>
+          WITH RECURSIVE PARTITION_NUMBERS(PARTITION_NUMBER)  AS
+          (
+          SELECT MIN_PARTITION_VALUE AS PARTITION_NUMBER FROM  PARTITION_RANGE
+          UNION ALL
+          SELECT PARTITION_NUMBER + 1 AS PARTITION_NUMBER FROM PARTITION_NUMBERS, PARTITION_RANGE WHERE PARTITION_NUMBERS.PARTITION_NUMBER &lt; PARTITION_RANGE.MAX_PARTITION_VALUE
+          ),
+          PARTITION_RANGE (MIN_PARTITION_VALUE, MAX_PARTITION_VALUE) AS
+          (
+          SELECT 0 AS MIN_PARTITION_VALUE, DEFINEDCOMBINEDPARTITIONS AS MAX_PARTITION_VALUE FROM DBC.PARTITIONINGCONSTRAINTSV WHERE DATABASENAME = '$$DATABASE_NAME_STRING$$' AND TABLENAME = '$$TABLE_NAME_STRING$$'
+          )
+          SELECT * FROM PARTITION_NUMBERS
+        </Set:PartitionQuery>
+        <Set:PartitionFormatString> WHERE PARTITION = {0}</Set:PartitionFormatString>
+        <Set:PrimaryKeyQuery>SELECT ColumnName FROM DBC.Indices WHERE DatabaseName = '$$DATABASE_NAME_STRING$$' AND TableName = '$$TABLE_NAME_STRING$$' AND IndexType = 'K'</Set:PrimaryKeyQuery>
+        <!--Teradata has these 5 server character sets and in the COLUMNSV dictionary view they identify them with an integer.-->
+        <!--We convert them so the code can be a little more readable when using the output of the query.-->
+        <!--We use these character sets to guide our collation inference since without a compatible encoding, the data cannot be transported properly.-->
+        <Set:ColumnCollationQuery>
+          SELECT
+          COLUMNNAME,
+          CASE UPPERCASEFLAG
+            WHEN 'C' THEN 'CS'
+            ELSE 'CI'
+          END,
+          CASE CHARTYPE
+            WHEN 1 THEN 'LATIN'
+            WHEN 2 THEN 'UNICODE'
+            WHEN 3 THEN 'KANJISJIS'
+            WHEN 4 THEN 'GRAPHIC'
+            WHEN 5 THEN 'KANJI1'
+            ELSE NULL
+          END
+          FROM DBC.COLUMNSV
+          WHERE TABLENAME = '$$TABLE_NAME_STRING$$' AND DATABASENAME = '$$DATABASE_NAME_STRING$$'
+        </Set:ColumnCollationQuery>
+        <Set:ExternalCollationRegex>(?&lt;case_insensitive&gt;CI)|(?&lt;case_sensitive&gt;CS)</Set:ExternalCollationRegex>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>UseDataEncryption</Parameter:String>
+          <Parameter:String>Y</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddConnectionStringOption>
+          <Parameter:String>CharacterSet</Parameter:String>
+          <Parameter:String>UTF8</Parameter:String>
+        </Invoke:AddConnectionStringOption>
+        <Invoke:AddConnectionStringOption>
+          <Parameter:String>MaxRespSize</Parameter:String>
+          <Parameter:String>1048576</Parameter:String>
+        </Invoke:AddConnectionStringOption>
+        <Invoke:AddConnectionStringOption>
+          <Parameter:String>DontUseHelpDatabase</Parameter:String>
+          <Parameter:String>Yes</Parameter:String>
+        </Invoke:AddConnectionStringOption>
+        <Invoke:AddOrModifyOdbcTypeToSqlDbTypeMapping>
+          <Parameter:String>SqlTinyint</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>SmallInt</Item:String>
+            <Item:String>TinyInt</Item:String>
+            <Item:String>BigInt</Item:String>
+            <Item:String>Int</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddOrModifyOdbcTypeToSqlDbTypeMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>LATIN</Parameter:String>
+          <Parameter:String>1252</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>KANJISJIS</Parameter:String>
+          <Parameter:String>932</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>KANJI1</Parameter:String>
+          <Parameter:String>932</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>GRAPHIC</Parameter:String>
+          <Parameter:String>-1</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>CHAR</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>Char</Item:String>
+            <Item:String>VarChar</Item:String>
+            <Item:String>NChar</Item:String>
+            <Item:String>NVarChar</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>VARCHAR</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>VarChar</Item:String>
+            <Item:String>NVarChar</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+      </Object>
+      <Object Name="MongoDBOptionsBag" Type="OdbcOptionsBag" >
+        <Set:DriverName>{PolyBase ODBC Driver for MongoDB}</Set:DriverName>
+        <Invoke:SetExpectedIdentifierPartsFromFile>
+          <Parameter:Int>2</Parameter:Int>
+        </Invoke:SetExpectedIdentifierPartsFromFile>
+        <Invoke:AddAlternativeDriverName>
+          <Parameter:String>{PolyBase ODBC Driver for MongoDB 2.3.8}</Parameter:String>
+        </Invoke:AddAlternativeDriverName>
+        <Invoke:AddAlternativeDriverName>
+          <Parameter:String>{PolyBase ODBC Driver for MongoDB 2.3.3}</Parameter:String>
+        </Invoke:AddAlternativeDriverName>
+        <Set:ServiceIdentifierComponent>$$DATABASE_NAME_IDENTIFIER$$</Set:ServiceIdentifierComponent>
+        <Set:HasCatalogSupport>true</Set:HasCatalogSupport>
+        <Set:SqlTablesMayReturnEmptyObjects>false</Set:SqlTablesMayReturnEmptyObjects>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <!--Note that this is not referring to the internal Mongo DB timestamp type,-->
+          <!--but rather the driver's way of referring to the Mongo DB "Date" type.-->
+          <!--https://docs.mongodb.com/v3.4/reference/bson-types/#date-->
+          <Parameter:String>TYPE_TIMESTAMP</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>DateTime2</Item:String>
+            <Item:String>DateTimeOffset</Item:String>
+            <Item:String>DateTime</Item:String>
+            <Item:String>Date</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddConnectionStringOption>
+          <Parameter:String>DefaultStringColumnLength</Parameter:String>
+          <Parameter:String>2147483647</Parameter:String>
+        </Invoke:AddConnectionStringOption>
+        <Invoke:AddConnectionStringOption>
+          <Parameter:String>DefaultBinaryColumnLength</Parameter:String>
+          <Parameter:String>2147483647</Parameter:String>
+        </Invoke:AddConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>SSL</Parameter:String>
+          <Parameter:String>1</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>sslAllowInvalidCertificates</Parameter:String>
+          <Parameter:String>1</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+      </Object>
+      <Object Name="BaseMssqlOptionsBag" Type="OdbcOptionsBag" >
+        <Set:DriverName>{PolyBase ODBC Driver for SQL Server}</Set:DriverName>
+        <Invoke:SetExpectedIdentifierPartsFromFile>
+          <Parameter:Int>3</Parameter:Int>
+        </Invoke:SetExpectedIdentifierPartsFromFile>
+        <Set:ColumnCollationQuery>
+          SELECT
+            COLUMN_NAME, COLLATION_NAME, CHARACTER_SET_NAME
+          FROM
+            $$DATABASE_NAME_IDENTIFIER$$.INFORMATION_SCHEMA.COLUMNS
+          WHERE
+            TABLE_NAME = '$$TABLE_NAME_STRING$$' AND
+            TABLE_SCHEMA = '$$SCHEMA_NAME_STRING$$';
+        </Set:ColumnCollationQuery>
+        <Set:DefaultSchemaNameQuery>SELECT cast(schema_name() as varchar(30))</Set:DefaultSchemaNameQuery>
+        <Set:HasCatalogSupport>true</Set:HasCatalogSupport>
+        <Set:PacketSize>32768</Set:PacketSize>
+        <Set:DataReaderName>SqlServerBufferReader</Set:DataReaderName>
+        <Set:SqlTablesMayReturnEmptyObjects>false</Set:SqlTablesMayReturnEmptyObjects>
+        <Invoke:AddUnsupportedDriverCapability>
+          <Parameter:String>SupportsDotInCatalogName</Parameter:String>
+        </Invoke:AddUnsupportedDriverCapability>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>MONEY</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>Money</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>SMALLMONEY</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>SmallMoney</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>UNIQUEIDENTIFIER</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>UniqueIdentifier</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>DATETIMEOFFSET</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>DateTimeOffset</Item:String>
+            <Item:String>DateTime2</Item:String>
+            <Item:String>DateTime</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>SMALLDATETIME</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>SmallDateTime</Item:String>
+            <Item:String>DateTime</Item:String>
+            <Item:String>DateTime2</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>DATETIME</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>DateTime</Item:String>
+            <Item:String>DateTime2</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>TrustServerCertificate</Parameter:String>
+          <Parameter:String>Yes</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>Encrypt</Parameter:String>
+          <Parameter:String>Yes</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+      </Object>
+      <Object Name="SqlDbOptionsBag" Type="OdbcOptionsBag" >
+        <Constructor>
+          <NameRef:BaseMssqlOptionsBag/>
+        </Constructor>
+        <Set:RowCountQuery>
+          SELECT sum(row_count)
+          FROM
+            $$DATABASE_NAME_IDENTIFIER$$.sys.dm_db_partition_stats
+          WHERE
+            object_id = object_id('$$DATABASE_NAME_STRING$$.$$SCHEMA_NAME_STRING$$.$$TABLE_NAME_STRING$$') AND
+            index_id &lt; 2;
+        </Set:RowCountQuery>
+        <Set:TableSizeQuery>
+          SELECT sum(used_page_count) * 8192
+          FROM
+          $$DATABASE_NAME_IDENTIFIER$$.sys.dm_db_partition_stats
+          WHERE
+          object_id = object_id('$$DATABASE_NAME_STRING$$.$$SCHEMA_NAME_STRING$$.$$TABLE_NAME_STRING$$') AND
+          index_id &lt; 2;
+        </Set:TableSizeQuery>
+        <Set:PartitionQuery>
+          SELECT
+            PARTITION_FUNCTIONS.name, QUOTENAME(COLUMNS.name), cast(PARTITIONS.partition_number AS nvarchar(10))
+          FROM
+            $$DATABASE_NAME_IDENTIFIER$$.sys.indexes AS INDEXES,
+            $$DATABASE_NAME_IDENTIFIER$$.sys.partitions AS PARTITIONS,
+            $$DATABASE_NAME_IDENTIFIER$$.sys.index_columns AS INDEX_COLUMNS,
+            $$DATABASE_NAME_IDENTIFIER$$.sys.columns AS COLUMNS,
+            $$DATABASE_NAME_IDENTIFIER$$.sys.partition_functions AS PARTITION_FUNCTIONS,
+            $$DATABASE_NAME_IDENTIFIER$$.sys.partition_schemes AS PARTITION_SCHEMES
+          WHERE
+            -- Match the table's object_id.
+            INDEXES.object_id = object_id('$$DATABASE_NAME_STRING$$.$$SCHEMA_NAME_STRING$$.$$TABLE_NAME_STRING$$') AND
+            -- Ensure it is either a heap or a clustered index.
+            INDEXES.type IN (0,1,5) AND
+            -- Ensure it is a partitioning column.
+            INDEX_COLUMNS.partition_ordinal = 1 AND
+            -- INDEXES join PARTITIONS
+            INDEXES.object_id = PARTITIONS.object_id AND
+            INDEXES.index_id = PARTITIONS.index_id AND
+            -- INDEXES join INDEX_COLUMNS
+            INDEXES.object_id = INDEX_COLUMNS.object_id AND
+            INDEXES.index_id = INDEX_COLUMNS.index_id AND
+            -- INDEXES join PARTITION_SCHEMES
+            INDEXES.data_space_id = PARTITION_SCHEMES.data_space_id AND
+            -- PARTITION_SCHEMES join PARTITION_FUNCTIONS
+            PARTITION_SCHEMES.function_id = PARTITION_FUNCTIONS.function_id AND
+            -- INDEX_COLUMNS join COLUMNS
+            INDEXES.object_id = COLUMNS.object_id AND
+            INDEX_COLUMNS.column_id = COLUMNS.column_id;
+        </Set:PartitionQuery>
+        <Set:PartitionFormatString> WHERE $$DATABASE_NAME_IDENTIFIER$$.$partition.{0}({1}) = {2}</Set:PartitionFormatString>
+      </Object>
+      <Object Name="SqlServerOptionsBag" Type="OdbcOptionsBag" >
+        <Constructor>
+          <NameRef:SqlDbOptionsBag/>
+        </Constructor>
+        <Set:SetDatabaseInConnectionString>false</Set:SetDatabaseInConnectionString>
+      </Object>
+      <Object Name="SqlDwOptionsBag" Type="OdbcOptionsBag" >
+        <Constructor>
+          <NameRef:BaseMssqlOptionsBag/>
+        </Constructor>
+        <Set:RowCountQuery>
+          SELECT sum(rows)
+          FROM
+            $$DATABASE_NAME_IDENTIFIER$$.sys.partitions
+          WHERE
+            object_id = object_id('$$DATABASE_NAME_STRING$$.$$SCHEMA_NAME_STRING$$.$$TABLE_NAME_STRING$$') AND
+            index_id &lt; 2
+          </Set:RowCountQuery>
+        <Set:TableSizeQuery>
+          SELECT sum(PARTITION_STATS.used_page_count) * 8192 FROM
+            $$DATABASE_NAME_IDENTIFIER$$.sys.partitions PARTITIONS,
+            $$DATABASE_NAME_IDENTIFIER$$.sys.dm_pdw_nodes_db_partition_stats PARTITION_STATS
+          WHERE
+            PARTITIONS.object_id = object_id('$$DATABASE_NAME_STRING$$.$$SCHEMA_NAME_STRING$$.$$TABLE_NAME_STRING$$') AND
+            PARTITIONS.partition_id = PARTITION_STATS.partition_id AND
+            PARTITION_STATS.index_id &lt; 2
+        </Set:TableSizeQuery>
+      </Object>
+      <Object Name="OracleOptionsBag" Type="OdbcOptionsBag" >
+        <Set:DriverName>{PolyBase ODBC Driver for Oracle}</Set:DriverName>
+        <Invoke:SetExpectedIdentifierPartsFromFile>
+          <Parameter:Int>3</Parameter:Int>
+        </Invoke:SetExpectedIdentifierPartsFromFile>
+        <Set:ServiceIdentifierComponent>$$DATABASE_NAME_IDENTIFIER$$</Set:ServiceIdentifierComponent>
+        <Set:DatabaseIdentifierName>ServiceName</Set:DatabaseIdentifierName>
+        <Set:ServerIdentifierName>HostName</Set:ServerIdentifierName>
+        <Set:DefaultPortNumber>1521</Set:DefaultPortNumber>
+        <Set:RowCountQuery>SELECT num_rows FROM all_tables WHERE OWNER='$$SCHEMA_NAME_STRING$$' AND TABLE_NAME='$$TABLE_NAME_STRING$$'</Set:RowCountQuery>
+        <Set:TableSizeQuery>SELECT num_rows * avg_row_len FROM all_tables WHERE OWNER='$$SCHEMA_NAME_STRING$$' AND TABLE_NAME='$$TABLE_NAME_STRING$$'</Set:TableSizeQuery>
+        <Set:PartitionQuery>SELECT PARTITION_NAME FROM ALL_TAB_PARTITIONS WHERE PARTITION_NAME IS NOT NULL AND TABLE_OWNER = '$$SCHEMA_NAME_STRING$$' AND TABLE_NAME = '$$TABLE_NAME_STRING$$'</Set:PartitionQuery>
+        <Set:PartitionFormatString> PARTITION({0})</Set:PartitionFormatString>
+        <Set:HasCatalogSupport>false</Set:HasCatalogSupport>
+        <!--We use the NLS_SORT parameter to obtain the language and attributes of the sorting for a column, and NLS_CHARACTERSET parameters to get the character set used in the column.-->
+        <!--This information is used to match with SQL Server collations.-->
+        <Set:ColumnCollationQuery>
+          SELECT COLUMN_NAME, (SELECT VALUE FROM V$NLS_PARAMETERS WHERE PARAMETER = 'NLS_SORT') SORT, VALUE CHARSET FROM V$NLS_PARAMETERS, ALL_TAB_COLS
+          WHERE TABLE_NAME = '$$TABLE_NAME_STRING$$' AND OWNER = '$$SCHEMA_NAME_STRING$$' AND PARAMETER = CASE WHEN CHARACTER_SET_NAME = 'NCHAR_CS' THEN 'NLS_NCHAR_CHARACTERSET' ELSE 'NLS_CHARACTERSET' END
+        </Set:ColumnCollationQuery>
+        <Set:DefaultSchemaNameQuery>SELECT USER FROM DUAL</Set:DefaultSchemaNameQuery>
+        <Set:ExternalCollationRegex>^(?&lt;language&gt;.*?)(?:_M)?(?:(?:_(?&lt;case_insensitive&gt;CI)(?&lt;accent_sensitive&gt;)|_(?&lt;accent_insensitive&gt;AI)(?&lt;case_insensitive&gt;))|(?:(?&lt;case_sensitive&gt;)(?&lt;accent_sensitive&gt;)))$</Set:ExternalCollationRegex>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <!--https://docs.oracle.com/cd/B28359_01/server.111/b28318/datatype.htm#CNCPT413-->
+          <Parameter:String>DATE</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>DateTime2</Item:String>
+            <Item:String>DateTimeOffset</Item:String>
+            <Item:String>DateTime</Item:String>
+            <Item:String>Date</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <!--Explicitly map BINARY_DOUBLE to float-->
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>BINARY_DOUBLE</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>Float</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <!--
+          The driver maps a NUMBER with no precision or scale to SqlDouble.
+          This is correct in the sense that it is most likely to provide sufficient range,
+          but unlike a double, NUMBER uses decimal precision. This means customers with data
+          that can fit inside a SQL Server DECIMAL may want to map to that.
+          https://docs.oracle.com/cd/B28359_01/server.111/b28286/sql_elements001.htm#SQLRF50950
+
+          During type mapping, we will unwittingly be converting between binary and decimal precision
+          when mapping Float to Decimal. This is okay only because we still use the driver's recommendation
+          of a Float as the first choice, so we will never actually surface our converted precision to the user,
+          and because the reflected binary precision (52) will always exceed the maximum decimal precision (38).
+          If we were to ever flip this, or enforce stricter alignment of precision in schema reflection, we would
+          need to introduce the notion of binary vs. decimal precision, and negative scale into our type mapping logic.
+
+          This mapping also assumes that all other Oracle types that map to SQL_DOUBLE ODBC type have already been mapped
+          by their backend type name (e.g. BINARY_DOUBLE). We need to use the ODBC type to do the mapping because the name
+          of the type, NUMBER, will be the same regardless of whether it is floating or fixed point, and we don't want to allow
+          the fixed-point number to be mapped to Float.
+        -->
+        <Invoke:AddOrModifyOdbcTypeToSqlDbTypeMapping>
+          <Parameter:String>SqlDouble</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>Float</Item:String>
+            <Item:String>Decimal</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddOrModifyOdbcTypeToSqlDbTypeMapping>
+        <Invoke:AddUnsupportedExternalTypeName>
+          <Parameter:String>TIMESTAMP(?:\(\d+\))? WITH TIME ZONE</Parameter:String>
+        </Invoke:AddUnsupportedExternalTypeName>
+        <!-- It should be LOCAL TIME ZONE but due to an issue in driver, we get
+         the type name as 'TIMESTAMP WITH LOCAL TIMEZONE. We modified the regex to
+         accomodate this. This change should be reverted once it is fixed in the driver.-->
+        <Invoke:AddUnsupportedExternalTypeName>
+          <Parameter:String>TIMESTAMP(?:\(\d+\))? WITH LOCAL TIME\s?ZONE</Parameter:String>
+        </Invoke:AddUnsupportedExternalTypeName>
+        <Invoke:AddConnectionStringOption>
+          <Parameter:String>ArraySize</Parameter:String>
+          <Parameter:String>1048576</Parameter:String>
+        </Invoke:AddConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>EncryptionLevel</Parameter:String>
+          <Parameter:String>3</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddConnectionStringOption>
+          <Parameter:String>EnableNcharSupport</Parameter:String>
+          <Parameter:String>1</Parameter:String>
+        </Invoke:AddConnectionStringOption>
+        <Invoke:AddSupportedTableType>
+          <Parameter:String>TABLE</Parameter:String>
+        </Invoke:AddSupportedTableType>
+        <Invoke:AddSupportedTableType>
+          <Parameter:String>SYSTEM TABLE</Parameter:String>
+        </Invoke:AddSupportedTableType>
+        <Invoke:AddSupportedTableType>
+          <Parameter:String>VIEW</Parameter:String>
+        </Invoke:AddSupportedTableType>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC37</Parameter:String>
+          <Parameter:String>37</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC37C</Parameter:String>
+          <Parameter:String>37</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>US8PC437</Parameter:String>
+          <Parameter:String>437</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC500</Parameter:String>
+          <Parameter:String>500</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC500C</Parameter:String>
+          <Parameter:String>500</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>AR8ADOS710</Parameter:String>
+          <Parameter:String>710</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>AR8ADOS710T</Parameter:String>
+          <Parameter:String>710</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>AR8ADOS720</Parameter:String>
+          <Parameter:String>720</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>AR8ADOS720T</Parameter:String>
+          <Parameter:String>720</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EL8PC437S</Parameter:String>
+          <Parameter:String>737</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>BLT8PC775</Parameter:String>
+          <Parameter:String>775</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8PC850</Parameter:String>
+          <Parameter:String>850</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EE8PC852</Parameter:String>
+          <Parameter:String>852</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>RU8PC855</Parameter:String>
+          <Parameter:String>855</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>TR8PC857</Parameter:String>
+          <Parameter:String>857</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8PC858</Parameter:String>
+          <Parameter:String>858</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8PC860</Parameter:String>
+          <Parameter:String>860</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>IS8PC861</Parameter:String>
+          <Parameter:String>861</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>CDN8PC863</Parameter:String>
+          <Parameter:String>863</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>N8PC865</Parameter:String>
+          <Parameter:String>865</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>LV8PC8LR</Parameter:String>
+          <Parameter:String>866</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>RU8PC866</Parameter:String>
+          <Parameter:String>866</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EL8PC869</Parameter:String>
+          <Parameter:String>869</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EE8EBCDIC870</Parameter:String>
+          <Parameter:String>870</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EE8EBCDIC870C</Parameter:String>
+          <Parameter:String>870</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EE8EBCDIC870S</Parameter:String>
+          <Parameter:String>870</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>TH8TISASCII</Parameter:String>
+          <Parameter:String>874</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>TH8TISEBCDIC</Parameter:String>
+          <Parameter:String>874</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>TH8TISEBCDICS</Parameter:String>
+          <Parameter:String>874</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EL8EBCDIC875</Parameter:String>
+          <Parameter:String>875</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EL8EBCDIC875R</Parameter:String>
+          <Parameter:String>875</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>ET8MSWIN923</Parameter:String>
+          <Parameter:String>923</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>JA16SJIS</Parameter:String>
+          <Parameter:String>932</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>ZHS16GBK</Parameter:String>
+          <Parameter:String>936</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>KO16KSC5601</Parameter:String>
+          <Parameter:String>949</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>KO16MSWIN949</Parameter:String>
+          <Parameter:String>949</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>ZHT16BIG5</Parameter:String>
+          <Parameter:String>950</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>ZHT16MSWIN950</Parameter:String>
+          <Parameter:String>950</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>TR8EBCDIC1026</Parameter:String>
+          <Parameter:String>1026</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>TR8EBCDIC1026S</Parameter:String>
+          <Parameter:String>1026</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC1047</Parameter:String>
+          <Parameter:String>1047</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC1047E</Parameter:String>
+          <Parameter:String>1047</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC1140</Parameter:String>
+          <Parameter:String>1140</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC1140C</Parameter:String>
+          <Parameter:String>1140</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>D8EBCDIC1141</Parameter:String>
+          <Parameter:String>1141</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>DK8DBCDIC1142</Parameter:String>
+          <Parameter:String>1142</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>S8EBCDCI1143</Parameter:String>
+          <Parameter:String>1143</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>I8EBCDIC1144</Parameter:String>
+          <Parameter:String>1144</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC1145</Parameter:String>
+          <Parameter:String>1145</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8DBCDIC1146</Parameter:String>
+          <Parameter:String>1146</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>F8EBCDIC1147</Parameter:String>
+          <Parameter:String>1147</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC1148</Parameter:String>
+          <Parameter:String>1148</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC1148C</Parameter:String>
+          <Parameter:String>1148</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EE8MSWIN1250</Parameter:String>
+          <Parameter:String>1250</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>BG8MSWIN</Parameter:String>
+          <Parameter:String>1251</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>CL8MSWIN1251</Parameter:String>
+          <Parameter:String>1251</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8MSWIN1252</Parameter:String>
+          <Parameter:String>1252</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EL8MSWIN1253</Parameter:String>
+          <Parameter:String>1253</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>TR8MSWIN1254</Parameter:String>
+          <Parameter:String>1254</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>IW8MSWIN1255</Parameter:String>
+          <Parameter:String>1255</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>AR8MSWIN1256</Parameter:String>
+          <Parameter:String>1256</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>BLT8MSWIN1257</Parameter:String>
+          <Parameter:String>1257</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>VN8MSWIN1258</Parameter:String>
+          <Parameter:String>1258</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8MACROMAN8S</Parameter:String>
+          <Parameter:String>10000</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>AR8ARABICMAC</Parameter:String>
+          <Parameter:String>10004</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>AR8ARABICMACS</Parameter:String>
+          <Parameter:String>10004</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>IW8MACHEBREW</Parameter:String>
+          <Parameter:String>10005</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EL8MACGREEKS</Parameter:String>
+          <Parameter:String>10006</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>CL8MACCYRILLICS</Parameter:String>
+          <Parameter:String>10007</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>TH8MACTHAIS</Parameter:String>
+          <Parameter:String>10021</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EE8MACCES</Parameter:String>
+          <Parameter:String>10029</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>TR8MACTURKISH</Parameter:String>
+          <Parameter:String>10081</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>TR8MACTURKISHS</Parameter:String>
+          <Parameter:String>10081</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EE8MACCROATIANS</Parameter:String>
+          <Parameter:String>10082</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>US7ASCII</Parameter:String>
+          <Parameter:String>20127</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>LA8ISO6937</Parameter:String>
+          <Parameter:String>20269</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>D8EBCDIC273</Parameter:String>
+          <Parameter:String>20273</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>DK8EBCDIC277</Parameter:String>
+          <Parameter:String>20277</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>S8EBCDIC278</Parameter:String>
+          <Parameter:String>20278</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>I8EBCDIC280</Parameter:String>
+          <Parameter:String>20280</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC284</Parameter:String>
+          <Parameter:String>20284</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC285</Parameter:String>
+          <Parameter:String>20285</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>JA16EBCDIC930</Parameter:String>
+          <Parameter:String>20290</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>F8EBCDIC297</Parameter:String>
+          <Parameter:String>20297</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>AR8EBCDIC420S</Parameter:String>
+          <Parameter:String>20420</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EL8EBCDIC423R</Parameter:String>
+          <Parameter:String>20423</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>IW8EBCDIC424</Parameter:String>
+          <Parameter:String>20424</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>IW8EBCDIC424S</Parameter:String>
+          <Parameter:String>20424</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>KO16DBCS</Parameter:String>
+          <Parameter:String>20833</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>CL8KOI8R</Parameter:String>
+          <Parameter:String>20866</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC871</Parameter:String>
+          <Parameter:String>20871</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8EBCDIC924</Parameter:String>
+          <Parameter:String>20924</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>ZHS16CGB231280</Parameter:String>
+          <Parameter:String>20936</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>CL8EBCDIC1025</Parameter:String>
+          <Parameter:String>21025</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>CL8EBCDIC1025C</Parameter:String>
+          <Parameter:String>21025</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>CL8EBCDIC1025R</Parameter:String>
+          <Parameter:String>21025</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>CL8EBCDIC1025S</Parameter:String>
+          <Parameter:String>21025</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>CL8KOI8U</Parameter:String>
+          <Parameter:String>21866</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8ISO8859P1</Parameter:String>
+          <Parameter:String>28591</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EE8ISO8859P2</Parameter:String>
+          <Parameter:String>28592</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>SE8ISO8859P3</Parameter:String>
+          <Parameter:String>28593</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>NEE8ISO8859P4</Parameter:String>
+          <Parameter:String>28594</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>CL8ISO8859P5</Parameter:String>
+          <Parameter:String>28595</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>AR8ISO8859P6</Parameter:String>
+          <Parameter:String>28596</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>EL8ISO8859P7</Parameter:String>
+          <Parameter:String>28597</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>IW8ISO8859P8</Parameter:String>
+          <Parameter:String>28598</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>AZ8ISO8859PE</Parameter:String>
+          <Parameter:String>28599</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8ISO8859P9</Parameter:String>
+          <Parameter:String>28599</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>BLT8ISO8859P13</Parameter:String>
+          <Parameter:String>28603</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>CEL8ISO8859P14</Parameter:String>
+          <Parameter:String>28603</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>WE8ISO8859P15</Parameter:String>
+          <Parameter:String>28605</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>ZHS16DBCS</Parameter:String>
+          <Parameter:String>50936</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>JA16EUC</Parameter:String>
+          <Parameter:String>51932</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>ZHT32EUC</Parameter:String>
+          <Parameter:String>51950</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>AL32UTF8</Parameter:String>
+          <Parameter:String>65001</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddCharacterSetMapping>
+          <Parameter:String>UTF8</Parameter:String>
+          <Parameter:String>65001</Parameter:String>
+        </Invoke:AddCharacterSetMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>ARABIC</Parameter:String>
+          <Parameter:String>ARABIC</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>ARABIC_ABJ_MATCH</Parameter:String>
+          <Parameter:String>ARABIC</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>ARABIC_ABJ_SORT</Parameter:String>
+          <Parameter:String>ARABIC</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>ARABIC_MATCH</Parameter:String>
+          <Parameter:String>ARABIC</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>AZERBAIJANI</Parameter:String>
+          <Parameter:String>AZERI</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>BENGALI</Parameter:String>
+          <Parameter:String>BENGALI</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>BIG5</Parameter:String>
+          <Parameter:String>CHINESE</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>BINARY</Parameter:String>
+          <Parameter:String>BIN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>BULGARIAN</Parameter:String>
+          <Parameter:String>CYRILLIC_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>CANADIAN</Parameter:String>
+          <Parameter:String>LATIN1_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>CATALAN</Parameter:String>
+          <Parameter:String>LATIN1_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>CROATIAN</Parameter:String>
+          <Parameter:String>CROATIAN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>CZECH</Parameter:String>
+          <Parameter:String>CZECH</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>CZECH_PUNCTUATION</Parameter:String>
+          <Parameter:String>CZECH</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>DANISH</Parameter:String>
+          <Parameter:String>DANISH_NORWEGIAN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>DUTCH</Parameter:String>
+          <Parameter:String>LATIN1_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>ESTONIAN</Parameter:String>
+          <Parameter:String>ESTONIAN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>FINNISH</Parameter:String>
+          <Parameter:String>FINNISH</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>FRENCH</Parameter:String>
+          <Parameter:String>FRENCH</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>GBK</Parameter:String>
+          <Parameter:String>CHINESE</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>GERMAN</Parameter:String>
+          <Parameter:String>LATIN1_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>GERMAN_DIN</Parameter:String>
+          <Parameter:String>LATIN1_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>GREEK</Parameter:String>
+          <Parameter:String>GREEK</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>HEBREW</Parameter:String>
+          <Parameter:String>HEBREW</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>HKSCS</Parameter:String>
+          <Parameter:String>CHINESE_HONG_KONG_STROKE</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>HUNGARIAN</Parameter:String>
+          <Parameter:String>HUNGARIAN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>ICELANDIC</Parameter:String>
+          <Parameter:String>ICELANDIC</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>INDONESIAN</Parameter:String>
+          <Parameter:String>LATIN1_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>ITALIAN</Parameter:String>
+          <Parameter:String>LATIN1_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>JAPANESE</Parameter:String>
+          <Parameter:String>JAPANESE</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>KOREAN</Parameter:String>
+          <Parameter:String>KOREAN_WANSUNG</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>LATIN</Parameter:String>
+          <Parameter:String>LATIN1_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>LATVIAN</Parameter:String>
+          <Parameter:String>LATVIAN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>LITHUANIAN</Parameter:String>
+          <Parameter:String>LITHUANIAN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>MALAY</Parameter:String>
+          <Parameter:String>LATIN1_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>NORWEGIAN</Parameter:String>
+          <Parameter:String>NORWEGIAN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>POLISH</Parameter:String>
+          <Parameter:String>POLISH</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>ROMANIAN</Parameter:String>
+          <Parameter:String>ROMANIAN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>RUSSIAN</Parameter:String>
+          <Parameter:String>CYRILLIC_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>SCHINESE_PINYIN</Parameter:String>
+          <Parameter:String>CHINESE_SIMPLIFIED_PINYIN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>SCHINESE_RADICAL</Parameter:String>
+          <Parameter:String>CHINESE_SIMPLIFIED</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>SCHINESE_STROKE</Parameter:String>
+          <Parameter:String>CHINESE_SIMPLIFIED_STROKE_ORDER</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>SLOVAK</Parameter:String>
+          <Parameter:String>SLOVAK</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>SLOVENIAN</Parameter:String>
+          <Parameter:String>SLOVENIAN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>SPANISH</Parameter:String>
+          <Parameter:String>SPANISH</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>SWEDISH</Parameter:String>
+          <Parameter:String>FINNISH_SWEDISH</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>SWISS</Parameter:String>
+          <Parameter:String>LATIN1_GENERAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>TCHINESE_RADICAL</Parameter:String>
+          <Parameter:String>CHINESE_TRADITIONAL</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>TCHINESE_STROKE</Parameter:String>
+          <Parameter:String>CHINESE_TRADITIONAL_STROKE_ORDER</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>THAI</Parameter:String>
+          <Parameter:String>THAI</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>TURKISH</Parameter:String>
+          <Parameter:String>TURKISH</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>UKRAINIAN</Parameter:String>
+          <Parameter:String>UKRAINIAN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>UNICODE_BINARY</Parameter:String>
+          <Parameter:String>BIN</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+        <Invoke:AddLanguageNameMapping>
+          <Parameter:String>VIETNAMESE</Parameter:String>
+          <Parameter:String>VIETNAMESE</Parameter:String>
+        </Invoke:AddLanguageNameMapping>
+      </Object>
+      <Object Name="SqlHdfsOptionsBag" Type="OdbcOptionsBag" >
+        <Set:DriverName>{PolyBase ODBC Driver for SQL Server}</Set:DriverName>
+        <Set:HasCatalogSupport>true</Set:HasCatalogSupport>
+        <Set:SetDatabaseInConnectionString>false</Set:SetDatabaseInConnectionString>
+        <Set:PacketSize>32768</Set:PacketSize>
+        <Set:DataReaderName>ShardedBufferReader</Set:DataReaderName>
+        <Invoke:AddUnsupportedDriverCapability>
+          <Parameter:String>SupportsDotInCatalogName</Parameter:String>
+        </Invoke:AddUnsupportedDriverCapability>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>TrustServerCertificate</Parameter:String>
+          <Parameter:String>No</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>Encrypt</Parameter:String>
+          <Parameter:String>Yes</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>MONEY</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>Money</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>SMALLMONEY</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>SmallMoney</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>UNIQUEIDENTIFIER</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>UniqueIdentifier</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>DATETIMEOFFSET</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>DateTimeOffset</Item:String>
+            <Item:String>DateTime2</Item:String>
+            <Item:String>DateTime</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>SMALLDATETIME</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>SmallDateTime</Item:String>
+            <Item:String>DateTime</Item:String>
+            <Item:String>DateTime2</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>DATETIME</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>DateTime</Item:String>
+            <Item:String>DateTime2</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddConnectionStringOption>
+          <Parameter:String>AutoTranslate</Parameter:String>
+          <Parameter:String>No</Parameter:String>
+        </Invoke:AddConnectionStringOption>
+      </Object>
+      <Object Name="SqlDataPoolOptionsBag" Type="OdbcOptionsBag" >
+        <Constructor>
+          <NameRef:SqlHdfsOptionsBag/>
+        </Constructor>
+        <Invoke:SetExpectedIdentifierPartsFromFile>
+          <Parameter:Int>3</Parameter:Int>
+        </Invoke:SetExpectedIdentifierPartsFromFile>
+        <!--Adding port of back end data pool. This must be removed once the controller can send the port-->
+        <Set:DefaultPortNumber>1433</Set:DefaultPortNumber>
+        <Set:ColumnCollationQuery>
+          SELECT
+            COLUMN_NAME, COLLATION_NAME, CHARACTER_SET_NAME
+          FROM
+            $$DATABASE_NAME_IDENTIFIER$$.INFORMATION_SCHEMA.COLUMNS
+          WHERE
+            TABLE_NAME = '$$TABLE_NAME_STRING$$' AND
+            TABLE_SCHEMA = '$$SCHEMA_NAME_STRING$$';
+        </Set:ColumnCollationQuery>
+        <Set:DefaultSchemaNameQuery>SELECT cast(schema_name() as varchar(30))</Set:DefaultSchemaNameQuery>
+      </Object>
+      <Object Name="SqlComputePoolOptionsBag" Type="OdbcOptionsBag" >
+        <Constructor>
+          <NameRef:SqlDataPoolOptionsBag/>
+        </Constructor>
+      </Object>
+
+      <!--3rd Party Driver Configuration-->
+      <Object Name="OdbcOptionsBag,Driver={HDBODBC}" Type="OdbcOptionsBag" >
+        <Constructor>
+          <NameRef:OdbcOptionsBag/>
+        </Constructor>
+        <Set:ServerIdentifierName>ServerNode</Set:ServerIdentifierName>
+      </Object>
+      <Object Name="OdbcOptionsBag,Driver={IBM DB2 ODBC DRIVER}" Type="OdbcOptionsBag" >
+        <Constructor>
+          <NameRef:OdbcOptionsBag/>
+        </Constructor>
+        <Set:ServerIdentifierName>HostName</Set:ServerIdentifierName>
+      </Object>
+      <Object Name="OdbcOptionsBag,Driver={Microsoft Spark ODBC Driver}" Type="OdbcOptionsBag" >
+        <Set:HasCatalogSupport>false</Set:HasCatalogSupport>
+        <Set:ServerIdentifierName>Host</Set:ServerIdentifierName>
+        <Set:IdentifierEscapeCharacter>`</Set:IdentifierEscapeCharacter>
+        <Invoke:AddUnsupportedDriverCapability>
+          <Parameter:String>SupportsRowCount</Parameter:String>
+        </Invoke:AddUnsupportedDriverCapability>
+        <Invoke:AddTypeNameToSqlDbTypeMapping>
+          <Parameter:String>STRING</Parameter:String>
+          <Parameter:StringArray>
+            <Item:String>VarChar</Item:String>
+            <Item:String>NVarChar</Item:String>
+            <Item:String>Char</Item:String>
+            <Item:String>NChar</Item:String>
+          </Parameter:StringArray>
+        </Invoke:AddTypeNameToSqlDbTypeMapping>
+        <Invoke:AddConnectionStringOption>
+          <Parameter:String>DefaultStringColumnLength</Parameter:String>
+          <Parameter:String>2147483647</Parameter:String>
+        </Invoke:AddConnectionStringOption>
+        <Invoke:AddConnectionStringOption>
+          <Parameter:String>BinaryColumnLength</Parameter:String>
+          <Parameter:String>2147483647</Parameter:String>
+        </Invoke:AddConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>SSL</Parameter:String>
+          <Parameter:String>1</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>AllowSelfSignedServerCert</Parameter:String>
+          <Parameter:String>1</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>SparkServerType</Parameter:String>
+          <Parameter:String>3</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>ShowSystemTable</Parameter:String>
+          <Parameter:String>1</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>ThriftTransport</Parameter:String>
+          <Parameter:String>2</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>AuthMech</Parameter:String>
+          <Parameter:String>3</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+        <Invoke:AddEncryptionConnectionStringOption>
+          <Parameter:String>UseNativeQuery</Parameter:String>
+          <Parameter:String>1</Parameter:String>
+        </Invoke:AddEncryptionConnectionStringOption>
+      </Object>
+    </Objects>
+  </ObjectFactory>

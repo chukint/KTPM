@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Messages [
+  <!ELEMENT Messages (Package*)>
+
+  <!ELEMENT Package (Error*)>
+  <!ATTLIST Package ID CDATA #REQUIRED>
+  <!ATTLIST Package DefaultComponent CDATA #REQUIRED>
+
+  <!ELEMENT Error (#PCDATA)>
+  <!ATTLIST Error Key ID #REQUIRED>
+  <!ATTLIST Error Component CDATA #IMPLIED>
+  <!ATTLIST Error NativeErrorCode CDATA #REQUIRED>
+  <!ATTLIST Error Params CDATA "0">
+]>
+
+<Messages>
+  <Package ID="5067603" DefaultComponent="SchemaMap">
+
+    <Error Key="SMParseError" NativeErrorCode="10">Failed to parse JSON.</Error>
+
+    <Error Key="FileNotFound" Params="1" NativeErrorCode="20">Failed to open file: '%1%'.</Error>
+
+    <Error Key="EmptyFile" Params="1" NativeErrorCode="21">File was empty: '%1%'.</Error>
+
+    <Error Key="InvalidJson" NativeErrorCode="30">Invalid JSON structure.</Error>
+
+    <Error Key="NoColumnDefinition" NativeErrorCode="31">Invalid JSON structure: No Column Definition found.</Error>
+
+    <Error Key="NoTableDefinition" NativeErrorCode="32">Invalid JSON structure: No Table Definition found.</Error>
+
+    <Error Key="CatalogRequiredAttribute" Params="2" NativeErrorCode="40">Invalid Catalog '%1%': Missing required attribute '%2%'.</Error>
+    
+    <Error Key="SchemaRequiredAttribute" Params="2" NativeErrorCode="41">Invalid Schema '%1%': Missing required attribute '%2%'.</Error>
+    
+    <Error Key="TableRequiredAttribute" Params="2" NativeErrorCode="42">Invalid Table '%1%': Missing required attribute '%2%'.</Error>
+    
+    <Error Key="ColumnRequiredAttribute" Params="2" NativeErrorCode="43">Invalid Column '%1%': Missing required attribute '%2%'.</Error>
+
+    <Error Key="InvalidSMDefinition" NativeErrorCode="50">The schema definition file you are trying to load is either corrupt, invalid or older. Please use a valid file.</Error>
+
+  </Package>
+</Messages>

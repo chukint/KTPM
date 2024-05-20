@@ -1,0 +1,1623 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+//**************************************************************************
+// <copyright file="CommonDiagnosticsConfig.xml" company="Microsoft">
+//     Copyright (c) Microsoft Corporation.  All rights reserved.
+// </copyright>
+//**************************************************************************
+
+//**************************************************************************
+// @Owner: tomerv
+// @Test:
+//
+// Purpose:
+// Defines configuration for common diagnostics components across PDW appliance.
+//
+// Notes/Assumptions/Dependencies:
+// none
+//
+// @EndHeader@
+//**************************************************************************
+-->
+<ObjectFactory xmlns:Invoke="Microsoft.SqlServer.DataWarehouse.Common.Ioc.MethodConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Set="Microsoft.SqlServer.DataWarehouse.Common.Ioc.PropertyConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Parameter="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Item="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:NameRef="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:TypeRef="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common">
+  <Types>
+    <Type Alias="DataColumn" Name="System.Data.DataColumn"/>
+
+    <Type Alias="Event" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.ApplicationEventDescriptor, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="Event[]" Name="System.Collections.Generic.List`1[[Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.ApplicationEventDescriptor]]"/>
+    <Type Alias="EventCategory" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Events.EventCategoryInfo, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventCategory[]" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Events.EventCategoryInfo[], Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="XEventHeader" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.XEvent.XEventHeaderInfo, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="XEventProperty" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.XEvent.XEventPropertyInfo, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="IEventInfo" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.IEventInfo, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="IEventInfo[]" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.IEventInfo[], Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventPayloadInfo" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Events.EventPayloadInfo, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="IEventProperty" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.IEventProperty, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventProperty" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.EventProperty, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="IEventFilter" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Filters.IEventFilter, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventDescriptorFilter" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Filters.EventDescriptorFilter, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventExceptionTypeFilter" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Filters.EventExceptionTypeFilter, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventPropertyFilter" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Filters.EventPropertyFilter, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventCategoryFilter" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Filters.EventCategoryFilter, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventCategoryValueFilter" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Filters.EventCategoryValueFilter, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventBitwiseGroupFilter" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Filters.EventBitwiseGroupFilter, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="IEventContext" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.ContextHandlers.IEventContext, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="ProcessContextPayload" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.ProcessContextPayload, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="CallstackContextPayload" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.CallstackContextPayload, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventPropertyFilteredContext" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.ContextHandlers.EventPropertyFilteredContext, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventConfigurationGroup" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Events.EventConfigurationGroup, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="IApplicationEventFilter" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.IApplicationEventFilter, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="IEventConfigurationAction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Events.IEventConfigurationAction, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventInfoConfigurationAction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Events.EventInfoConfigurationAction, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventPropertyConfigurationAction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Events.EventPropertyConfigurationAction, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventManager" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.EventManager, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="DefaultEventContainer" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.GeneralInstrumentation, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="DiagnosticsSessionPayload" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.DiagnosticsSessionPayload, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="DiagnosticsRingBufferTargetPayload" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.DiagnosticsRingBufferTargetPayload, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventTraceManager" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Tracing.EventTraceManager, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="DebugPayload" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Tracing.DebugPayload, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="SimpleEventQueue" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.SimpleEventQueue, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="IEventListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.IEventListener, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="LoggingListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.LoggingListener, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="WindowsEventLogListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.EventLogListener, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventLogItem" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.EventLogItem, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventLogItem[]" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.EventLogItem[], Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="PerformanceCounterListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.PerformanceCounterListener, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventPerformanceCounterInfo" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Performance.EventPerformanceCounterInfo, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventPerformanceCounterInfo[]" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Performance.EventPerformanceCounterInfo[], Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="PerformanceCounterConfigurationDescriptor" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Performance.PerformanceCounterConfigurationDescriptor, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="PerformanceCounterConfigurationDescriptor[]" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Performance.PerformanceCounterConfigurationDescriptor[], Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="ErrorContextListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.ErrorContextListener, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="RingBufferListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.RingBufferListener, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="PersistedRingBufferListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.PersistedRingBufferListener, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="FilterRingBufferEntry" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.FilterRingBufferEntry, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="DmvBufferDescriptor" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.DmvBufferDescriptor, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="DmvBufferDescriptor[]" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.DmvBufferDescriptor[], Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventDataColumnDescriptor" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.EventDataColumnDescriptor, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="EventDataColumnDescriptor[]" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.EventDataColumnDescriptor[], Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="SosSqlDumperListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.SosSqlDumperListener, Microsoft.SqlServer.DataWarehouse.Diagnostics" />
+    <Type Alias="ControlInjectionListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.ControlInjectionListener, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="AssertListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.ControlInjectionListener, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="ManagementInstrumentationListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.ManagementInstrumentationListener, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="DebuggerListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.DebuggerListener, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="PriorityCategories" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Events.PriorityCategories, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="SeverityCategories" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Events.SeverityCategories, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="PerformanceCounterCategoryType" Name="System.Diagnostics.PerformanceCounterCategoryType"/>
+    <Type Alias="RemoteServiceListener" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.RemoteServiceListener, Microsoft.SqlServer.DataWarehouse.Common"/>
+
+    <Type Alias="AggregateFunction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.IEventDataColumnAggregateFunction, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="ReplaceValueAggregateFunction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.ReplaceValueEventRingBufferAggregation, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="AverageValueAggregateFunction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.AverageValueRingBufferAggregation, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="IncrementByValueAggregateFunction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.IncrementByEventRingBufferAggregation, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="RateAggregateFunction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.RateEventRingBufferAggregation, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="MaxAggregateFunction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.MaxEventRingBufferAggregation, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="MaxIntAggregateFunction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.MaxIntEventRingBufferAggregation, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="MinAggregateFunction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.MinEventRingBufferAggregation, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="TransitionFunction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.TransitionEventRingBufferFunction, Microsoft.SqlServer.DataWarehouse.Common"/>
+
+    <Type Alias="DurationColumnValueFunction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.DurationColumnValueFunction, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="DurationColumnIntValueFunction" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.DurationColumnIntValueFunction, Microsoft.SqlServer.DataWarehouse.Common"/>
+
+    <Type Alias="IService" Name="Microsoft.SqlServer.DataWarehouse.Common.Service.IService, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="EventManagerService" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Service.EventManagerService, Microsoft.SqlServer.DataWarehouse.Diagnostics"/>
+    <Type Alias="IEventManagerServiceHeartbeatSubscriber" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Service.IEventManagerServiceHeartbeatSubscriber, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="IEventManagerServicePeerProvider" Name="Microsoft.SqlServer.DataWarehouse.Fabric.IEventManagerServicePeerProvider, Microsoft.SqlServer.DataWarehouse.Fabric.Interface"/>
+    <Type Alias="DefaultDiagnosticsPeerProvider" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Service.DefaultDiagnosticsPeerProvider, Microsoft.SqlServer.DataWarehouse.Common" FilterOverride="Full"/>
+    <Type Alias="XdbDiagnosticsPeerProvider" Name="Microsoft.SqlServer.DataWarehouse.Fabric.Xdb.XdbDiagnosticsPeerProvider, Microsoft.SqlServer.DataWarehouse.Fabric.Xdb" FilterOverride="Xdb"/>
+    <Type Alias="PolybaseDiagnosticsPeerProvider" Name="Microsoft.SqlServer.DataWarehouse.Fabric.PolybaseDiagnosticsPeerProvider, Microsoft.SqlServer.DataWarehouse.Fabric.Polybase" FilterOverride="Polybase"/>
+
+    <Type Alias="PerformanceManager" Name="Microsoft.SqlServer.DataWarehouse.Common.Performance.PerformanceManager, Microsoft.SqlServer.DataWarehouse.Common"/>
+
+    <Type Alias="ISqlObfuscator" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.ISqlObfuscator, Microsoft.SqlServer.DataWarehouse.Common" />
+    <Type Alias="IObfuscationSettings" Name="Microsoft.SqlServer.DataWarehouse.Common.Configuration.IObfuscationSettings, Microsoft.SqlServer.DataWarehouse.Common" />
+
+    <Type Alias="RollingFileAppenderProperties" Name="Microsoft.SqlServer.DataWarehouse.Hadoop.HadoopBridge.RollingFileAppenderProperties, Microsoft.SqlServer.DataWarehouse.Hadoop.HadoopBridge" FilterOverride="NonLite"/>
+
+    <Type Alias="IPropertyResolver" Name="Microsoft.SqlServer.DataWarehouse.Configuration.IPropertyResolver, Microsoft.SqlServer.DataWarehouse.Configuration"/>
+    <Type Alias="IProperty" Name="Microsoft.SqlServer.DataWarehouse.Common.Configuration.IProperty`1, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="IntConfigProperty" Name="Microsoft.SqlServer.DataWarehouse.Configuration.ConfigProperty`1[[System.Int32]], Microsoft.SqlServer.DataWarehouse.Configuration" />
+    <Type Alias="FabricResolver" Name="Microsoft.SqlServer.DataWarehouse.Configuration.FabricPropertyResolver, Microsoft.SqlServer.DataWarehouse.Configuration"/>
+    <Type Alias="ObjectPropertyDecorator" Name="Microsoft.SqlServer.DataWarehouse.Common.IoC.ObjectPropertyDecorator, Microsoft.SqlServer.DataWarehouse.Common"/>
+    <Type Alias="TruncateStringMutator" Name="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.Listeners.TruncateStringColumnValueMutator, Microsoft.SqlServer.DataWarehouse.Common"/>
+  </Types>
+
+  <Objects>
+
+    <!--BEGIN: Define categories available in the configuration-->
+    <Object Name="XEventCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>XEvent</Set:Name>
+      <Set:Description>This category represents events that can be published as SQL Server Extended Events</Set:Description>
+    </Object>
+
+    <Object Name="WindowsEventLogCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>WindowsEventLog</Set:Name>
+      <Set:Description>This category represents events that can be published as Windows Event Log entries</Set:Description>
+    </Object>
+
+    <Object Name="PerformanceCounterCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>PerformanceCounter</Set:Name>
+      <Set:Description>This category represents events that fall into performance counter category and to be used to increment/decrement associated performance counters</Set:Description>
+    </Object>
+
+    <Object Name="DurationCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>Duration</Set:Name>
+      <Set:Description>This category represents events that fall into duration measurement category.</Set:Description>
+    </Object>
+
+    <Object Name="SystemEventsCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>SystemEvents</Set:Name>
+      <Set:Description>This category represents events produced by listening to OS events</Set:Description>
+    </Object>
+
+    <Object Name="GlobalWindowsEventsCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="DefaultEventContainer" FactoryMethod="GlobalWindowsEventsCategory"/>
+    </Object>
+
+    <Object Name="LocalWindowsEventsCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="DefaultEventContainer" FactoryMethod="LocalWindowsEventsCategory"/>
+    </Object>
+
+    <Object Name="HardwareEventsCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="DefaultEventContainer" FactoryMethod="HardwareEventsCategory"/>
+    </Object>
+
+    <Object Name="FatalCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="PriorityCategories" FactoryMethod="Fatal"/>
+    </Object>
+
+    <Object Name="ErrorCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="PriorityCategories" FactoryMethod="Error"/>
+    </Object>
+
+    <Object Name="WarningCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="PriorityCategories" FactoryMethod="Warning"/>
+    </Object>
+
+    <Object Name="InfoCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="PriorityCategories" FactoryMethod="Info"/>
+    </Object>
+
+    <Object Name="DebugCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="PriorityCategories" FactoryMethod="Debug"/>
+    </Object>
+
+    <Object Name="TraceCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="PriorityCategories" FactoryMethod="Trace"/>
+    </Object>
+
+    <Object Name="VerboseCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="PriorityCategories" FactoryMethod="Trace"/>
+    </Object>
+
+    <Object Name="CriticalCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="SeverityCategories" FactoryMethod="Critical"/>
+    </Object>
+
+    <Object Name="HighCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="SeverityCategories" FactoryMethod="High"/>
+    </Object>
+
+    <Object Name="NormalCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="SeverityCategories" FactoryMethod="Normal"/>
+    </Object>
+
+    <Object Name="LowCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Constructor IsStaticFactory="true" FactoryType="SeverityCategories" FactoryMethod="Low"/>
+    </Object>
+
+    <Object Name="DebuggingCategory" Type="EventCategory" Lifecycle="Singleton">
+      <Set:Name>Debugging</Set:Name>
+      <Set:Description>This category represents events produced by Debug.Assert and Debug.Fail calls</Set:Description>
+    </Object>
+    <!--END: Define categories available in the configuration-->
+
+    <Object Type="ObjectPropertyDecorator" Name="FabricConfigurationDecorator">
+      <Method Name="AddProperty">
+        <Parameter Type="string">Resolver</Parameter>
+        <Parameter ObjectName="FabricResolverPropertyResolver"/>
+      </Method>
+    </Object>
+
+    <Object Type="IPropertyResolver" AsType="FabricResolver" Name="FabricResolverPropertyResolver" Lifecycle="Singleton"/>
+
+    <Object Type="IProperty" AsType="IntConfigProperty" Name="DmsDiagnosticsPort" Decorator="FabricConfigurationDecorator" Lifecycle="Singleton"/>
+    <Object Type="IProperty" AsType="IntConfigProperty" Name="CtlDiagnosticsPort" Decorator="FabricConfigurationDecorator" Lifecycle="Singleton"/>
+
+    <Object Type="bool"
+            Name="DiagTestMode"
+            Lifecycle="Singleton" FilterOverride="Full">${HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SQL Server Parallel Data Warehouse\Configuration\DiagTestMode\Value}</Object>
+    <Object Type="bool"
+            Name="DiagTestMode"
+            Lifecycle="Singleton" FilterOverride="Lite">true</Object>
+    <Object Type="bool"
+            Name="DiagTestMode"
+            Lifecycle="Singleton" FilterOverride="AnyXdb">true</Object>
+    <Object Type="bool"
+            Name="DiagTestMode"
+            Lifecycle="Singleton" FilterOverride="Polybase">
+      <Constructor FactoryName="PolybaseFabricProperties" FactoryMethod="DiagTestMode"/>
+    </Object>
+
+    <Object Type="int"
+        Name="MaxDiagSessions"
+        Lifecycle="Singleton">100</Object>
+
+    <Object Type="String"
+           Name="LogPath"
+           Lifecycle="Singleton" FilterOverride="Full">${HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SQL Server Parallel Data Warehouse\Configuration\LogPath}</Object>
+    <Object Type="String"
+           Name="LogPath"
+           Lifecycle="Singleton" FilterOverride="Lite">Logs</Object>
+    <Object Type="String"
+           Name="LogPath"
+           Lifecycle="Singleton" FilterOverride="AnyXdb">
+      <Constructor FactoryName="XdbFabricProperties" FactoryMethod="LoggingDirectory"/>
+    </Object>
+    <Object Type="String"
+           Name="LogPath"
+           Lifecycle="Singleton" FilterOverride="Polybase">
+      <Constructor FactoryName="PolybaseFabricProperties" FactoryMethod="LoggingDirectory"/>
+    </Object>
+
+    <Object Name="StackTraceFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.StackTrace</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>StackTrace</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+        </Object>
+      </Set:Field>
+    </Object>
+
+
+    <Object Name="ComplianceTagFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>ComplianceTag</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>ComplianceTag</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="EventNameFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>FullName</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceValueFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>event_name</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>1000</Set:MaxLength>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="EventCountFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:IsCalculated>true</Set:IsCalculated>
+      <Set:AggregateFunction ObjectName="IncrementFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>total_event_count</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="EventDateTimePublishedFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>DateTimePublished</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>event_datetime_published</Set:ColumnName>
+          <Set:DataType>DateTime</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="EventDescriptionFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>Message</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>event_description</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>4000</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="MachineNameFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>MachineName</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>machine_name</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ProcessNameFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>ProcessName</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>process_name</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ThreadIdFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>ThreadId</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>thread_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ClientSessionIdFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>Client.ClientSessionId</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>client_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>255</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SessionIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>Session.SessionId</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>session_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ErrorIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>ErrorId</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="ReplaceWhenNullFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>error_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>36</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="QueryIdFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>Query.QueryId</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>query_id</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>32</Set:MaxLength>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SPIDFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.SPID</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>spid</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="SqlRequestIdFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>CustomContext.RequestInfo.request_id</Set:PropertyName>
+      <Set:AggregateFunction ObjectName="MaxFunction"/>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>request_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ProcessIdFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>ProcessId</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>process_id</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ApplicationVersionFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyTemplate>$[ApplicationVersion.Major].$[ApplicationVersion.MajorRevision].$[ApplicationVersion.Minor].$[ApplicationVersion.MinorRevision]</Set:PropertyTemplate>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>application_version</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+          <Set:MaxLength>4000</Set:MaxLength>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="DurationMillisecondsFieldDescriptor" Type="EventDataColumnDescriptor" FilterOverride="NonLite">
+      <Set:PropertyName>Duration.TotalMilliseconds</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>duration_msec</Set:ColumnName>
+          <Set:DataType>Double</Set:DataType>
+          <Set:AllowDBNull>false</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ErrorCodeFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.ErrorCode</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>ErrorCode</Set:ColumnName>
+          <Set:DataType>int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ErrorStateFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>CustomContext.ErrorState</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>ErrorState</Set:ColumnName>
+          <Set:DataType>int</Set:DataType>
+          <Set:AllowDBNull>true</Set:AllowDBNull>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="AllErrorsFilter" Type="EventBitwiseGroupFilter"  Lifecycle="Singleton">
+      <Set:Operation>OR</Set:Operation>
+
+      <Invoke:AddFilter>
+        <Parameter>
+          <Object Type="EventCategoryValueFilter">
+            <Set:CategoryGroup>Severity</Set:CategoryGroup>
+            <Set:CategoryValue>8</Set:CategoryValue>
+            <Set:Comparison>LessThan</Set:Comparison>
+          </Object>
+        </Parameter>
+      </Invoke:AddFilter>
+
+      <Invoke:AddFilter>
+        <Parameter>
+          <Object Type="EventCategoryValueFilter">
+            <Set:CategoryGroup>Priority</Set:CategoryGroup>
+            <Set:CategoryValue>7</Set:CategoryValue>
+            <Set:Comparison>LessThan</Set:Comparison>
+          </Object>
+        </Parameter>
+      </Invoke:AddFilter>
+    </Object>
+
+    <Object Name="GlobalErrorContextListener" Type="IEventListener" AsType="ErrorContextListener" Lifecycle="Singleton">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Invoke:AddFilter>
+        <NameRef:AllErrorsFilter/>
+      </Invoke:AddFilter>
+    </Object>
+
+    <Object Name="ErrorRingBufferListener" Type="IEventListener" AsType="PersistedRingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:Mode>RingBuffer</Set:Mode>
+      <Set:IsPersisted>true</Set:IsPersisted>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:TableName>pdw_errors</Set:TableName>
+
+      <Invoke:AddView>
+        <Parameter:String>dm_pdw_errors</Parameter:String>
+        <Parameter:String>
+          [ErrorId] as [error_id],
+          [ModuleName] as [source],
+          [FullName] as [type],
+          [DateTimePublished] as [create_time],
+          [CurrentNode.Id] as [pdw_node_id],
+          [Session.SessionId] as [session_id],
+          [Query.QueryId] as [request_id],
+          [CustomContext.SPID] as [spid],
+          [ThreadId] as [thread_id],
+          CAST([Message] AS nvarchar(4000)) as [details]
+        </Parameter:String>
+      </Invoke:AddView>
+
+      <Invoke:AddFilter>
+        <NameRef:AllErrorsFilter/>
+      </Invoke:AddFilter>
+
+      <Invoke:Register/>
+    </Object>
+
+
+    <Object Name="ErrorRingBufferListenerPolybase" Type="IEventListener" AsType="PersistedRingBufferListener" Lifecycle="Singleton" FilterOverride="Polybase">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:Mode>RingBuffer</Set:Mode>
+      <Set:IsPersisted>true</Set:IsPersisted>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:TableName>pdw_errors</Set:TableName>
+
+      <Invoke:AddView>
+        <Parameter:String>_dm_exec_compute_node_errors</Parameter:String>
+        <Parameter:String>
+          [ErrorId] as [error_id],
+          [ModuleName] as [source],
+          [FullName] as [type],
+          [DateTimePublished] as [create_time],
+          [CurrentNode.Id] as [compute_node_id],
+          [Query.QueryId] as [execution_id],
+          [CustomContext.SPID] as [spid],
+          [ThreadId] as [thread_id],
+          CAST([Message] AS nvarchar(4000)) as [details]
+        </Parameter:String>
+      </Invoke:AddView>
+
+      <Invoke:AddFilter>
+        <NameRef:AllErrorsFilter/>
+      </Invoke:AddFilter>
+
+      <Invoke:Register/>
+    </Object>
+
+    <Object Name="HardwareComponentsRingBufferListener" Type="IEventListener" AsType="PersistedRingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:Mode>Update</Set:Mode>
+      <Set:IsPersisted>true</Set:IsPersisted>
+      <Set:TableName>pdw_health_components_data</Set:TableName>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:PrimaryKey>$[CustomContext.ComponentId].$[CustomContext.ParentId].$[CustomContext.ComponentType].$[CustomContext.ChildId]</Set:PrimaryKey>
+      <Set:ProcessRealTime>true</Set:ProcessRealTime>
+      <Invoke:AddEvent>
+        <NameRef:ApplianceHealthComponentAvailableEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:Register/>
+    </Object>
+
+    <Object Name="PerformanceCountersPersistedTableListener" Type="IEventListener" AsType="PersistedRingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:TableName>pdw_performance_data</Set:TableName>
+      <Set:Mode>Update</Set:Mode>
+      <Set:IsPersisted>true</Set:IsPersisted>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:PrimaryKey>$[CustomContext.Node.Id].$[CustomContext.CounterCategory].$[CustomContext.InstanceName].$[CustomContext.CounterName]</Set:PrimaryKey>
+      <Set:IsBatchEnabled>true</Set:IsBatchEnabled>
+      <Set:BatchCommandText>PublishPerformanceCounterData</Set:BatchCommandText>
+      <Set:BatchCommandParameter>@PerformanceCounterDataBatch</Set:BatchCommandParameter>
+      <Set:ProcessRealTime>true</Set:ProcessRealTime>
+
+      <Invoke:AddView>
+        <Parameter:String>dm_pdw_os_performance_counters</Parameter:String>
+        <Parameter:String>
+          [CustomContext.Node.Id] as [pdw_node_id],
+          [CustomContext.CounterName] as [counter_name],
+          [CustomContext.CounterCategory] as [counter_category],
+          [CustomContext.InstanceName]  as [instance_name],
+          [CustomContext.CounterValue] as [counter_value],
+          [DateTimePublished] as [last_update_time]
+        </Parameter:String>
+      </Invoke:AddView>
+
+      <Invoke:AddEvent>
+        <NameRef:PerformanceCounterCollectedEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:Register/>
+    </Object>
+
+    <Object Name="HardwareHealthStatusPersistedTableListener" Type="IEventListener" AsType="PersistedRingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:TableName>pdw_component_health_data</Set:TableName>
+      <Set:Mode>Update</Set:Mode>
+      <Set:IsPersisted>true</Set:IsPersisted>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+      <Set:PrimaryKey>$[CustomContext.Node.Id].$[CustomContext.ComponentId].$[CustomContext.InstanceId].$[CustomContext.DetailId].$[CustomContext.ParentId]</Set:PrimaryKey>
+      <Set:IsBatchEnabled>true</Set:IsBatchEnabled>
+      <Set:BatchCommandText>PublishHealthStatusData</Set:BatchCommandText>
+      <Set:BatchCommandParameter>@HealthStatusDataBatch</Set:BatchCommandParameter>
+      <Set:BatchCommandFilterParameters>PdwNodeId,SourceName,ClusterId</Set:BatchCommandFilterParameters>
+      <Set:ProcessRealTime>true</Set:ProcessRealTime>
+      <!--This listener uses a custom stored procedure that is designed to
+      ignore inserting data in certain circumstances such as when multiple processes
+      perform the update and all but one process are chosen to be ignored
+      to simulate one at a time synchornous updates to the destination table.
+      In the above case operation executed by the ignored processes will return
+      affected row count = 0 which is expected and we should not assert there.-->
+      <Set:ValidateRowCount>false</Set:ValidateRowCount>
+
+      <Invoke:AddColumnMapping>
+        <Parameter:String>PdwNodeId</Parameter:String>
+        <Parameter:String>CustomContext.CurrentNode.Id</Parameter:String>
+      </Invoke:AddColumnMapping>
+
+      <Invoke:AddColumnMapping>
+        <Parameter:String>SourceName</Parameter:String>
+        <Parameter:String>CustomContext.SourceName</Parameter:String>
+      </Invoke:AddColumnMapping>
+
+      <Invoke:AddColumnMapping>
+        <Parameter:String>ClusterId</Parameter:String>
+        <Parameter:String>CustomContext.ClusterId</Parameter:String>
+      </Invoke:AddColumnMapping>
+
+      <Invoke:AddView>
+        <Parameter:String>dm_pdw_component_health_status</Parameter:String>
+        <Parameter:String>
+          [CustomContext.Node.Id] as [pdw_node_id],
+          [CustomContext.ComponentId] as [component_id],
+          [CustomContext.DetailId] as [property_id],
+          [CustomContext.InstanceId] as [component_instance_id],
+          [CustomContext.DetailValue]  as [property_value],
+          [DateTimePublished] as [update_time]
+        </Parameter:String>
+      </Invoke:AddView>
+
+      <Invoke:AddEvent>
+        <NameRef:SystemHealthDataEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:Register/>
+    </Object>
+
+    <Object Name="HardwareAlertsPersistedTableListener" Type="IEventListener" AsType="PersistedRingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:TableName>pdw_component_alerts_data</Set:TableName>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:Mode>RingBuffer</Set:Mode>
+      <Set:IsPersisted>true</Set:IsPersisted>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+
+      <Invoke:AddView>
+        <Parameter:String>dm_pdw_component_health_alerts</Parameter:String>
+        <Parameter:String>
+          [CustomContext.Node.Id] as [pdw_node_id],
+          [CustomContext.ParentId] as [component_id],
+          [CustomContext.ComponentInstanceId] as [component_instance_id],
+          [CustomContext.AlertId] as [alert_id],
+          [CustomContext.InstanceId] as [alert_instance_id],
+          [CustomContext.PreviousValue]  as [previous_value],
+          [CustomContext.CurrentValue]  as [current_value],
+          [DateTimePublished] as [create_time]
+        </Parameter:String>
+      </Invoke:AddView>
+
+      <Invoke:AddEvent>
+        <NameRef:SystemAlertEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:Register/>
+    </Object>
+
+    <Object Name="EventLogAlertsPersistedTableListener" Type="IEventListener" AsType="PersistedRingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:TableName>pdw_os_event_logs</Set:TableName>
+      <Set:MaxItemCount>10000</Set:MaxItemCount>
+      <Set:Mode>RingBuffer</Set:Mode>
+      <Set:IsPersisted>true</Set:IsPersisted>
+      <Set:ServiceLocation>Control</Set:ServiceLocation>
+
+      <Invoke:AddView>
+        <Parameter:String>dm_pdw_os_event_logs</Parameter:String>
+        <Parameter:String>
+          [CurrentNode.Id] as [pdw_node_id],
+          [CustomContext.LogName] as [log_name],
+          [CustomContext.SourceName] as [log_source],
+          CAST([CustomContext.EntryId] AS bigint) as [event_id],
+          [CustomContext.EntryType] as [event_type],
+          CAST([Message] AS nvarchar(4000)) as [event_message],
+          [CustomContext.TimeGeneated] as [generate_time],
+          [CustomContext.TimeWritten] as [write_time]
+        </Parameter:String>
+      </Invoke:AddView>
+
+      <Invoke:AddEvent>
+        <NameRef:EventLogEntryEvent/>
+      </Invoke:AddEvent>
+
+      <Invoke:Register/>
+    </Object>
+
+    <!-- This object specifies the properties for the rolling log file appender (listener) associated with log4j logger of the java bridge JVM. -->
+    <Object Name="JavaBridgeRollingFileAppenderProperties" Type="RollingFileAppenderProperties" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:LogDirectory ObjectName="LogPath"/>
+      <Set:RollSizeInBytes>52428800</Set:RollSizeInBytes>
+      <Set:MaxRolledFileCount>10</Set:MaxRolledFileCount>
+    </Object>
+
+    <!--Listener responsible for processing events as textual messages to the log file: warnings, errors and critical failures-->
+    <Object Name="AllErrorsLogListener" Type="IEventListener" AsType="LoggingListener" Lifecycle="Singleton">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:LogDirectory ObjectName="LogPath"/>
+      <Set:LogFileName>errors</Set:LogFileName>
+      <Set:RollSizeInBytes>52428800</Set:RollSizeInBytes>
+      <Set:TimeStampPattern>yyyy-MM-dd</Set:TimeStampPattern>
+      <Set:MaxRolledFileCount>10</Set:MaxRolledFileCount>
+      <Set:MessageTemplate>$[DateTimePublished] [Thread:$[ThreadId]] [$[FullName]] ($[Listener.Priority], $[Listener.Severity]): $[Message]</Set:MessageTemplate>
+
+      <Invoke:AddCategory>
+        <NameRef:ErrorCategory/>
+      </Invoke:AddCategory>
+      <Invoke:AddCategory>
+        <NameRef:FatalCategory/>
+      </Invoke:AddCategory>
+      <Invoke:AddCategory>
+        <NameRef:CriticalCategory/>
+      </Invoke:AddCategory>
+      <Invoke:AddCategory>
+        <NameRef:HighCategory/>
+      </Invoke:AddCategory>
+    </Object>
+
+    <!--Listener responsible for processing events as Windows Event Log entries: warnings, errors and critical failures-->
+    <Object Name="AllErrorsWindowsEventLogListener" Type="IEventListener" AsType="WindowsEventLogListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      <Set:Source>MSSQLSERVERPDW</Set:Source>
+      <Set:LogName>Application</Set:LogName>
+      <Set:Message>Event ID:$[FullName]
+        $[Message]</Set:Message>
+      <Set:DefaultEventId>17001</Set:DefaultEventId>
+
+      <Invoke:AddCategory>
+        <NameRef:FatalCategory/>
+      </Invoke:AddCategory>
+      <Invoke:AddCategory>
+        <NameRef:CriticalCategory/>
+      </Invoke:AddCategory>
+
+      <!-- We will only log events that do not stem from MppSqlException and ActionCancelledException being generated. -->
+      <!-- Such events will be logged in the general purpose file-based logs. -->
+      <Invoke:AddFilter>
+        <Parameter>
+          <Object Type="EventExceptionTypeFilter">
+            <Set:ExceptionTypeName>MppSqlException</Set:ExceptionTypeName>
+            <Set:ComparisonType>DoesNotContain</Set:ComparisonType>
+          </Object>
+        </Parameter>
+      </Invoke:AddFilter>
+      <Invoke:AddFilter>
+        <Parameter>
+          <Object Type="EventExceptionTypeFilter">
+            <Set:ExceptionTypeName>ActionCancelledException</Set:ExceptionTypeName>
+            <Set:ComparisonType>DoesNotContain</Set:ComparisonType>
+          </Object>
+        </Parameter>
+      </Invoke:AddFilter>
+    </Object>
+    
+    <Object Name="CriticalAndUnhandledErrorsSqlDumperListener" Type="IEventListener" AsType="SosSqlDumperListener" Lifecycle="Singleton">
+      <Set:IsEnabled>true</Set:IsEnabled>
+      
+      <Invoke:AddCategory>
+        <NameRef:FatalCategory/>
+      </Invoke:AddCategory>
+    </Object>
+
+    <Object Name="AssertionSqlDumperListener" Type="IEventListener" AsType="SosSqlDumperListener" Lifecycle="Singleton">
+      <Set:IsEnabled>false</Set:IsEnabled>
+    </Object>
+
+    <!--<Object Name="ScrubExceptionMessageEventFilter" Type="IApplicationEventFilter" AsType="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.ScrubExceptionMessageEventFilter, Microsoft.SqlServer.DataWarehouse.Common" Lifecycle="Singleton"/> -->
+    <Object Name="ScrubIpAddressEventFilter" Type="IApplicationEventFilter" AsType="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.ScrubIpAddressEventFilter, Microsoft.SqlServer.DataWarehouse.Common" Lifecycle="Singleton"/>
+
+    <Object Name="ScrubClientAppNameEventFilter" Type="IApplicationEventFilter" AsType="Microsoft.SqlServer.DataWarehouse.Common.Diagnostics.ScrubClientAppNameEventFilter, Microsoft.SqlServer.DataWarehouse.Common" Lifecycle="Singleton"/>
+
+    <!--This configuration group allows to configure any events registeres with the system with common settings.-->
+    <Object Name="AllEventsConfigurationGroup" Type="EventConfigurationGroup" Lifecycle="Singleton">
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>DebugPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>ProcessContextPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>DiagnosticsSessionPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadType>DiagnosticsRingBufferTargetPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+
+      <Invoke:AddAction>
+        <Parameter>
+          <Object Type="IEventConfigurationAction" AsType="EventInfoConfigurationAction">
+            <Set:EventInfo>
+              <Object Type="IEventInfo" AsType="EventPayloadInfo">
+                <Set:PayloadName>Callstack</Set:PayloadName>
+                <Set:PayloadType>CallstackContextPayload</Set:PayloadType>
+              </Object>
+            </Set:EventInfo>
+          </Object>
+        </Parameter>
+      </Invoke:AddAction>
+    </Object>
+
+    <Object Name="MessageQueuePerformanceBeginEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+    </Object>
+
+    <Object Name="MessageQueuePerformanceEndEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+      <Set:CorrelationEvent ObjectName="MessageQueuePerformanceBeginEvent"/>
+    </Object>
+
+    <Object Name="UnhandledExceptionEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>DefaultEventContainer</Set:Source>
+      <Set:ForceRealtime>true</Set:ForceRealtime>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:FatalCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="UnhandledExceptionEventNoDump"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>DefaultEventContainer</Set:Source>
+      <Set:ForceRealtime>true</Set:ForceRealtime>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ErrorCategory/>
+          <NameRef:HighCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="SynchronousLogEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>DefaultEventContainer</Set:Source>
+      <Set:ForceRealtime>true</Set:ForceRealtime>
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:InfoCategory/>
+          <NameRef:NormalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DebugAssertionFailedEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>DefaultEventContainer</Set:Source>
+      <Set:MessageTemplate>
+        Assertion failure: $[Message]
+        Thread Id: $[ThreadId]
+        Thread Name: $[ThreadName]
+        Callstack: $[StackTrace]
+        Session: $[Session.SessionId]
+        Request: $[Query.QueryId]
+        Command: $[Query.CommandText]
+      </Set:MessageTemplate>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DebuggingCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DebugFailEvent"  Type="Event" Lifecycle="Singleton">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:DebuggingCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+
+    <Object Name="MaterializeBufferBeginEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="MaterializeBufferEndEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="MaterializeBufferBeginEvent"/>
+    </Object>
+
+
+    <Object Name="MaterializeBufferErrorEvent"  Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="CreateEventSessionBeginEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="CreateEventSessionEndEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="CreateEventSessionEndEvent"/>
+    </Object>
+
+    <Object Name="CreateEventSessionErrorEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DeleteEventSessionBeginEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="DeleteEventSessionEndEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="DeleteEventSessionBeginEvent"/>
+    </Object>
+
+    <Object Name="DeleteEventSessionErrorEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="SynchronizeSessionsBeginEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="SynchronizeSessionsEndEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:TraceCategory/>
+          <NameRef:LowCategory/>
+          <NameRef:DurationCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+
+      <Set:CorrelationEvent ObjectName="SynchronizeSessionsBeginEvent"/>
+    </Object>
+
+    <Object Name="SynchronizeSessionsErrorEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:ErrorCategory/>
+          <NameRef:CriticalCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="EventLogEntryEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:InfoCategory/>
+          <NameRef:NormalCategory/>
+          <NameRef:SystemEventsCategory/>
+          <NameRef:GlobalWindowsEventsCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="ProcessExitEvent" Type="Event" Lifecycle="Singleton">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:InfoCategory/>
+          <NameRef:NormalCategory/>
+          <NameRef:SystemEventsCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="SystemHealthStatusEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:SystemEventsCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="SystemHealthDataEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:SystemEventsCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="SystemAlertEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:SystemEventsCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="SystemAlertDataEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+
+      <Invoke:AddEventInfo>
+        <Parameter Type="IEventInfo[]">
+          <NameRef:SystemEventsCategory/>
+        </Parameter>
+      </Invoke:AddEventInfo>
+    </Object>
+
+    <Object Name="PerformanceCounterCollectedEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+    </Object>
+
+    <Object Name="ApplianceHealthComponentAvailableEvent" Type="Event" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:Source>DefaultEventContainer</Set:Source>
+    </Object>
+
+    <Object Name="RecentEventsRingBufferListener" Type="IEventListener" AsType="RingBufferListener" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:IsEnabled>false</Set:IsEnabled>
+      <Set:MaxItemCount>1000</Set:MaxItemCount>
+      <Set:TableName>dm_pdw_recent_activity</Set:TableName>
+      <Set:Fields>
+        <NameRef:EventNameFieldDescriptor/>
+        <NameRef:EventDateTimePublishedFieldDescriptor/>
+        <NameRef:MachineNameFieldDescriptor/>
+        <NameRef:ProcessNameFieldDescriptor/>
+        <NameRef:ProcessIdFieldDescriptor/>
+        <NameRef:ErrorIdFieldDescriptor/>
+        <NameRef:EventDescriptionFieldDescriptor/>
+        <NameRef:ClientSessionIdFieldDescriptor/>
+        <NameRef:SessionIdFieldDescriptor/>
+        <NameRef:QueryIdFieldDescriptor/>
+        <NameRef:SPIDFieldDescriptor/>
+      </Set:Fields>
+
+      <Invoke:AddCategory>
+        <NameRef:InfoCategory/>
+      </Invoke:AddCategory>
+
+      <Invoke:AddCategory>
+        <NameRef:NormalCategory/>
+      </Invoke:AddCategory>
+    </Object>
+
+    <Object Name="ApplianceDiagnosticsPeerProvider"
+            Type="IEventManagerServicePeerProvider"
+            AsType="DefaultDiagnosticsPeerProvider"
+            Lifecycle="Singleton" FilterOverride="Full"/>
+
+    <Object Name="XdbDiagnosticsPeerProvider"
+        Type="IEventManagerServicePeerProvider"
+        AsType="XdbDiagnosticsPeerProvider"
+        Lifecycle="Singleton" FilterOverride="Xdb"/>
+
+    <Object Name="PolybaseDiagnosticsPeerProvider"
+            Type="IEventManagerServicePeerProvider"
+            AsType="PolybaseDiagnosticsPeerProvider"
+            Lifecycle="Singleton" FilterOverride="Polybase"/>
+
+    <Object Name="EventManager" Type="EventManager" Lifecycle="Singleton" FilterOverride="Polybase">
+      <Constructor FactoryMethod="Instance"/>
+      <Set:IsTestMode ObjectName="DiagTestMode"/>
+      <Set:MaxAllowedSessions ObjectName="MaxDiagSessions"/>
+      <Set:DiagnosticsFileShare>DWDiagnostics</Set:DiagnosticsFileShare>
+      <Set:ControlDiagPort ObjectName="CtlDiagnosticsPort"/>
+      <Set:ComputeDiagPort ObjectName="DmsDiagnosticsPort"/>
+      <Set:AgentDiagPort ObjectName="DmsDiagnosticsPort"/>
+
+      <Invoke:InitializePeerProvider>
+      </Invoke:InitializePeerProvider>
+
+      <Invoke:AddConfigurationGroup>
+        <NameRef:AllEventsConfigurationGroup/>
+      </Invoke:AddConfigurationGroup>
+
+      <Invoke:AddListener>
+        <NameRef:CriticalAndUnhandledErrorsSqlDumperListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:GlobalErrorContextListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:AllErrorsLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:ErrorRingBufferListenerPolybase/>
+      </Invoke:AddListener>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DefaultEventContainer</Parameter:Type>
+      </Invoke:AddEventContainer>
+    </Object>
+
+    <Object Name="EventManager" Type="EventManager" Lifecycle="Singleton" FilterOverride="Full">
+      <Constructor FactoryMethod="Instance"/>
+      <Set:IsTestMode ObjectName="DiagTestMode"/>
+      <Set:MaxAllowedSessions ObjectName="MaxDiagSessions"/>
+      <Set:DiagnosticsFileShare>DWDiagnostics</Set:DiagnosticsFileShare>
+      <Set:ControlDiagPort ObjectName="CtlDiagnosticsPort"/>
+      <Set:ComputeDiagPort ObjectName="DmsDiagnosticsPort"/>
+      <Set:AgentDiagPort ObjectName="DmsDiagnosticsPort"/>
+
+      <Invoke:InitializePeerProvider>
+      </Invoke:InitializePeerProvider>
+
+      <Invoke:AddConfigurationGroup>
+        <NameRef:AllEventsConfigurationGroup/>
+      </Invoke:AddConfigurationGroup>
+
+      <Invoke:AddListener>
+        <NameRef:CriticalAndUnhandledErrorsSqlDumperListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:GlobalErrorContextListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:ErrorRingBufferListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:AllErrorsLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:AllErrorsWindowsEventLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:PerformanceCountersPersistedTableListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:EventLogAlertsPersistedTableListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:RecentEventsRingBufferListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:HardwareComponentsRingBufferListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:HardwareHealthStatusPersistedTableListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:HardwareAlertsPersistedTableListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DefaultEventContainer</Parameter:Type>
+      </Invoke:AddEventContainer>
+    </Object>
+
+    <Object Name="EventManager" Type="EventManager" Lifecycle="Singleton" FilterOverride="Xdb">
+      <Constructor FactoryMethod="Instance"/>
+      <Set:IsTestMode ObjectName="DiagTestMode"/>
+      <Set:MaxAllowedSessions ObjectName="MaxDiagSessions"/>
+      <Set:DiagnosticsFileShare>DWDiagnostics</Set:DiagnosticsFileShare>
+      <Set:ControlDiagPort ObjectName="CtlDiagnosticsPort"/>
+      <Set:ComputeDiagPort ObjectName="DmsDiagnosticsPort"/>
+      <Set:AgentDiagPort ObjectName="DmsDiagnosticsPort"/>
+
+      <Invoke:InitializePeerProvider>
+      </Invoke:InitializePeerProvider>
+
+      <Invoke:AddConfigurationGroup>
+        <NameRef:AllEventsConfigurationGroup/>
+      </Invoke:AddConfigurationGroup>
+
+      <Invoke:AddListener>
+        <NameRef:CriticalAndUnhandledErrorsSqlDumperListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:GlobalErrorContextListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:ErrorRingBufferListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:AllErrorsLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:AllErrorsWindowsEventLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:RecentEventsRingBufferListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DefaultEventContainer</Parameter:Type>
+      </Invoke:AddEventContainer>
+
+      <Invoke:AddEventFilter>
+        <NameRef:ScrubIpAddressEventFilter/>
+      </Invoke:AddEventFilter>
+
+      <Invoke:AddEventFilter>
+        <NameRef:ScrubClientAppNameEventFilter/>
+      </Invoke:AddEventFilter>
+    </Object>
+
+    <Object Name="EventManager" Type="EventManager" Lifecycle="Singleton" FilterOverride="AnyLite">
+      <Constructor FactoryMethod="Instance"/>
+      <Set:IsTestMode>false</Set:IsTestMode>
+      <Set:MaxAllowedSessions ObjectName="MaxDiagSessions"/>
+      <Set:DiagnosticsFileShare>DWDiagnostics</Set:DiagnosticsFileShare>
+      <Set:ControlDiagPort ObjectName="ControlDiagPort"/>
+      <Set:ComputeDiagPort ObjectName="ComputeDiagPort"/>
+      <Set:AgentDiagPort ObjectName="AgentDiagPort"/>
+
+      <Invoke:AddConfigurationGroup>
+        <NameRef:AllEventsConfigurationGroup/>
+      </Invoke:AddConfigurationGroup>
+
+      <Invoke:AddListener>
+        <NameRef:CriticalAndUnhandledErrorsSqlDumperListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:GlobalErrorContextListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddListener>
+        <NameRef:AllErrorsLogListener/>
+      </Invoke:AddListener>
+
+      <Invoke:AddEventContainer>
+        <Parameter:Type>DefaultEventContainer</Parameter:Type>
+      </Invoke:AddEventContainer>
+    </Object>
+
+
+    <Object Name="EventManagerService" Type="IService" AsType="EventManagerService" Lifecycle="Singleton" FilterOverride="NonLite">
+      <Set:DmvBuffers Type="DmvBufferDescriptor[]">
+        <Item>
+          <!--Register DMVs exposed by the local SQL Server as distributed
+          diagnostics buffers.-->
+          <!--Special case for dm_pdw_nodes_io_virtual_file_stats to use DMV view created
+          specially for SQL DW as view dm_io_virtual_file_stats takes parameters.-->
+          <Object Type="DmvBufferDescriptor">
+            <Set:ItemQuery>
+              select [name], case
+                when [name] like 'dm[_]pdw[_]nodes[_]io[_]virtual[_]file[_]stats' then ('sys.[' + [name] + ']')
+                when [name] like 'pdw[_]nodes[_]%' then ('sys.[' + substring([name], len('pdw_nodes_') + 1, len([name])) + ']')
+                else ('sys.[dm_' + substring([name], len('dm_pdw_nodes_') + 1, len([name])) + ']')
+              end from {0}.sys.system_views with (nolock) 
+              where [name] like '%pdw[_]nodes[_]%' 
+              and [name] not in ('dm_pdw_nodes_exec_query_profiles', 'dm_pdw_nodes_exec_query_statistics_xml', 'dm_pdw_nodes_exec_query_plan', 'dm_pdw_nodes_exec_sql_text', 'dm_pdw_nodes_exec_text_query_plan')
+            </Set:ItemQuery>
+            <Set:SchemaQuery>SELECT * FROM {0}.[sys].{1}</Set:SchemaQuery>
+            <Set:ServiceLocation>Control | Compute</Set:ServiceLocation>
+          </Object>
+        </Item>
+        <Item>
+          <!--Register SQL Server XEvent sessions represented by views on top of the
+          XEvent file output as distributed diagnostics buffers.-->
+          <!--Special case for several query execution related DMVs which needs to use views underneath directly.
+              dm_pdw_nodes_exec_query_profiles,
+              dm_pdw_nodes_exec_query_statistics_xml,
+              dm_pdw_nodes_exec_query_plan,
+              dm_pdw_nodes_exec_sql_text,
+              dm_pdw_nodes_exec_text_query_plan
+          -->
+          <Object Type="DmvBufferDescriptor">
+            <Set:ItemQuery>
+              select [name], 'sys.[' + [name] + ']'
+              from {0}.sys.system_views with (nolock) 
+              where [name] in ('dm_pdw_nodes_exec_query_profiles', 'dm_pdw_nodes_exec_query_statistics_xml', 'dm_pdw_nodes_exec_query_plan', 'dm_pdw_nodes_exec_sql_text', 'dm_pdw_nodes_exec_text_query_plan')
+            </Set:ItemQuery>
+            <Set:SchemaQuery>SELECT * FROM {0}.[sys].{1}</Set:SchemaQuery>
+            <Set:ServiceLocation>Control | Compute</Set:ServiceLocation>
+            <Set:LOBColumnAllowed>true</Set:LOBColumnAllowed>
+          </Object>
+        </Item>
+        <Item>
+          <!--Register SQL Server XEvent sessions represented by views on top of the
+          XEvent file output as distributed diagnostics buffers.-->
+          <Object Type="DmvBufferDescriptor">
+            <Set:SourceDatabase>master</Set:SourceDatabase>
+            <Set:ItemQuery>SELECT [name], ('dbo.[' + [name] + ']') FROM {0}.sys.system_views WITH (NOLOCK) WHERE [name] LIKE 'dm[_]pdw[_]%[_]xe%'</Set:ItemQuery>
+            <Set:SchemaQuery>SELECT * FROM {0}.[sys].{1}</Set:SchemaQuery>
+            <Set:ServiceLocation>Compute</Set:ServiceLocation>
+          </Object>
+        </Item>
+        <Item>
+          <!--Register Appliance Health Views as DMVs-->
+          <Object Type="DmvBufferDescriptor" FilterOverride="Full">
+            <Set:SourceDatabase>DWDiagnostics</Set:SourceDatabase>
+            <Set:ItemQuery>SELECT [name], ('dbo.[' + [name] + ']') FROM {0}.sys.system_views WITH (NOLOCK) WHERE [name] LIKE 'pdw[_]health[_]%' OR [name] IN ('dm_pdw_component_health_active_alerts')</Set:ItemQuery>
+            <Set:SchemaQuery>SELECT * FROM {0}.[sys].{1}</Set:SchemaQuery>
+            <Set:ServiceLocation>Control</Set:ServiceLocation>
+            <Set:DisableColumnFilter>true</Set:DisableColumnFilter>
+          </Object>
+        </Item>
+        <Item>
+          <!--Register diagnostics session view(s) as DMVs-->
+          <Object Type="DmvBufferDescriptor">
+            <Set:SourceDatabase>DWDiagnostics</Set:SourceDatabase>
+            <Set:ItemQuery>SELECT [name], ('dbo.[' + [name] + ']') FROM {0}.sys.system_views WITH (NOLOCK) WHERE [name] IN ('pdw_diag_sessions')</Set:ItemQuery>
+            <Set:SchemaQuery>SELECT * FROM {0}.[sys].{1}</Set:SchemaQuery>
+            <Set:ServiceLocation>Control</Set:ServiceLocation>
+          </Object>
+        </Item>
+      </Set:DmvBuffers>
+    </Object>
+
+    <!--Predefined set of well-know aggregate functions that can be used-->
+    <Object Name="SumFunction" Type="IncrementByValueAggregateFunction"/>
+
+    <Object Name="IncrementFunction" Type="IncrementByValueAggregateFunction">
+      <Set:Value>1</Set:Value>
+    </Object>
+
+    <Object Name="DecrementFunction" Type="IncrementByValueAggregateFunction">
+      <Set:Value>1</Set:Value>
+      <Set:IsNegative>true</Set:IsNegative>
+    </Object>
+    <Object Name="AverageFunction" Type="AverageValueAggregateFunction"/>
+
+    <Object Name="RatePerMsecFunction" Type="RateAggregateFunction"/>
+
+    <Object Name="RatePerSecFunction" Type="RateAggregateFunction">
+      <Set:Multiplier>1000</Set:Multiplier>
+    </Object>
+
+    <Object Name="RatePerMinFunction" Type="RateAggregateFunction">
+      <Set:Multiplier>60000</Set:Multiplier>
+    </Object>
+
+    <Object Name="RatePerHourFunction" Type="RateAggregateFunction">
+      <Set:Multiplier>3600000</Set:Multiplier>
+    </Object>
+
+    <Object Name="ReplaceValueFunction" Type="ReplaceValueAggregateFunction"/>
+
+    <Object Name="ReplaceNotNullFunction" Type="ReplaceValueAggregateFunction">
+      <Set:AllowNull>false</Set:AllowNull>
+    </Object>
+
+    <Object Name="ReplaceWhenNullFunction" Type="ReplaceValueAggregateFunction">
+      <Set:IsNullMode>true</Set:IsNullMode>
+      <Set:AllowNull>false</Set:AllowNull>
+    </Object>
+
+    <Object Name="MaxFunction" Type="MaxAggregateFunction"/>
+
+    <Object Name="MaxIntFunction" Type="MaxIntAggregateFunction"/>
+
+    <Object Name="MinFunction" Type="MinAggregateFunction"/>
+
+    <!--
+      Add a set of events known at this level of configuration.
+      Additional configuration includes may add more events using the
+      following object reference pattern.
+
+    <Object Extends="EventManager">
+      <Invoke:AddEvents>
+        <Parameter Type="Event[]">
+          <NameRef:MyEventDescriptor1/>
+          <NameRef:MyEventDescriptor2/>
+          <NameRef:MyEventDescriptor3/>
+        </Parameter>
+      </Invoke:AddEvents>
+    </Object>
+    -->
+
+    <Object Name="PerformanceManager" Type="PerformanceManager" AsType="PerformanceManager" Lifecycle="Singleton"/>
+
+    <!-- BEGIN: Field Descriptors -->
+    <Object Name="ModuleNameMdsFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>ModuleName</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>ModuleName</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ProcessIdMdsFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>ProcessId</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>ProcessId</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="ThreadIdMdsFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>ThreadId</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>ThreadId</Set:ColumnName>
+          <Set:DataType>Int</Set:DataType>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="LogMessageMdsFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>Message</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>Message</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+        </Object>
+      </Set:Field>
+      <Set:ComplianceTag>Pii</Set:ComplianceTag>
+    </Object>
+
+    <Object Name="EventPriorityMdsFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>Priority</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>Priority</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="EventSeverityMdsFieldDescriptor" Type="EventDataColumnDescriptor">
+      <Set:PropertyName>Severity</Set:PropertyName>
+      <Set:Field>
+        <Object Type="DataColumn">
+          <Set:ColumnName>Severity</Set:ColumnName>
+          <Set:DataType>String</Set:DataType>
+        </Object>
+      </Set:Field>
+    </Object>
+
+    <Object Name="TruncateStringColumnValueMutator" Type="TruncateStringMutator"/>
+    <!-- END: Field Descriptors -->
+
+  </Objects>
+</ObjectFactory>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ObjectFactory xmlns:Set="Microsoft.SqlServer.DataWarehouse.Common.Ioc.PropertyConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common">
+  <Types>
+    <Type Alias="ExternalShardedTable" Name="Microsoft.SqlServer.DataWarehouse.Sql.Statements.ExternalShardedTable, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="ExternalGenericTable" Name="Microsoft.SqlServer.DataWarehouse.Sql.Statements.ExternalGenericTable, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="ExternalRelationalTable" Name="Microsoft.SqlServer.DataWarehouse.Sql.Statements.ExternalRelationalTable, Microsoft.SqlServer.DataWarehouse.Sql"/>
+    <Type Alias="ExternalSqlHdfsTable" Name="Microsoft.SqlServer.DataWarehouse.Sql.Statements.ExternalSqlHdfsTable, Microsoft.SqlServer.DataWarehouse.Sql"/>
+  </Types>
+
+  <Objects>
+    <Object Name="ExternalOdbcTable" Type="ExternalGenericTable" AsType="ExternalRelationalTable"/>
+    <Object Name="ExternalTeradataTable" Type="ExternalGenericTable" AsType="ExternalRelationalTable"/>
+    <Object Name="ExternalMongoDbTable" Type="ExternalGenericTable" AsType="ExternalRelationalTable"/>
+    <Object Name="ExternalSqlServerTable" Type="ExternalGenericTable" AsType="ExternalRelationalTable"/>
+    <Object Name="ExternalOracleTable" Type="ExternalGenericTable" AsType="ExternalRelationalTable"/>
+    <Object Name="ExternalSqlDataPoolTable" Type="ExternalGenericTable" AsType="ExternalShardedTable"/>
+    <Object Name="ExternalSqlComputePoolTable" Type="ExternalGenericTable" AsType="ExternalShardedTable"/>
+    <Object Name="ExternalSqlHdfsTable" Type="ExternalGenericTable" AsType="ExternalSqlHdfsTable">
+      <Set:StoragePoolDataSourceName>StoragePoolDataSource</Set:StoragePoolDataSourceName>
+    </Object>
+  </Objects>
+</ObjectFactory>

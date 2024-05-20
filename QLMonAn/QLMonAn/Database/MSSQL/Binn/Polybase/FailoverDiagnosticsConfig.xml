@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ObjectFactory xmlns:Invoke="Microsoft.SqlServer.DataWarehouse.Common.Ioc.MethodConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Set="Microsoft.SqlServer.DataWarehouse.Common.Ioc.PropertyConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Parameter="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:Item="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:NameRef="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common"
+               xmlns:TypeRef="Microsoft.SqlServer.DataWarehouse.Common.Ioc.ParameterConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common">
+  <Includes>
+    <Include Path =".\CommonDiagnosticsConfig.xml"/>
+  </Includes>
+
+  <Types>
+    <Type Alias="FailoverCoreInstrumentation" Name="Microsoft.SqlServer.DataWarehouse.Failover.Diagnostics.FailoverCoreInstrumentation, Microsoft.SqlServer.DataWarehouse.Failover"/>
+    <Type Alias="FailoverIsAlivePayload" Name="Microsoft.SqlServer.DataWarehouse.Failover.Diagnostics.FailoverIsAlivePayload, Microsoft.SqlServer.DataWarehouse.Failover"/>
+  </Types>
+ 
+</ObjectFactory>

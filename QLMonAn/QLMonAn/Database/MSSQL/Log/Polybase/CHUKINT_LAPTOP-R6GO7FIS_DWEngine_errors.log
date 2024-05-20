@@ -1,0 +1,186 @@
+5/18/2024 1:59:56 PM [Thread:5388] [DMSManager:ErrorEvent] (Error, High): LAPTOP-R6GO7FIS:CHUKINT receive system error message - Unable to read data from the transport connection: An established connection was aborted by the software in your host machine.
+5/18/2024 1:59:56 PM [Thread:5388] [DMSManager:ErrorEvent] (Error, High): DataChannel error, channel: Credit Feedback Receiver, local: LAPTOP-R6GO7FIS:CHUKINT, remote: LAPTOP-R6GO7FIS:CHUKINT
+5/18/2024 1:59:56 PM [Thread:18120] [DMSManager:ErrorEvent] (Error, High): 
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LAPTOP-R6GO7FIS:CHUKINT CONNECTION IS DROPPED
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+5/18/2024 1:59:57 PM [Thread:5716] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 2:00:17 PM [Thread:5716] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 2:00:37 PM [Thread:5716] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 2:00:57 PM [Thread:5716] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 7:35:25 PM [Thread:18080] [DMSManager:ErrorEvent] (Error, High): LAPTOP-R6GO7FIS:CHUKINT receive system error message - Unable to read data from the transport connection: An established connection was aborted by the software in your host machine.
+5/18/2024 7:35:25 PM [Thread:18080] [DMSManager:ErrorEvent] (Error, High): DataChannel error, channel: Credit Feedback Receiver, local: LAPTOP-R6GO7FIS:CHUKINT, remote: LAPTOP-R6GO7FIS:CHUKINT
+5/18/2024 7:35:25 PM [Thread:18000] [DMSManager:ErrorEvent] (Error, High): 
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LAPTOP-R6GO7FIS:CHUKINT CONNECTION IS DROPPED
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+5/18/2024 7:35:42 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 7:36:02 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 7:36:22 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 10:28:36 PM [Thread:17684] [DMSManager:ErrorEvent] (Error, High): LAPTOP-R6GO7FIS:CHUKINT receive system error message - Unable to read data from the transport connection: An established connection was aborted by the software in your host machine.
+5/18/2024 10:28:36 PM [Thread:17684] [DMSManager:ErrorEvent] (Error, High): DataChannel error, channel: Data movement, local: LAPTOP-R6GO7FIS:CHUKINT, remote: LAPTOP-R6GO7FIS:CHUKINT
+5/18/2024 10:28:36 PM [Thread:2320] [DMSManager:ErrorEvent] (Error, High): 
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LAPTOP-R6GO7FIS:CHUKINT CONNECTION IS DROPPED
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+5/18/2024 10:28:48 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 10:29:08 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 10:29:28 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 10:34:13 PM [Thread:9684] [DMSManager:ErrorEvent] (Error, High): LAPTOP-R6GO7FIS:CHUKINT receive system error message - Unable to read data from the transport connection: An established connection was aborted by the software in your host machine.
+5/18/2024 10:34:13 PM [Thread:9684] [DMSManager:ErrorEvent] (Error, High): DataChannel error, channel: Credit Feedback Receiver, local: LAPTOP-R6GO7FIS:CHUKINT, remote: LAPTOP-R6GO7FIS:CHUKINT
+5/18/2024 10:34:13 PM [Thread:15628] [DMSManager:ErrorEvent] (Error, High): 
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LAPTOP-R6GO7FIS:CHUKINT CONNECTION IS DROPPED
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+5/18/2024 10:34:28 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 10:34:48 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/18/2024 10:35:08 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/19/2024 9:25:57 AM [Thread:10344] [DMSManager:ErrorEvent] (Error, High): LAPTOP-R6GO7FIS:CHUKINT receive system error message - Unable to read data from the transport connection: An established connection was aborted by the software in your host machine.
+5/19/2024 9:25:57 AM [Thread:10344] [DMSManager:ErrorEvent] (Error, High): DataChannel error, channel: Credit Feedback Receiver, local: LAPTOP-R6GO7FIS:CHUKINT, remote: LAPTOP-R6GO7FIS:CHUKINT
+5/19/2024 9:25:57 AM [Thread:9684] [DMSManager:ErrorEvent] (Error, High): 
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LAPTOP-R6GO7FIS:CHUKINT CONNECTION IS DROPPED
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+5/19/2024 9:26:00 AM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/19/2024 9:26:20 AM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/19/2024 9:26:40 AM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/19/2024 10:35:36 AM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/19/2024 7:17:29 PM [Thread:1528] [DMSManager:ErrorEvent] (Error, High): LAPTOP-R6GO7FIS:CHUKINT receive system error message - Unable to read data from the transport connection: An established connection was aborted by the software in your host machine.
+5/19/2024 7:17:29 PM [Thread:1528] [DMSManager:ErrorEvent] (Error, High): DataChannel error, channel: Data movement, local: LAPTOP-R6GO7FIS:CHUKINT, remote: LAPTOP-R6GO7FIS:CHUKINT
+5/19/2024 7:17:29 PM [Thread:14144] [DMSManager:ErrorEvent] (Error, High): 
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LAPTOP-R6GO7FIS:CHUKINT CONNECTION IS DROPPED
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+5/19/2024 7:17:38 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/19/2024 7:17:58 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/19/2024 7:18:18 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+
+5/19/2024 7:18:38 PM [Thread:18076] [ControlNodeMessenger:ErrorEvent] (Error, High): ***** DMS System has disconnected nodes :
+ 1. LAPTOP-R6GO7FIS:CHUKINT (Control)
+ 2. LAPTOP-R6GO7FIS:CHUKINT (Compute)
+
+Current ConnectionInfo...
+

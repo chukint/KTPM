@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ObjectFactory xmlns:Set="Microsoft.SqlServer.DataWarehouse.Common.Ioc.PropertyConfigurationProvider, Microsoft.SqlServer.DataWarehouse.Common">
+  <Types>
+    <Type Alias="IDmsReader" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Workers.IDmsReader, DMS"/>
+    <Type Alias="OdbcBufferReader" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Workers.DataReader.OdbcBufferReader, DMS"/>
+    <Type Alias="ShardedBufferReader" Name="Microsoft.SqlServer.DataWarehouse.DataMovement.Workers.DataReader.ShardedBufferReader, DMS"/>
+  </Types>
+
+  <Objects>
+    <!-- Registry for external data source readers -->
+    <Object Name="OdbcBufferReader" Type="IDmsReader" AsType="OdbcBufferReader" />
+    <Object Name="TeradataBufferReader" Type="IDmsReader" AsType="OdbcBufferReader">
+      <Set:CharacterExportWidthMultiplier>1</Set:CharacterExportWidthMultiplier>
+    </Object>
+    <Object Name="SqlServerBufferReader" Type="IDmsReader" AsType="OdbcBufferReader">
+      <Set:ConvertTimeFields>false</Set:ConvertTimeFields>
+      <Set:SupportsCancellation>true</Set:SupportsCancellation>
+    </Object>
+    <Object Name="ShardedBufferReader" Type="IDmsReader" AsType="ShardedBufferReader">
+      <Set:ConvertTimeFields>false</Set:ConvertTimeFields>
+      <Set:SupportsCancellation>true</Set:SupportsCancellation>
+    </Object>
+</Objects>
+</ObjectFactory>

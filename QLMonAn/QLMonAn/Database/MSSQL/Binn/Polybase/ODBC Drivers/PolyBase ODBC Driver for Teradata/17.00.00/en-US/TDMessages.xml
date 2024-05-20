@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Messages [
+    <!ELEMENT Messages (Package*)>
+
+    <!ELEMENT Package (Error*)>
+    <!ATTLIST Package ID CDATA #REQUIRED>
+    <!ATTLIST Package DefaultComponent CDATA #REQUIRED>
+
+    <!ELEMENT Error (#PCDATA)>
+    <!ATTLIST Error Key ID #REQUIRED>
+    <!ATTLIST Error Component CDATA #IMPLIED>
+    <!ATTLIST Error NativeErrorCode CDATA #REQUIRED>
+    <!ATTLIST Error Params CDATA "0">
+]>
+
+<Messages>
+    <!-- Package ID corresponds to the TD_ERROR constant defined in Teradata.h -->
+    <Package ID="100" DefaultComponent="ODBC Teradata Driver">
+        <!-- Error thrown when connect with database. -->
+        <Error Key="TDConnectionError"                                  NativeErrorCode="1">Failed call to Logon, aborting connection.</Error>
+
+        <!-- Error thrown when Unable to logon with Authentication Mechanism selected -->
+        <Error Key="TDMechanismLogonError"                              NativeErrorCode="2">Unable to logon with Authentication Mechanism selected.</Error>
+
+        <!-- Error thrown when Encryption is not supportedd -->
+        <Error Key="TDNoEncryptionError"                                NativeErrorCode="3">Encryption is not supported by Teradata Database.</Error>
+
+        <Error Key="TDStringAllocFail"                                  NativeErrorCode="4">Could not allocate memory to hold string data.</Error>
+
+        <!-- Error thrown when Internal Error -->
+        <Error Key="TDInternalErrorException"                           NativeErrorCode="6">Internal Error (Exception).</Error>
+
+        <!-- Error thrown when User password has expired -->
+        <Error Key="TDUserPasswordExpired"                              NativeErrorCode="7">User password has expired.</Error>
+
+        <!-- Error thrown when Can't disconnect -->
+        <Error Key="TDCannotDisconnect"                                 NativeErrorCode="8">Can't disconnect, a transaction is in process.</Error>
+
+        <!-- Error thrown when Connection was not open -->
+        <Error Key="TDConnectNotOpen"                                   NativeErrorCode="9">Connection was not open.</Error>
+
+        <!-- Error thrown when Invalid Attribute Value -->
+        <Error Key="TDInvalidAttribute"                                 NativeErrorCode="10">Invalid Attribute Value.</Error>
+
+        <!-- Error thrown when Not enough information to log on -->
+        <Error Key="TDNotEnoughInfo"                                    NativeErrorCode="11">Not enough information to log on.</Error>
+
+        <!-- Error thrown when Login timeout expired -->
+        <Error Key="TDLoginTimeOut"                                     NativeErrorCode="12">Login timeout expired.</Error>
+
+        <!-- Error thrown when Connection to Teradata lost -->
+        <Error Key="TDConnectionLost"                                   NativeErrorCode="13">Connection to Teradata lost.</Error>
+
+        <!-- Error thrown when Assign message failed -->
+        <Error Key="TDAssignFailed"                                     NativeErrorCode="14">Assign message failed to return a session number.</Error>
+
+        <!-- Error thrown when SSO not available -->
+        <Error Key="TDNoSSOSupport"                                     NativeErrorCode="15">SSO request can not be honored - SSO not available.</Error>
+
+        <!-- Error thrown when Unable to get UserName -->
+        <Error Key="TDUnableToGetUserName"                              NativeErrorCode="16">Unable to get UserName.</Error>
+
+        <!-- Error thrown when Unable to establish connection -->
+        <Error Key="TDUnableToEstablishConn"                            NativeErrorCode="17">Unable to establish connection - Logon string encryption failed.</Error>
+
+        <!-- Error message from Legacy driver -->
+        <Error Key="TDIndicatorNotSupp"                                 NativeErrorCode="18">Indicator variable required but not supplied.</Error>
+        <Error Key="TDNoLanBuffer"                                      NativeErrorCode="19">Unable to GlobalAlloc memory for LAN message buffer.</Error>
+        <Error Key="TDInvalidFunction"                                  NativeErrorCode="20">Function Sequence Error.</Error>
+        <Error Key="TDOpCanceled"                                       NativeErrorCode="21">Operation Canceled.</Error>
+        <Error Key="TDInvalidCursorState"                               NativeErrorCode="22">Invalid cursor state.</Error>
+        <Error Key="TDParamMarkerNotBound"                              NativeErrorCode="23">Stored procedure parameter markers are not bound.</Error>
+        <Error Key="TDInvalidAttributeValue"                            NativeErrorCode="24">Invalid Attribute Value</Error>
+        <Error Key="TDReqExceedsV2R5MaxSize"                            NativeErrorCode="25">SQL request exceeds maximum allowed length of 1 MB.</Error>
+        <Error Key="TDObjectNotExist" Params="1"                        NativeErrorCode="26">%1%</Error>
+        <Error Key="TDError" Params="1"                                 NativeErrorCode="27">%1%</Error>
+
+        <!-- Error thrown when an empty SQL statement is passed into Prepare. -->
+        <Error Key="TDSyntaxError"                                      NativeErrorCode="28">Syntax error: Invalid empty SQL statement.</Error>
+
+        <!-- Error message from Legacy driver -->
+        <Error Key="AGKRNOTSUPPORTED"                                   NativeErrorCode="29">Return Generated Keys option is not supported by the database. Option turned off.</Error>
+        <Error Key="OPINVALIDTHISTIME"                                  NativeErrorCode="30">Operation invalid at this time.</Error>
+        <Error Key="UDFSRCNOTSUPPORTED"                                 NativeErrorCode="31">User Defined Function source on the client is not supported by the driver.</Error>
+        <Error Key="UDFSRCNOTSUPPORTEDWithFailCode" Params="1"          NativeErrorCode="32">User Defined Function source on the client is not supported by the driver.%1%</Error>
+        <Error Key="UDFSRCNOTENABLED"                                   NativeErrorCode="32">Client Side UDF Upload is not enabled.  Please refer to the driver documentation to enable this feature.</Error>
+        <Error Key="DUPINDEXNAME"                                       NativeErrorCode="33">Duplicate index name, cannot create index.</Error>
+        <Error Key="INVALIDPARAM"                                       NativeErrorCode="34">Invalid parameter number.</Error>
+        <Error Key="Unsupported"                                        NativeErrorCode="35">Unsupported.</Error>
+        <Error Key="InvalidColumn"                                      NativeErrorCode="36">Invalid column number.</Error>
+        <Error Key="FCTYPE"                                             NativeErrorCode="37">Invalid C type: fCType value out of range.</Error>
+        <Error Key="INVALIDARGRGB"                                      NativeErrorCode="38">Invalid argument value (rgbValue==NULL)</Error>
+        <Error Key="INVALIDBUFFSIZE"                                    NativeErrorCode="39">Invalid buffer size (cbMaxValue less than 0 or cbMaxValue less thanfInfoType) or (cbDescMax less than 0).</Error>
+        <Error Key="CONNINUSE"                                          NativeErrorCode="40">Connection in use</Error>
+        <Error Key="QUERYTIMEOUTLIMITED"                                NativeErrorCode="41">Query timeout only acceptable in the range [0-%1%]</Error>
+        <!-- Error thrown SQL type is invalid -->
+        <Error Key="TDFSlTypeOutOfRange"                                NativeErrorCode="42">Invalid SQL type: fSQLType value out of range</Error>
+
+        <!-- Limited support -->
+        <Error Key="TDITxnLimited"                                      NativeErrorCode="43">Only SQL_TXN_SERIALIZABLE and SQL_TXN_READ_UNCOMMITTED accepted at this time.</Error>
+
+        <!-- TeraSSO errors -->
+        <Error Key="TDSsoBadParamFail"                                  NativeErrorCode="44">A call to terasso library failed.\r\nThere is a problem with parameter(s).</Error>
+        <Error Key="TDSsoLoadSecDllFail"                                NativeErrorCode="45">Cannot find terasso library.</Error>
+        <Error Key="TDSsoProcSecDllFail"                                NativeErrorCode="46">Cannot find entry point in terasso library.</Error>
+        <Error Key="TDSsoInitSecDllFail"                                NativeErrorCode="47">Cannot initialize terasso library.</Error>
+        <Error Key="TDSsoEnumSecPkgFail"                                NativeErrorCode="48">A call to EnumerateSecurityPackages in terasso library failed.</Error>
+        <Error Key="TDSsoSecPkgMatchFail"                               NativeErrorCode="49">Cannot find a compatible package match between client and gateway in terasso library.</Error>
+        <Error Key="TDSsoAcqcRedHndFail"                                NativeErrorCode="50">A call to AcquireCredentialsHandle in terasso library failed.</Error>
+        <Error Key="TDSsoBadSeqFail"                                    NativeErrorCode="51">SSO_CALL or SSO_TERM issued before SSO_INIT.</Error>
+        <Error Key="TDSsoInitSecCntxtFail"                              NativeErrorCode="52">A call to InitializeSecurityContext in terasso library failed.</Error>
+        <Error Key="TDSsoCompAuthTknFail"                               NativeErrorCode="53">A call to CompleteAuthToken in terasso library failed.</Error>
+        <Error Key="TDSsoFreeBufCntxtFail"                              NativeErrorCode="54">A call to FreeBufferContext in terasso library failed.</Error>
+        <Error Key="TDSsoUnknownException"                              NativeErrorCode="55">Unknown exception occurred in terasso library. FailCode = %1%</Error>
+        <Error Key="TDSsoNotOk"                                         NativeErrorCode="56">A call in the terasso library failed.</Error>
+        <Error Key="TDSsoMemFail"                                       NativeErrorCode="57">A call to terasso library failed.\r\nCannot acquire memory on behalf of caller.</Error>
+        <Error Key="TDSsoMechUnavailable"                               NativeErrorCode="58">User Specified Mechanism for Logon is Not Available.</Error>
+        <Error Key="TDTerassoTdWalletError"                             NativeErrorCode="59">Wallet Initialization failure.  Check Teradata Wallet installation.</Error>
+        <Error Key="TDTerassoTdWalletWarning"                           NativeErrorCode="60">Wallet string not found</Error>
+        <Error Key="TDGSSLoadDllFail"                                   NativeErrorCode="61">Could not locate the tdgss library.</Error>
+
+        <!-- Error thrown when attempting to use non-character or non-binary data for data-at-exec parameters. -->
+        <Error Key="TDInvalidDataAtExecParamType" Params="1"            NativeErrorCode="62">Parameter type %1% cannot be used with data-at-exec parameters, only LOB types are allowed.</Error>
+        <Error Key="TDPutDataNullOrDefaultLOBNotSupported" Params="0"   NativeErrorCode="63">NULL or DEFAULT data for LOB types through SQLPutData is not supported by the database.</Error>
+
+        <!-- Parameters error -->
+        <Error Key="TDParamNumOutOfRange"                               NativeErrorCode="64">Numeric value out of range.</Error>
+        <Error Key="TDBindInvalidScale" Params="1"                      NativeErrorCode="65">Invalid scale: ibScale value %1% out of range.</Error>
+        <Error Key="TDBindInvalidPrecision" Params="1"                  NativeErrorCode="66">Invalid precision: cbColDef value %1% out of range.</Error>
+
+        <!-- Max message length error-->
+        <Error Key="TDReqExceedsV2R16MaxSize"                           NativeErrorCode="67">SQL request exceeds maximum allowed length of 7 MB.</Error>
+
+        <!-- Max message length error-->
+        <Error Key="InsertValueOutOfBound" Params="1"                   NativeErrorCode="68">Insert value %1% size is out of bound.</Error>
+
+        <!-- Default value are not supported by TD DB, using NULL as a default-->
+        <Error Key="DefaultParamWarning" Params="1"                     NativeErrorCode="69">Default parameter values are not supported natively by the database. The default value used is NULL.</Error>
+
+        <!-- Error thrown when Session Character Set is invalid -->
+        <Error Key="TDInvalidSessionCharSet"                            NativeErrorCode="70">Invalid Session Character Set</Error>
+
+        <!-- Error thrown when parameter array is used for a stored procedure call -->
+        <Error Key="TDParamArraysProcedureNotSupported"                 NativeErrorCode="71">Parameter arrays are not supported with stored procedures</Error>
+
+        <!-- Communication link failure. -->
+        <Error Key="TDProtocolDeserializationErr"                       NativeErrorCode="72">Protocol deserialization failed. %1%</Error>
+
+        <!-- Error thrown when MAC Connection buddle is not load successfully -->
+        <Error Key="TDDialogLoadFail"                                   NativeErrorCode="73">DisplayConnectionDialog failed due to no graphics session available.</Error>
+
+        <!-- Error thrown when Translation DLL return error -->
+        <Error Key="TDTranslationDLLFailure"                            NativeErrorCode="74">Translation DLL failed on encoding conversion with error: %1%</Error>
+
+        <Error Key="QUERYTIMEOUT"                                       NativeErrorCode="75">Query timeout expired.</Error>
+
+        <!-- Error thrown when SET TRANSFORM GROUP has been called between PREPARE and EXECUTE-->
+        <Error Key="TDTransformChanged"                                 NativeErrorCode="76">Error occurred as a SET TRANSFORM GROUP FOR TYPE statement was executed between PREPARE and EXECUTE.</Error>
+        <Error Key="UDFFolderPathNotFound"                              NativeErrorCode="77">Please provide a UDF Folder Path in the DSN configuration or in the connection string.</Error>
+        <Error Key="UDFAnyAccessNotAllowed"                             NativeErrorCode="78">The UDF file path contains unallowed characters: %1%</Error>
+        <Error Key="UDFCompileError"                                    NativeErrorCode="79">UDF compile error occurred on database: %1%</Error>
+        <Error Key="TDUnknownParamWarning"                              NativeErrorCode="80">The database cannot determine the type and size of parameter, returning 0.</Error>
+        <Error Key="TDRecoveryFailure"                                  NativeErrorCode="81">Automatic recovery after socket communication failure was not possible, returning error.</Error>
+        <Error Key="TDIntegratedAuthFailure"                            NativeErrorCode="82">Unable to logon, invalid credentials. Check entries such as username, password, credentials, authentication mechanism.</Error>
+        <Error Key="TDNoDataSessionsError"                              NativeErrorCode="83">Unable to create any FastExport data sessions.</Error>
+
+        <!-- TLS/WebSocket related errors -->
+        <Error Key="TDInvalidSSLMode"                                   NativeErrorCode="84">Invalid SSLMode: %1%</Error>
+        <Error Key="TDHTTPHeaderNotTerminated"                          NativeErrorCode="85">HTTP header section was not properly terminated.</Error>
+        <Error Key="TDHTTPResp101SwitchingNotFound"                     NativeErrorCode="86">HTTP response does not contain "101 Switching Protocols" string.</Error>
+        <Error Key="TDHTTPRespHTTPVersionNotFound"                      NativeErrorCode="87">HTTP response does not contain HTTP/1.1 "Version" string.</Error>
+        <Error Key="TDHTTPRespMultiHTTPVersionHeaders"                  NativeErrorCode="88">HTTP response contains multiple HTTP/1.1 "Version" headers.</Error>
+        <Error Key="TDHTTPHeaderMalform"                                NativeErrorCode="89">HTTP header malformed - no colon character in it.</Error>
+        <Error Key="TDHTTPHeaderEmpty"                                  NativeErrorCode="90">HTTP header malformed - header value is empty.</Error>
+        <Error Key="TDHTTPHeaderExceedMax"                              NativeErrorCode="91">HTTP header contains headers that exceeds maximum allowed.</Error>
+        <Error Key="TDHTTPRespWSUpgradeNotFound"                        NativeErrorCode="92">HTTP response does not contain "Upgrade: websocket" string.</Error>
+        <Error Key="TDHTTPRespMultiWSUpgrade"                           NativeErrorCode="93">HTTP response contains multiple "Upgrade" headers.</Error>
+        <Error Key="TDHTTPRespConnectionUpgradeNotFound"                NativeErrorCode="94">HTTP response does not contain "Connection: Upgrade" string.</Error>
+        <Error Key="TDHTTPRespMultiConnectionHeaders"                   NativeErrorCode="95">HTTP response contains multipe "Connection" headers.</Error>
+        <Error Key="TDHTTPRespSecWebSocketAcceptNotFound"               NativeErrorCode="96">HTTP response malformed, value for "Sec-WebSocket-Accept" not found.</Error>
+        <Error Key="TDHTTPRespMultiSecWebSocketAccept"                  NativeErrorCode="97">HTTP response contains multiple "Sec-WebSocket-Accept" headers.</Error>
+        <Error Key="TDHTTPRespLessThanMinNumHeaders"                    NativeErrorCode="98">HTTP response does not contain the minimum required number of headers.</Error>
+        <Error Key="TDHTTPRespMalform"                                  NativeErrorCode="99">HTTP response malformed, value for "Sec-WebSocket-Accept" not found.</Error>
+        <Error Key="TDInvalidPath"                                      NativeErrorCode="100">The path entered contains invalid characters: %1%</Error>
+
+        <!-- CloudSSO related errors -->
+        <Error Key="TDCloudSSOClientIDIdenProviderURLMissing"           NativeErrorCode="101">CloudSSO ClientID or Identity Provider is empty.</Error>
+        <Error Key="TDCloudSSOInvalidRandomLength"                      NativeErrorCode="102">CloudSSO random length needs to be greater than 44 and smaller than 129, random length is: %1%</Error>
+        <Error Key="TDCloudSSOCodeNotReceived"                          NativeErrorCode="103">CloudSSO Code not found in the server response. </Error>
+        <Error Key="TDCloudSSOInvalidIdentityProviderURL"               NativeErrorCode="104">IdentityProviderURL is invalid: %1%</Error>
+        <Error Key="TDCloudSSOSocketError"                              NativeErrorCode="105">CloudSSO ERROR opening socket. </Error>
+        <Error Key="TDCloudSSOHostnameError"                            NativeErrorCode="106">Could not resolve CloudSSO hostname given: %1%</Error>
+        <Error Key="TDCloudSSOSocketConnectError"                       NativeErrorCode="107">CloudSSO connecting to the socket error.</Error>
+        <Error Key="TDCloudSSOHttpGetRequestError"                      NativeErrorCode="108">CloudSSO sending HTTP message data ERROR: %1%</Error>
+        <Error Key="TDCloudSSOAuthEndpointError"                        NativeErrorCode="109">CloudSSO authentication endpoint is empty, response from server: %1%</Error>
+        <Error Key="TDCloudSSOTokenEndpointError"                       NativeErrorCode="110">CloudSSO token endpoint is empty, response from server: %1%</Error>
+        <Error Key="TDCloudSSOCompleteResponseSocketError"              NativeErrorCode="111">CloudSSO failed to store complete response from the socket. </Error>
+        <Error Key="TDCloudSSOHttpResponseError"                        NativeErrorCode="112">HTTP response received from the server is empty</Error>
+        <Error Key="TDCloudSSOKeyvalueNotFoundError"                    NativeErrorCode="113">CloudSSO No Matching Value given Keyname: %1%</Error>
+        <Error Key="TDCloudSSOInvalidJsonResponse"                      NativeErrorCode="114">CloudSSO invalid Json response from the server: %1%</Error>
+        <Error Key="TDCloudSSOEndpointOrIDMissing"                      NativeErrorCode="115">CloudSSO clientID, Token or Authentication endpoint cannot be empty</Error>
+        <Error Key="TDCloudSSOSocketBindingError"                       NativeErrorCode="116">CloudSSO failed to bind the socket. </Error>
+        <Error Key="TDCloudSSOSocketListeningError"                     NativeErrorCode="117">CloudSSO failed to listen to the socket.</Error>
+        <Error Key="TDCloudSSOCodeVerifierNotFound"                     NativeErrorCode="118">CloudSSO code verifier cannot be found: %1%</Error>
+
+        <Error Key="TDCloudSSOSocketAcceptionError"                     NativeErrorCode="119">CloudSSO failed to accept the connection.</Error>
+        <Error Key="TDCloudSSOCallingRecvFailed"                        NativeErrorCode="120">CloudSSO calling recv function failed. </Error>
+        <Error Key="TDCloudSSOServerStateNotFound"                      NativeErrorCode="121">CloudSSO state value from the server is empty</Error>
+        <Error Key="TDCloudSSOPostResponseEmpty"                        NativeErrorCode="122">CloudSSO Post response is empty after posting data: %1%</Error>
+        <Error Key="TDCloudSSOJWTTokenNotFound"                         NativeErrorCode="123">CloudSSO JWT token not found in the server response: %1%</Error>
+
+        <Error Key="TDSsoVCR2012Fail"                                   NativeErrorCode="124">Visual C++ Redistributable 2012 Update 4 required.</Error>
+        <Error Key="TDSsoLoadDllFail"                                   NativeErrorCode="125">Cannot load terasso library.</Error>
+        <Error Key="TDSQLStatisticsRangeWarning"                        NativeErrorCode="126">Warning: PAGES or CARDINALITY in SQLStatistics exceeded 2147483647.</Error>
+    </Package>
+
+    <!-- Package ID corresponds to the TD_DB_ERROR constant defined in Teradata.h -->
+    <Package ID="101" DefaultComponent="ODBC Teradata Driver][Teradata Database">
+        <Error Key="TDStmtLimit"                                        NativeErrorCode="200">Beyond SQL_ACTIVE_STATEMENTS limit</Error>
+
+        <!-- Parcel errors -->
+        <Error Key="TDInvalidClass"                                     NativeErrorCode="-8009">Invalid class</Error>
+        <Error Key="TDInvalidKind"                                      NativeErrorCode="-8010">Invalid kind</Error>
+        <Error Key="TDInvalidFormat"                                    NativeErrorCode="-8011">Invalid format</Error>
+        <Error Key="TDInvalidChecksum"                                  NativeErrorCode="-8012">Invalid checksum</Error>
+        <Error Key="TDInvalidMsgLen"                                    NativeErrorCode="-8013">Invalid MessageLength in LAN header</Error>
+        <Error Key="TDInvalidSessionNo"                                 NativeErrorCode="-8025">Invalid SessionNo</Error>
+        <Error Key="TDInvalidReqNo"                                     NativeErrorCode="-8026">Invalid RequestNo in LAN header</Error>
+        <Error Key="TDUnexpectedParcelErrWithFailCode"                  NativeErrorCode="201">Unexpected parcel error. FailCode = %1%</Error>
+        <Error Key="TDMemoryManagementError"                            NativeErrorCode="202">Memory management error</Error>
+        <Error Key="TDUnableToGetProcName"                              NativeErrorCode="204">Unable to get ProcName for logon source</Error>
+        <Error Key="TDUnknownParcel"                                    NativeErrorCode="205">Unknown Parcel Kind received on Connect</Error>
+        <Error Key="TDExceedsMaxMsgSize"                                NativeErrorCode="206">Message length exceeded maximum allowed length of 1 MB</Error>
+        <Error Key="TDSSPIIniSecntxtFail"                               NativeErrorCode="207">SSPI call to InitializeSecurityContext failed</Error>
+        <Error Key="TDBlankNameError"                                   NativeErrorCode="208">Syntax error: Blank name in quotation marks.</Error>
+        <Error Key="TDPWDNotMatch"                                      NativeErrorCode="209">Passwords do not match.</Error>
+        <Error Key="TDDBError"                                          NativeErrorCode="210">%1%</Error>
+        <Error Key="TDErrorSettingDefaultDB"                            NativeErrorCode="211">Query delayed too long or no response from the database when setting default database to %1%</Error>
+        <Error Key="TDErrorSettingUPTMode"                              NativeErrorCode="212">Error occured while setting UPT mode on DBS, set to 'Not Set' to connect. %1%</Error>
+    </Package>
+
+    <!-- Package ID corresponds to the TD_SOCKET_ERROR constant defined in Teradata.h -->
+    <Package ID="102" DefaultComponent="socket error">
+        <Error Key="TDUnknownSocketError"                               NativeErrorCode="400">WSA E Unknown socket error</Error>
+        <Error Key="TDInterruptedSysCall"                               NativeErrorCode="401">WSA E Intr: Interrupted system call</Error>
+        <Error Key="TDBadFileNumber"                                    NativeErrorCode="402">WSA E BadF: Bad file number</Error>
+        <Error Key="TDAccessPermissionDenied"                           NativeErrorCode="403">WSA E Access: Permission denied</Error>
+        <Error Key="TDFaultBadAddress"                                  NativeErrorCode="404">WSA E Fault: Bad address</Error>
+        <Error Key="TDInvalidArgument"                                  NativeErrorCode="405">WSA E Inval: Invalid argument</Error>
+        <Error Key="TDMfile"                                            NativeErrorCode="406">WSA E Mfile: Too many open files</Error>
+        <Error Key="TDWouldBlock"                                       NativeErrorCode="407">WSA E WouldBlock: Operation would block</Error>
+        <Error Key="TDInProgress"                                       NativeErrorCode="408">WSA E InProgress: Operation now in progress</Error>
+        <Error Key="TDAlreadyInProgress"                                NativeErrorCode="409">WSA E Already: Operation already in progress</Error>
+        <Error Key="TDNotSock"                                          NativeErrorCode="410">WSA E NotSock: Socket operation on non-socket</Error>
+        <Error Key="TDDestAddrRequired1"                                NativeErrorCode="411">WSA E DestAddrReq: Can't communicate with Teradata Server.  Teradata system is probably down.</Error>
+        <Error Key="TDDestAddrRequired2"                                NativeErrorCode="412">WSA E DestAddrReq: Destination address required</Error>
+        <Error Key="TDMessageTooLong"                                   NativeErrorCode="413">WSA E MsgSize: Message too long</Error>
+        <Error Key="TDProtocolWrong"                                    NativeErrorCode="414">WSA E Prototype: Protocol wrong for socket</Error>
+        <Error Key="TDProtocolNotAvailable"                             NativeErrorCode="415">WSA E NoProtoOpt: Protocol not available</Error>
+        <Error Key="TDProtocolNotSupported"                             NativeErrorCode="416">WSA E ProtoNoSupport: Protocol not supported</Error>
+        <Error Key="TDSocketNotSupported"                               NativeErrorCode="417">WSA E SocketNoSupport: Socket type not supported</Error>
+        <Error Key="TDOpNotSupported"                                   NativeErrorCode="418">WSA E OpNotSupp: Operation not supported</Error>
+        <Error Key="TDProtocolFamNotSupported"                          NativeErrorCode="419">WSA E PFNoSupport: Protocol family not supported</Error>
+        <Error Key="TDAddressFamNotSupported"                           NativeErrorCode="420">WSA E AFNoSupport: Address family not supported</Error>
+        <Error Key="TDAddressAlreadyInUse"                              NativeErrorCode="421">WSA E AddrInUse: Address already in use</Error>
+        <Error Key="TDAddressNotAvailable"                              NativeErrorCode="422">WSA E AddrNotAvail: Can't assign requested address</Error>
+        <Error Key="TDNetworkDown"                                      NativeErrorCode="423">WSA E NetDown: Network is down</Error>
+        <Error Key="TDNetworkUnreachable"                               NativeErrorCode="424">WSA E NetUnreach: Network is unreachable</Error>
+        <Error Key="TDNetworkReset"                                     NativeErrorCode="425">WSA E NetReset: Network dropped connection</Error>
+        <Error Key="TDConnectionAborted"                                NativeErrorCode="426">WSA E ConnAborted: Software caused connection abort</Error>
+        <Error Key="TDWsaeConnReset"                                    NativeErrorCode="427">WSA E ConnReset: Connection reset by peer</Error>
+        <Error Key="TDWsaeConnResetWithFailCode" Params="1"             NativeErrorCode="428">WSA E ConnReset: Connection reset by peer. FailCode = %1%</Error>
+        <Error Key="TDNoBufferSpace"                                    NativeErrorCode="429">WSA E NoBufs: No buffer space available</Error>
+        <Error Key="TDSocketAlreadyConnected"                           NativeErrorCode="430">WSA E IsConn: Socket is already connected</Error>
+        <Error Key="TDSocketNotConnected"                               NativeErrorCode="431">WSA E NotConn: Socket is not connected</Error>
+        <Error Key="TDShutdown"                                         NativeErrorCode="432">WSA E Shutdown: Can't send after socket shutdown</Error>
+        <Error Key="TDTooManyReferences"                                NativeErrorCode="433">WSA E TooManyRefs: Too many references: Can't splice</Error>
+        <Error Key="TDTimedOut"                                         NativeErrorCode="434">WSA E TimedOut: Lost socket connection to the Teradata server</Error>
+        <Error Key="TDConnectionRefused"                                NativeErrorCode="435">WSA E ConnRefused: The Teradata server is not accepting connections</Error>
+        <Error Key="TDSymbolicLinkLoop"                                 NativeErrorCode="436">WSA E Loop: Too many levels of symbolic links</Error>
+        <Error Key="TDNameTooLong"                                      NativeErrorCode="437">WSA E NameTooLong: File name too  long</Error>
+        <Error Key="TDHostDown"                                         NativeErrorCode="438">WSA E HostDown: The specified Teradata server is currently down</Error>
+        <Error Key="TDHostUnreach"                                      NativeErrorCode="439">WSA E HostUnreach: The Teradata server can't currently be reached over this network</Error>
+        <Error Key="TDSysNotReady"                                      NativeErrorCode="440">WSA E SysNotReady</Error>
+        <Error Key="TDVerNotSupported"                                  NativeErrorCode="441">WSA E VerNotSupported</Error>
+        <Error Key="TDNotInitialized"                                   NativeErrorCode="442">WSA E NotInitialized</Error>
+        <Error Key="TDHostNotFound"                                     NativeErrorCode="443">WSA E Host_Not_Found: Your name server is down, or you need to add the Teradata system to your HOSTS file</Error>
+        <Error Key="TDTryAgain"                                         NativeErrorCode="444">WSA E Try_Again: The name server is currently down</Error>
+        <Error Key="TDNoRecovery"                                       NativeErrorCode="445">WSA E No_Recovery</Error>
+        <Error Key="TDNoData"                                           NativeErrorCode="446">WSA E No_Data</Error>
+    </Package>
+
+    <!-- Package ID corresponds to the TD_UNIX_SYS_ERROR constant defined in Teradata.h -->
+    <Package ID="103" DefaultComponent="Unix system error">
+        <!-- Error thrown when Connection reset by peer -->
+    </Package>
+</Messages>

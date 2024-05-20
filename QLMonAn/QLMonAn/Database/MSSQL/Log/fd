@@ -1,0 +1,14 @@
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 465 Starting msftefd.exe
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv C:\Program Files\Microsoft SQL Server\MSSQL16.CHUKINT\MSSQL\Binn\fdhost.exe
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv MSSQL16.CHUKINTBde7c02bafd5edf4678fa3a1f279800bb782a8dg6
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv MSSQL16.CHUKINT
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv MSSQL16.CHUKINT
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv 16
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv 
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv 8192
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv M
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv 0
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv 
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv 
+2024-05-18 15:31:01.079	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 505 argc 12, argv 
+2024-05-18 15:31:01.101	 File [sql\ntdbms\msql\fulltext\src\search\Search\fdexe\fd.cxx] Line 586 msFteFD has started

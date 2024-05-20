@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLMonAn", "QLMonAn\QLMonAn.csproj", "{69DCF087-5760-49F9-87C1-A1A4226274CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{783369C7-8B80-4EB3-99B3-83E3F3496C64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLMonAnTests", "QLMonAnTests\QLMonAnTests.csproj", "{335E5DFD-A9C1-48F8-AFDD-BB501E8BEB5E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69DCF087-5760-49F9-87C1-A1A4226274CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69DCF087-5760-49F9-87C1-A1A4226274CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69DCF087-5760-49F9-87C1-A1A4226274CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69DCF087-5760-49F9-87C1-A1A4226274CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{335E5DFD-A9C1-48F8-AFDD-BB501E8BEB5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{335E5DFD-A9C1-48F8-AFDD-BB501E8BEB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{335E5DFD-A9C1-48F8-AFDD-BB501E8BEB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{335E5DFD-A9C1-48F8-AFDD-BB501E8BEB5E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {69AB0123-ADBD-4946-9ADC-2DFDB8A45BE6}
+	EndGlobalSection
+EndGlobal
